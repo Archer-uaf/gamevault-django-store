@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 12:15+0000\n"
+"POT-Creation-Date: 2026-07-03 20:25+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -23,27 +23,34 @@ msgstr "English"
 msgid "REST API навчального інтернет-магазину відеоігор GameVault."
 msgstr "REST API for the educational GameVault video game store."
 
-#: orders/admin.py:38
+#: orders/admin.py:55
+msgid "Покупець"
+msgstr "Customer"
+
+#: orders/admin.py:116
 msgid "Позначити вибрані замовлення як оплачені"
 msgstr "Mark selected orders as paid"
 
-#: orders/admin.py:46
+#: orders/admin.py:127
 msgid "Позначити вибрані замовлення як відправлені"
 msgstr "Mark selected orders as shipped"
 
-#: orders/admin.py:54
+#: orders/admin.py:138
 msgid "Позначити вибрані замовлення як доставлені"
 msgstr "Mark selected orders as delivered"
 
-#: orders/admin.py:62
+#: orders/admin.py:149
 msgid "Позначити вибрані замовлення як скасовані"
 msgstr "Mark selected orders as cancelled"
 
+#: orders/admin.py:163
+#, python-format
+msgid "Оновлено замовлень: %(count)d."
+msgstr "Orders updated: %(count)d."
+
 #: orders/api_views.py:112 orders/api_views.py:138
-#, fuzzy
-#| msgid "Недостатньо товару «%(product)s» на складі."
 msgid "Недостатньо товару на складі."
-msgstr "There is not enough stock for “%(product)s”."
+msgstr "Insufficient stock."
 
 #: orders/checkout_views.py:39 orders/checkout_views.py:68
 msgid "Ваш кошик порожній. Додайте ігри перед оформленням."
@@ -61,11 +68,12 @@ msgid "Замовлення №%(number)s успішно створено."
 msgstr "Order #%(number)s was created successfully."
 
 #: orders/emails.py:12
-#, fuzzy, python-format
-#| msgid "Підтвердити замовлення"
+#, python-format
 msgid "Підтвердження замовлення №%(number)s"
 msgstr "Order confirmation #%(number)s"
 
+#: orders/emails.py:16
+#, python-format
 msgid ""
 "Дякуємо за замовлення в GameVault.\n"
 "\n"
@@ -97,7 +105,8 @@ msgstr "The selected quantity exceeds the available stock."
 msgid "Повне ім’я"
 msgstr "Full name"
 
-#: orders/forms.py:53 templates/users/dashboard.html:25 users/forms.py:18
+#: orders/forms.py:53 templates/users/dashboard.html:25 users/admin.py:25
+#: users/forms.py:18
 msgid "Електронна пошта"
 msgstr "Email"
 
@@ -186,17 +195,46 @@ msgstr "“%(product)s” has been removed from the cart."
 msgid "Для «%(product)s» доступно одиниць: %(stock)s."
 msgstr "Available units for “%(product)s”: %(stock)s."
 
-#: products/admin.py:18 products/admin.py:70
+#: products/admin.py:20 products/admin.py:77
 msgid "Часові позначки"
 msgstr "Timestamps"
 
-#: products/admin.py:48
+#: products/admin.py:55
 msgid "Продажі"
 msgstr "Sales"
 
-#: products/admin.py:60
+#: products/admin.py:67
 msgid "Відомості про гру"
 msgstr "Game details"
+
+#: products/admin.py:87
+msgid "Кінцева ціна"
+msgstr "Final price"
+
+#: products/admin.py:92
+msgid "Кількість відгуків"
+msgstr "Review count"
+
+#: products/admin.py:99
+msgid "Середня оцінка"
+msgstr "Average rating"
+
+#: products/admin.py:106
+msgid "Позначити вибрані товари як активні"
+msgstr "Mark selected products as active"
+
+#: products/admin.py:115 products/admin.py:127 products/admin.py:139
+#, python-format
+msgid "Оновлено товарів: %(count)d."
+msgstr "Products updated: %(count)d."
+
+#: products/admin.py:118
+msgid "Позначити вибрані товари як неактивні"
+msgstr "Mark selected products as inactive"
+
+#: products/admin.py:130
+msgid "Скинути знижку для вибраних товарів"
+msgstr "Reset discount for selected products"
 
 #: products/views.py:49
 msgid "Спочатку нові"
@@ -246,6 +284,22 @@ msgstr "Write a comment for your review."
 #: reviews/serializers.py:46
 msgid "Потрібна автентифікація."
 msgstr "Authentication is required."
+
+#: templates/admin/orders/order/change_list.html:8
+msgid "Усього замовлень"
+msgstr "Total orders"
+
+#: templates/admin/orders/order/change_list.html:12
+msgid "Дохід"
+msgstr "Revenue"
+
+#: templates/admin/orders/order/change_list.html:16
+msgid "Очікують обробки"
+msgstr "Awaiting processing"
+
+#: templates/admin/orders/order/change_list.html:20
+msgid "Оплачені"
+msgstr "Paid orders"
 
 #: templates/base.html:8
 msgid "GameVault — магазин відеоігор для різних платформ."
@@ -495,6 +549,8 @@ msgid ""
 "чесні ціни — усе це GameVault!"
 msgstr ""
 "Build a library of your favorite PC and console games! New releases, "
+"classics, and fair prices — all at GameVault!"
+"Build a library of your favorite PC and console games! New releases, "
 "classics, and fair prices — all at GameVault!Build a library of your "
 "favorite PC and console games! New releases, classics, and fair prices — all "
 "at GameVault!"
@@ -549,7 +605,7 @@ msgstr "Reviews"
 
 #: templates/pages/home.html:74
 msgid "Рейтинги та думки спільноти спростять вибір наступної пригоди."
-msgstr ""
+msgstr "Community ratings and opinions make choosing your next adventure easier."
 "Community ratings and opinions make choosing your next adventure "
 "easier.Community ratings and opinions make choosing your next adventure "
 "easier."

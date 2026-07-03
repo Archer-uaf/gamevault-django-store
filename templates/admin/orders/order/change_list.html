@@ -1,0 +1,65 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block content %}
+    {% if order_summary %}
+        <div class="order-analytics">
+            <div class="order-analytics__card">
+                <span>{% trans "Усього замовлень" %}</span>
+                <strong>{{ order_summary.total_orders }}</strong>
+            </div>
+            <div class="order-analytics__card">
+                <span>{% trans "Дохід" %}</span>
+                <strong>₴{{ order_summary.total_revenue|floatformat:2 }}</strong>
+            </div>
+            <div class="order-analytics__card">
+                <span>{% trans "Очікують обробки" %}</span>
+                <strong>{{ order_summary.pending_orders }}</strong>
+            </div>
+            <div class="order-analytics__card">
+                <span>{% trans "Оплачені" %}</span>
+                <strong>{{ order_summary.paid_orders }}</strong>
+            </div>
+        </div>
+    {% endif %}
+
+    <style>
+        .order-analytics {
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .order-analytics__card {
+            padding: 16px;
+            border: 1px solid var(--hairline-color);
+            border-radius: 6px;
+            background: var(--body-bg);
+        }
+
+        .order-analytics__card span,
+        .order-analytics__card strong {
+            display: block;
+        }
+
+        .order-analytics__card span {
+            color: var(--body-quiet-color);
+            font-size: 0.78rem;
+        }
+
+        .order-analytics__card strong {
+            margin-top: 5px;
+            color: var(--body-fg);
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 800px) {
+            .order-analytics {
+                grid-template-columns: repeat(2, minmax(130px, 1fr));
+            }
+        }
+    </style>
+
+    {{ block.super }}
+{% endblock %}

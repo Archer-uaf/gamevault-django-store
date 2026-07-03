@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 10:14+0000\n"
+"POT-Creation-Date: 2026-07-03 10:36+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -11,15 +11,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: config/settings.py:105
+#: config/settings.py:108
 msgid "Українська"
 msgstr "Ukrainian"
 
-#: config/settings.py:106
+#: config/settings.py:109
 msgid "English"
 msgstr "English"
 
-#: config/settings.py:148
+#: config/settings.py:155
 msgid "REST API навчального інтернет-магазину відеоігор GameVault."
 msgstr "REST API for the educational GameVault video game store."
 
@@ -88,7 +88,7 @@ msgstr "Delivery address"
 msgid "Спосіб оплати"
 msgstr "Payment method"
 
-#: orders/forms.py:80
+#: orders/forms.py:80 orders/serializers.py:94
 msgid "Вкажіть ім’я та прізвище."
 msgstr "Enter your first and last name."
 
@@ -123,6 +123,19 @@ msgstr "Cash on delivery"
 #: orders/models.py:24
 msgid "Тестовий баланс"
 msgstr "Test balance"
+
+#: orders/serializers.py:102
+msgid "Кожен товар можна вказати в замовленні лише один раз."
+msgstr "Each product can appear only once in an order."
+
+#: orders/serializers.py:128
+msgid "Один або кілька товарів недоступні."
+msgstr "One or more products are unavailable."
+
+#: orders/serializers.py:140
+#, python-format
+msgid "Недостатньо товару «%(product)s» на складі."
+msgstr "There is not enough stock for “%(product)s”."
 
 #: orders/views.py:59
 #, python-format
@@ -172,11 +185,12 @@ msgstr "Price: high to low"
 msgid "Популярні"
 msgstr "Most popular"
 
-#: products/views.py:211 products/views.py:239
+#: products/views.py:211 products/views.py:239 reviews/serializers.py:56
+#: reviews/serializers.py:67
 msgid "Ви вже опублікували відгук про цю гру."
 msgstr "You have already published a review for this game."
 
-#: products/views.py:221
+#: products/views.py:221 reviews/serializers.py:52
 msgid "Залишити відгук можна лише після покупки цієї гри."
 msgstr "You can review this game only after purchasing it."
 
@@ -199,6 +213,10 @@ msgstr "Share your experience with the game."
 #: reviews/forms.py:39
 msgid "Напишіть коментар до відгуку."
 msgstr "Write a comment for your review."
+
+#: reviews/serializers.py:46
+msgid "Потрібна автентифікація."
+msgstr "Authentication is required."
 
 #: templates/base.html:8
 msgid "GameVault — магазин відеоігор для різних платформ."
@@ -991,6 +1009,10 @@ msgstr "New password"
 #: users/forms.py:51
 msgid "Підтвердження нового пароля"
 msgstr "New password confirmation"
+
+#: users/serializers.py:43
+msgid "Паролі не збігаються."
+msgstr "The passwords do not match."
 
 #: users/views.py:45
 msgid "Обліковий запис успішно створено."

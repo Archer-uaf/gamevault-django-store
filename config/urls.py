@@ -16,6 +16,7 @@ urlpatterns = [
     path("checkout/", include("orders.checkout_urls")),
     path("products/", include("products.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
+    path("api/", include("config.api_urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",

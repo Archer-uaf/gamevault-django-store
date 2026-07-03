@@ -6,7 +6,10 @@ from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config("DJANGO_SECRET_KEY", default="unsafe-development-key")
+SECRET_KEY = config(
+    "DJANGO_SECRET_KEY",
+    default="unsafe-development-key-change-me-32-characters",
+)
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config(
     "DJANGO_ALLOWED_HOSTS",
@@ -134,6 +137,10 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_PAGINATION_CLASS": (
+        "rest_framework.pagination.PageNumberPagination"
+    ),
+    "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 

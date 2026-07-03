@@ -113,7 +113,60 @@
                 <p class="eyebrow">{% trans "Думка гравців" %}</p>
                 <h2>{% trans "Відгуки" %}</h2>
             </div>
-            <p class="section-note">{% trans "Створення відгуків буде додано окремим етапом." %}</p>
+            <p class="section-note">
+                {% blocktrans with count=reviews_count %}Усього відгуків: {{ count }}{% endblocktrans %}
+            </p>
+        </div>
+
+        <div class="review-entry">
+            {% if not user.is_authenticated %}
+                <div class="review-callout">
+                    <h3>{% trans "Хочете поділитися враженнями?" %}</h3>
+                    <p>{% trans "Увійдіть, щоб залишити відгук після покупки гри." %}</p>
+                    <a href="{% url 'account:login' %}?next={{ request.path|urlencode }}" class="button button--outline">
+                        {% trans "Увійти" %}
+                    </a>
+                </div>
+            {% elif user_review %}
+                <div class="review-callout review-callout--success">
+                    <h3>{% trans "Ваш відгук уже опубліковано" %}</h3>
+                    <p>{% trans "Дякуємо, що поділилися думкою про цю гру." %}</p>
+                </div>
+            {% elif can_review %}
+                <form method="post" action="{{ product.get_absolute_url }}#reviews" class="review-form" novalidate>
+                    {% csrf_token %}
+                    <div class="review-form__heading">
+                        <div>
+                            <p class="eyebrow">{% trans "Підтверджена покупка" %}</p>
+                            <h3>{% trans "Залишити відгук" %}</h3>
+                        </div>
+                        <p>{% trans "Оцініть гру від 1 до 5 та напишіть коментар." %}</p>
+                    </div>
+
+                    {% if review_form.non_field_errors %}
+                        <div class="form-errors">{{ review_form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="review-form__fields">
+                        {% for field in review_form %}
+                            <div class="review-field {% if field.errors %}review-field--error{% endif %}">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="button button--primary">
+                        {% trans "Опублікувати відгук" %}
+                    </button>
+                </form>
+            {% else %}
+                <div class="review-callout">
+                    <h3>{% trans "Відгук доступний після покупки" %}</h3>
+                    <p>{% trans "Придбайте цю гру у своєму обліковому записі, щоб поділитися враженнями." %}</p>
+                </div>
+            {% endif %}
         </div>
 
         {% if reviews %}

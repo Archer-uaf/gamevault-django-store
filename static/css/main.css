@@ -1950,6 +1950,123 @@ dd {
     padding-bottom: 70px;
 }
 
+.review-entry {
+    margin-bottom: 30px;
+}
+
+.review-callout,
+.review-form {
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: var(--surface-alt);
+}
+
+.review-callout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 24px;
+}
+
+.review-callout h3 {
+    font-size: 1.12rem;
+}
+
+.review-callout p {
+    color: var(--ink-soft);
+}
+
+.review-callout .button {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+.review-callout--success {
+    color: #14584f;
+    border-color: #a9ded7;
+    background: #e8faf7;
+}
+
+.review-form {
+    background: var(--surface);
+    box-shadow: 0 10px 28px rgba(25, 21, 53, 0.06);
+}
+
+.review-form__heading {
+    margin-bottom: 22px;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.review-form__heading .eyebrow {
+    margin-bottom: 5px;
+}
+
+.review-form__heading h3 {
+    font-size: 1.45rem;
+}
+
+.review-form__heading > p {
+    max-width: 390px;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+}
+
+.review-form__fields {
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 18px;
+}
+
+.review-field {
+    display: grid;
+    align-content: start;
+    gap: 7px;
+}
+
+.review-field label {
+    color: #4f5061;
+    font-size: 0.78rem;
+    font-weight: 750;
+}
+
+.review-field select,
+.review-field textarea {
+    width: 100%;
+    padding: 0 13px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--ink);
+    background: #fbfbfd;
+    font: inherit;
+    outline: none;
+}
+
+.review-field select {
+    height: 48px;
+}
+
+.review-field textarea {
+    min-height: 125px;
+    padding-top: 11px;
+    resize: vertical;
+}
+
+.review-field select:focus,
+.review-field textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(104, 66, 245, 0.12);
+}
+
+.review-field--error select,
+.review-field--error textarea {
+    border-color: #d75b72;
+}
+
 .reviews-list {
     display: grid;
     gap: 15px;
@@ -2205,6 +2322,30 @@ dd {
     .account-actions,
     .account-actions .button,
     .account-form > .button {
+        width: 100%;
+    }
+
+    .review-callout {
+        grid-template-columns: 1fr;
+    }
+
+    .review-callout .button {
+        width: 100%;
+        margin-top: 10px;
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .review-form__heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .review-form__fields {
+        grid-template-columns: 1fr;
+    }
+
+    .review-form > .button {
         width: 100%;
     }
 

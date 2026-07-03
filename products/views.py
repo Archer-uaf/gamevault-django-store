@@ -3,13 +3,20 @@
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.views import redirect_to_login
+from django.db import IntegrityError, transaction
 from django.db.models import Avg, Count, Q, QuerySet
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from products.models import Category, Product
+from reviews.forms import ReviewForm
+from reviews.models import Review
+from reviews.services import user_has_purchased_product
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -137,11 +144,33 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         product = self.object
+        reviews = list(product.reviews.all())
+        user_review = None
+        has_purchased = False
+        if self.request.user.is_authenticated:
+            user_id = self.request.user.pk
+            if user_id is not None:
+                user_review = next(
+                    (
+                        review
+                        for review in reviews
+                        if review.user_id == user_id
+                    ),
+                    None,
+                )
+                has_purchased = user_has_purchased_product(
+                    user_id=user_id,
+                    product_id=product.pk,
+                )
+        can_review = has_purchased and user_review is None
         context.update(
             {
-                "reviews": product.reviews.all(),
+                "reviews": reviews,
                 "average_rating": product.average_rating,
                 "reviews_count": product.reviews_count,
+                "user_review": user_review,
+                "has_purchased": has_purchased,
+                "can_review": can_review,
                 "related_products": (
                     Product.objects.filter(
                         is_active=True,
@@ -157,4 +186,59 @@ class ProductDetailView(DetailView):
                 ),
             }
         )
+        if can_review:
+            context.setdefault("review_form", ReviewForm())
         return context
+
+    def post(
+        self,
+        request: HttpRequest,
+        *args: Any,
+        **kwargs: Any,
+    ) -> HttpResponse:
+        """Create a review after rechecking authentication and purchase."""
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path(), settings.LOGIN_URL)
+
+        self.object = self.get_object()
+        user_id = request.user.pk
+        if user_id is None:
+            return redirect_to_login(request.get_full_path(), settings.LOGIN_URL)
+
+        if Review.objects.filter(product=self.object, user_id=user_id).exists():
+            messages.info(
+                request,
+                _("Ви вже опублікували відгук про цю гру."),
+            )
+            return redirect(f"{self.object.get_absolute_url()}#reviews")
+
+        if not user_has_purchased_product(
+            user_id=user_id,
+            product_id=self.object.pk,
+        ):
+            messages.error(
+                request,
+                _("Залишити відгук можна лише після покупки цієї гри."),
+            )
+            return redirect(f"{self.object.get_absolute_url()}#reviews")
+
+        form = ReviewForm(request.POST)
+        if not form.is_valid():
+            context = self.get_context_data(review_form=form)
+            return self.render_to_response(context)
+
+        review = form.save(commit=False)
+        review.product = self.object
+        review.user = request.user
+        try:
+            with transaction.atomic():
+                review.save()
+        except IntegrityError:
+            messages.info(
+                request,
+                _("Ви вже опублікували відгук про цю гру."),
+            )
+        else:
+            messages.success(request, _("Дякуємо! Ваш відгук опубліковано."))
+
+        return redirect(f"{self.object.get_absolute_url()}#reviews")

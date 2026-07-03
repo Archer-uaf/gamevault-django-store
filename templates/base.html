@@ -14,6 +14,16 @@
 <body>
     {% include "includes/header.html" %}
 
+    {% if messages %}
+        <div class="messages container" aria-live="polite">
+            {% for message in messages %}
+                <div class="message message--{{ message.tags|default:'info' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <main>
         {% block content %}{% endblock %}
     </main>

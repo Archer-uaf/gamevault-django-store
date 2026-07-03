@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Кошик — GameVault" %}{% endblock %}
+
+{% block content %}
+<section class="compact-hero cart-hero">
+    <div class="container">
+        <p class="eyebrow">{% trans "Ваше замовлення" %}</p>
+        <h1>{% trans "Кошик" %}</h1>
+        <p>{% trans "Перевірте вибрані ігри та їхню кількість." %}</p>
+    </div>
+</section>
+
+<section class="cart-section">
+    <div class="container">
+        {% if cart_items %}
+            <div class="cart-layout">
+                <div class="cart-items">
+                    {% for item in cart_items %}
+                        <article class="cart-item">
+                            <a href="{{ item.product.get_absolute_url }}" class="cart-item__cover">
+                                {% if item.product.image %}
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{% blocktrans with name=item.product.name %}Обкладинка {{ name }}{% endblocktrans %}"
+                                    >
+                                {% else %}
+                                    <div class="game-placeholder" aria-hidden="true">
+                                        <span>{{ item.product.get_platform_display }}</span>
+                                        <strong>{{ item.product.name }}</strong>
+                                    </div>
+                                {% endif %}
+                            </a>
+
+                            <div class="cart-item__details">
+                                <p>{{ item.product.get_platform_display }}</p>
+                                <h2>
+                                    <a href="{{ item.product.get_absolute_url }}">
+                                        {{ item.product.name }}
+                                    </a>
+                                </h2>
+                                <span>{% blocktrans with price=item.unit_price %}Ціна за одиницю: ₴{{ price }}{% endblocktrans %}</span>
+                                {% if item.is_available %}
+                                    <small>{% blocktrans with stock=item.product.stock %}В наявності: {{ stock }}{% endblocktrans %}</small>
+                                {% else %}
+                                    <small class="stock-warning">
+                                        {% blocktrans with stock=item.product.stock %}Доступний залишок: {{ stock }}. Оновіть кількість.{% endblocktrans %}
+                                    </small>
+                                {% endif %}
+                            </div>
+
+                            <form
+                                method="post"
+                                action="{% url 'cart:update' item.product.pk %}"
+                                class="cart-item__quantity"
+                            >
+                                {% csrf_token %}
+                                <label for="quantity-{{ item.product.pk }}">{% trans "Кількість" %}</label>
+                                <input
+                                    id="quantity-{{ item.product.pk }}"
+                                    type="number"
+                                    name="quantity"
+                                    value="{{ item.quantity }}"
+                                    min="1"
+                                    max="{{ item.product.stock }}"
+                                    {% if not item.product.stock %}disabled{% endif %}
+                                >
+                                <button
+                                    type="submit"
+                                    class="button button--small button--outline"
+                                    {% if not item.product.stock %}disabled{% endif %}
+                                >
+                                    {% trans "Оновити" %}
+                                </button>
+                            </form>
+
+                            <div class="cart-item__total">
+                                <span>{% trans "Сума" %}</span>
+                                <strong>₴{{ item.total_price }}</strong>
+                                <form method="post" action="{% url 'cart:remove' item.product.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="cart-remove">
+                                        {% trans "Видалити" %}
+                                    </button>
+                                </form>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <aside class="cart-summary">
+                    <p class="eyebrow">{% trans "Разом" %}</p>
+                    <div>
+                        <span>{% trans "Загальна сума" %}</span>
+                        <strong>₴{{ cart_total }}</strong>
+                    </div>
+                    <p>{% trans "Оформлення замовлення буде доступне на наступному етапі." %}</p>
+                    <a href="{% url 'products:product_list' %}" class="button button--primary">
+                        {% trans "Продовжити покупки" %}
+                    </a>
+                </aside>
+            </div>
+        {% else %}
+            <div class="empty-state cart-empty">
+                <span aria-hidden="true">◇</span>
+                <h2>{% trans "Ваш кошик порожній" %}</h2>
+                <p>{% trans "Додайте ігри з каталогу, щоб вони з’явилися тут." %}</p>
+                <a href="{% url 'products:product_list' %}" class="button button--primary">
+                    {% trans "Перейти до каталогу" %}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

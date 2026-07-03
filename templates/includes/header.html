@@ -24,12 +24,17 @@
             <a href="{% url 'home' %}">{% trans 'Головна' %}</a>
             <a href="{% url 'products:product_list' %}">{% trans 'Ігри' %}</a>
 
-            {# TODO: замінити заглушки після додавання URL кошика та акаунта. #}
-            <a href="#" class="nav-icon-link">
+            <a href="{% url 'cart:detail' %}" class="nav-icon-link">
                 <img src="{% static 'images/icons/shopping-bag.svg' %}" alt="" width="20" height="20">
                 {% trans 'Кошик' %}
+                {% if cart_item_count %}
+                    <span class="cart-count" aria-label="{% blocktrans with count=cart_item_count %}Товарів у кошику: {{ count }}{% endblocktrans %}">
+                        {{ cart_item_count }}
+                    </span>
+                {% endif %}
             </a>
 
+            {# TODO: замінити заглушку після додавання URL акаунта. #}
             <a href="#" class="nav-icon-link">
                 <img src="{% static 'images/icons/user.svg' %}" alt="" width="20" height="20">
                 {% trans 'Особистий кабінет' %}

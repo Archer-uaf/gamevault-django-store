@@ -6,8 +6,9 @@ GameVault — учебный интернет-магазин видеоигр н
 DRF/JWT/OpenAPI и инструменты проверки. Реализованы базовые доменные модели каталога,
 заказов, профилей пользователей и отзывов, а также их Django admin-конфигурация.
 Подключены главная страница, каталог с поиском/фильтрами/сортировкой/пагинацией и
-детальная страница игры на Django templates. Корзина, checkout, auth views,
-создание отзывов и API viewsets ещё не реализованы.
+детальная страница игры на Django templates. Реализована корзина на Django sessions
+с проверкой остатков и управлением количеством. Checkout, auth views, создание
+отзывов и API viewsets ещё не реализованы.
 
 ## Визуальная тема
 
@@ -71,6 +72,7 @@ docker compose exec web mypy .
 - Главная страница: <http://localhost:8000/>
 - Каталог игр: <http://localhost:8000/products/>
 - Страница игры: `http://localhost:8000/product/<slug>/`
+- Корзина: <http://localhost:8000/cart/>
 - Django admin: <http://localhost:8000/admin/>
 - OpenAPI schema: <http://localhost:8000/api/schema/>
 - Swagger UI: <http://localhost:8000/api/docs/>

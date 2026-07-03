@@ -77,14 +77,29 @@
                             {% endif %}
                         </p>
                     </div>
-                    {# TODO: підключити справжнє додавання до кошика на наступному етапі. #}
-                    <a
-                        href="#"
-                        class="button button--primary {% if not product.is_in_stock %}button--disabled{% endif %}"
-                        {% if not product.is_in_stock %}aria-disabled="true"{% endif %}
-                    >
-                        {% trans "Додати до кошика" %}
-                    </a>
+                    {% if product.is_in_stock %}
+                        <form method="post" action="{% url 'cart:add' product.pk %}" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <label>
+                                <span>{% trans "Кількість" %}</span>
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    value="1"
+                                    min="1"
+                                    max="{{ product.stock }}"
+                                    aria-label="{% trans 'Кількість' %}"
+                                >
+                            </label>
+                            <button type="submit" class="button button--primary">
+                                {% trans "Додати до кошика" %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <button type="button" class="button button--primary button--disabled" disabled>
+                            {% trans "Немає в наявності" %}
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>

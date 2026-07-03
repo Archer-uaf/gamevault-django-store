@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Оформлення замовлення — GameVault" %}{% endblock %}
+
+{% block content %}
+<section class="compact-hero checkout-hero">
+    <div class="container">
+        <p class="eyebrow">{% trans "Останній крок" %}</p>
+        <h1>{% trans "Оформлення замовлення" %}</h1>
+        <p>{% trans "Вкажіть контактні дані та оберіть тестовий спосіб оплати." %}</p>
+    </div>
+</section>
+
+<section class="checkout-section">
+    <div class="container checkout-layout">
+        <form method="post" class="checkout-form" novalidate>
+            {% csrf_token %}
+            <div class="section-heading">
+                <p class="eyebrow">{% trans "Контактні дані" %}</p>
+                <h2>{% trans "Дані отримувача" %}</h2>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="checkout-fields">
+                {% for field in form %}
+                    <div class="checkout-field {% if field.errors %}checkout-field--error{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="checkout-notice">
+                <strong>{% trans "Тестова оплата" %}</strong>
+                <p>{% trans "Платіжні дані не запитуються та реальні кошти не списуються." %}</p>
+            </div>
+
+            <button type="submit" class="button button--primary checkout-submit">
+                {% trans "Підтвердити замовлення" %}
+            </button>
+        </form>
+
+        <aside class="checkout-summary">
+            <div class="section-heading">
+                <p class="eyebrow">{% trans "Ваш кошик" %}</p>
+                <h2>{% trans "Склад замовлення" %}</h2>
+            </div>
+
+            <div class="checkout-summary__items">
+                {% for item in cart_items %}
+                    <div class="checkout-summary__item">
+                        <div>
+                            <strong>{{ item.product.name }}</strong>
+                            <span>{% blocktrans with quantity=item.quantity %}Кількість: {{ quantity }}{% endblocktrans %}</span>
+                        </div>
+                        <strong>₴{{ item.total_price }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="checkout-summary__total">
+                <span>{% trans "Загальна сума" %}</span>
+                <strong>₴{{ cart_total }}</strong>
+            </div>
+            <a href="{% url 'cart:detail' %}" class="text-link">← {% trans "Повернутися до кошика" %}</a>
+        </aside>
+    </div>
+</section>
+{% endblock %}

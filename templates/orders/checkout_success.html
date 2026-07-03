@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Замовлення створено — GameVault" %}{% endblock %}
+
+{% block content %}
+<section class="checkout-success-section">
+    <div class="container">
+        <div class="checkout-success-card">
+            <span class="checkout-success-icon" aria-hidden="true">✓</span>
+            <p class="eyebrow">{% trans "Замовлення прийнято" %}</p>
+            <h1>{% trans "Дякуємо за покупку!" %}</h1>
+            <p>
+                {% blocktrans with number=order.pk trimmed %}
+                    Замовлення №{{ number }} успішно створено.
+                {% endblocktrans %}
+            </p>
+            <div class="checkout-success-total">
+                <span>{% trans "Загальна сума" %}</span>
+                <strong>₴{{ order.total_price }}</strong>
+            </div>
+            <a href="{% url 'products:product_list' %}" class="button button--primary">
+                {% trans "Повернутися до каталогу" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

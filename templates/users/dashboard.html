@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Особистий кабінет — GameVault" %}{% endblock %}
+
+{% block content %}
+<section class="compact-hero account-hero">
+    <div class="container">
+        <p class="eyebrow">{% trans "Ваш профіль" %}</p>
+        <h1>{% trans "Особистий кабінет" %}</h1>
+        <p>{% trans "Керуйте даними входу та переглядайте свої покупки." %}</p>
+    </div>
+</section>
+
+<section class="account-section">
+    <div class="container account-grid">
+        <article class="account-card">
+            <p class="eyebrow">{% trans "Дані облікового запису" %}</p>
+            <dl class="account-details">
+                <div>
+                    <dt>{% trans "Ім’я користувача" %}</dt>
+                    <dd>{{ user.username }}</dd>
+                </div>
+                <div>
+                    <dt>{% trans "Електронна пошта" %}</dt>
+                    <dd>{% if user.email %}{{ user.email }}{% else %}{% trans "Не вказано" %}{% endif %}</dd>
+                </div>
+            </dl>
+        </article>
+
+        <nav class="account-card account-navigation" aria-label="{% trans 'Навігація облікового запису' %}">
+            <p class="eyebrow">{% trans "Швидкі дії" %}</p>
+            <a href="{% url 'account:orders' %}">
+                <strong>{% trans "Історія замовлень" %}</strong>
+                <span>{% trans "Переглянути покупки, оформлені після входу." %}</span>
+            </a>
+            <a href="{% url 'account:password' %}">
+                <strong>{% trans "Змінити пароль" %}</strong>
+                <span>{% trans "Оновити пароль для входу до облікового запису." %}</span>
+            </a>
+        </nav>
+    </div>
+</section>
+{% endblock %}

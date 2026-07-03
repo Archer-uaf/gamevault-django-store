@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Вихід — GameVault" %}{% endblock %}
+
+{% block content %}
+<section class="account-section">
+    <div class="container account-shell">
+        <div class="account-card account-card--form">
+            <p class="eyebrow">{% trans "Завершення сеансу" %}</p>
+            <h1>{% trans "Вийти з облікового запису?" %}</h1>
+            <p class="account-intro">{% trans "Ви зможете знову увійти будь-коли." %}</p>
+            <form method="post" class="account-actions">
+                {% csrf_token %}
+                <button type="submit" class="button button--primary">{% trans "Вийти" %}</button>
+                <a href="{% url 'account:dashboard' %}" class="button button--outline">{% trans "Скасувати" %}</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

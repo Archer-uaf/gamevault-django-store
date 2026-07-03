@@ -11,7 +11,9 @@ from products.views import home
 urlpatterns = [
     path("", home, name="home"),
     path("admin/", admin.site.urls),
+    path("account/", include("users.urls")),
     path("cart/", include("orders.urls")),
+    path("checkout/", include("orders.checkout_urls")),
     path("products/", include("products.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

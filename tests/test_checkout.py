@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -81,6 +82,18 @@ class CheckoutFlowTests(TestCase):
         self.assertEqual(order_item.product, self.product)
         self.assertEqual(order_item.quantity, 2)
         self.assertEqual(order_item.price, Decimal("90.00"))
+
+    def test_authenticated_checkout_links_order_to_user(self) -> None:
+        user = get_user_model().objects.create_user(
+            username="checkout-player",
+            password="StrongPassword123!",
+        )
+        self.client.force_login(user)
+        self.add_to_cart()
+
+        self.client.post(reverse("checkout:form"), self.checkout_data())
+
+        self.assertEqual(Order.objects.get().user, user)
 
     def test_valid_checkout_decreases_stock(self) -> None:
         self.add_to_cart(quantity=3)

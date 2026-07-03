@@ -95,10 +95,14 @@
                         <span>{% trans "Загальна сума" %}</span>
                         <strong>₴{{ cart_total }}</strong>
                     </div>
-                    <p>{% trans "Оформлення замовлення буде доступне на наступному етапі." %}</p>
-                    <a href="{% url 'products:product_list' %}" class="button button--primary">
-                        {% trans "Продовжити покупки" %}
-                    </a>
+                    <div class="cart-summary__actions">
+                        <a href="{% url 'checkout:form' %}" class="button button--primary">
+                            {% trans "Оформити замовлення" %}
+                        </a>
+                        <a href="{% url 'products:product_list' %}" class="button button--outline">
+                            {% trans "Продовжити покупки" %}
+                        </a>
+                    </div>
                 </aside>
             </div>
         {% else %}

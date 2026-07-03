@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 08:36+0000\n"
+"POT-Creation-Date: 2026-07-03 09:56+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -19,7 +19,7 @@ msgstr "Ukrainian"
 msgid "English"
 msgstr "English"
 
-#: config/settings.py:145
+#: config/settings.py:148
 msgid "REST API навчального інтернет-магазину відеоігор GameVault."
 msgstr "REST API for the educational GameVault video game store."
 
@@ -39,15 +39,90 @@ msgstr "Mark selected orders as delivered"
 msgid "Позначити вибрані замовлення як скасовані"
 msgstr "Mark selected orders as cancelled"
 
-#: orders/forms.py:13 templates/orders/cart_detail.html:59
+#: orders/checkout_views.py:38 orders/checkout_views.py:67
+msgid "Ваш кошик порожній. Додайте ігри перед оформленням."
+msgstr "Your cart is empty. Add games before checking out."
+
+#: orders/checkout_views.py:74
+msgid ""
+"Залишки товарів змінилися. Перевірте кількість у кошику та спробуйте ще раз."
+msgstr ""
+"Product stock has changed. Check the quantities in your cart and try again."
+
+#: orders/checkout_views.py:84 templates/orders/checkout_success.html:14
+#, python-format
+msgid "Замовлення №%(number)s успішно створено."
+msgstr "Order #%(number)s was created successfully."
+
+#: orders/forms.py:15 templates/orders/cart_detail.html:59
 #: templates/products/product_detail.html:84
 #: templates/products/product_detail.html:91
 msgid "Кількість"
 msgstr "Quantity"
 
-#: orders/forms.py:36
+#: orders/forms.py:38
 msgid "Обрана кількість перевищує доступний залишок."
 msgstr "The selected quantity exceeds the available stock."
+
+#: orders/forms.py:48
+msgid "Повне ім’я"
+msgstr "Full name"
+
+#: orders/forms.py:53 templates/users/dashboard.html:25 users/forms.py:18
+msgid "Електронна пошта"
+msgstr "Email"
+
+#: orders/forms.py:57
+msgid "Телефон"
+msgstr "Phone"
+
+#: orders/forms.py:62
+msgid "Місто"
+msgstr "City"
+
+#: orders/forms.py:67
+msgid "Адреса доставки"
+msgstr "Delivery address"
+
+#: orders/forms.py:71
+msgid "Спосіб оплати"
+msgstr "Payment method"
+
+#: orders/forms.py:80
+msgid "Вкажіть ім’я та прізвище."
+msgstr "Enter your first and last name."
+
+#: orders/models.py:15
+msgid "Очікує обробки"
+msgstr "Pending"
+
+#: orders/models.py:16
+msgid "Оплачено"
+msgstr "Paid"
+
+#: orders/models.py:17
+msgid "Відправлено"
+msgstr "Shipped"
+
+#: orders/models.py:18
+msgid "Доставлено"
+msgstr "Delivered"
+
+#: orders/models.py:19
+msgid "Скасовано"
+msgstr "Cancelled"
+
+#: orders/models.py:22
+msgid "Картка (тестова оплата)"
+msgstr "Card (test payment)"
+
+#: orders/models.py:23
+msgid "Оплата при отриманні"
+msgstr "Cash on delivery"
+
+#: orders/models.py:24
+msgid "Тестовий баланс"
+msgstr "Test balance"
 
 #: orders/views.py:59
 #, python-format
@@ -157,23 +232,24 @@ msgstr "Cart"
 msgid "Товарів у кошику: %(count)s"
 msgstr "Items in cart: %(count)s"
 
-#: templates/includes/header.html:40
+#: templates/includes/header.html:39 templates/users/dashboard.html:10
 msgid "Особистий кабінет"
 msgstr "Account"
 
-#: templates/includes/header.html:44
+#: templates/includes/header.html:43 templates/users/logout.html:15
 msgid "Вийти"
 msgstr "Log out"
 
-#: templates/includes/header.html:46
+#: templates/includes/header.html:45 templates/users/login.html:29
+#: templates/users/register.html:34
 msgid "Увійти"
 msgstr "Log in"
 
-#: templates/includes/header.html:59
+#: templates/includes/header.html:58
 msgid "Перемкнути мову на українську"
 msgstr "Switch language to Ukrainian"
 
-#: templates/includes/header.html:69
+#: templates/includes/header.html:68
 msgid "Switch language to English"
 msgstr "Switch language to English"
 
@@ -230,29 +306,101 @@ msgstr "Remove"
 msgid "Разом"
 msgstr "Summary"
 
-#: templates/orders/cart_detail.html:95
+#: templates/orders/cart_detail.html:95 templates/orders/checkout.html:71
+#: templates/orders/checkout_success.html:19
+#: templates/users/order_history.html:37
 msgid "Загальна сума"
 msgstr "Total amount"
 
-#: templates/orders/cart_detail.html:98
-msgid "Оформлення замовлення буде доступне на наступному етапі."
-msgstr "Checkout will be available in the next stage."
-
 #: templates/orders/cart_detail.html:100
+msgid "Оформити замовлення"
+msgstr "Proceed to checkout"
+
+#: templates/orders/cart_detail.html:103
 msgid "Продовжити покупки"
 msgstr "Continue shopping"
 
-#: templates/orders/cart_detail.html:107
+#: templates/orders/cart_detail.html:111
 msgid "Ваш кошик порожній"
 msgstr "Your cart is empty"
 
-#: templates/orders/cart_detail.html:108
+#: templates/orders/cart_detail.html:112
 msgid "Додайте ігри з каталогу, щоб вони з’явилися тут."
 msgstr "Add games from the catalog to see them here."
 
-#: templates/orders/cart_detail.html:110 templates/pages/home.html:155
+#: templates/orders/cart_detail.html:114 templates/pages/home.html:155
+#: templates/users/order_history.html:48
 msgid "Перейти до каталогу"
 msgstr "Go to catalog"
+
+#: templates/orders/checkout.html:4
+msgid "Оформлення замовлення — GameVault"
+msgstr "Checkout — GameVault"
+
+#: templates/orders/checkout.html:9
+msgid "Останній крок"
+msgstr "Final step"
+
+#: templates/orders/checkout.html:10
+msgid "Оформлення замовлення"
+msgstr "Checkout"
+
+#: templates/orders/checkout.html:11
+msgid "Вкажіть контактні дані та оберіть тестовий спосіб оплати."
+msgstr "Enter your contact details and choose a test payment method."
+
+#: templates/orders/checkout.html:20
+msgid "Контактні дані"
+msgstr "Contact details"
+
+#: templates/orders/checkout.html:21
+msgid "Дані отримувача"
+msgstr "Recipient details"
+
+#: templates/orders/checkout.html:43
+msgid "Тестова оплата"
+msgstr "Test payment"
+
+#: templates/orders/checkout.html:44
+msgid "Платіжні дані не запитуються та реальні кошти не списуються."
+msgstr "No payment details are requested and no real funds are charged."
+
+#: templates/orders/checkout.html:48
+msgid "Підтвердити замовлення"
+msgstr "Confirm order"
+
+#: templates/orders/checkout.html:54
+msgid "Ваш кошик"
+msgstr "Your cart"
+
+#: templates/orders/checkout.html:55
+msgid "Склад замовлення"
+msgstr "Order summary"
+
+#: templates/orders/checkout.html:63
+#, python-format
+msgid "Кількість: %(quantity)s"
+msgstr "Quantity: %(quantity)s"
+
+#: templates/orders/checkout.html:74
+msgid "Повернутися до кошика"
+msgstr "Back to cart"
+
+#: templates/orders/checkout_success.html:4
+msgid "Замовлення створено — GameVault"
+msgstr "Order created — GameVault"
+
+#: templates/orders/checkout_success.html:11
+msgid "Замовлення прийнято"
+msgstr "Order received"
+
+#: templates/orders/checkout_success.html:12
+msgid "Дякуємо за покупку!"
+msgstr "Thank you for your purchase!"
+
+#: templates/orders/checkout_success.html:23
+msgid "Повернутися до каталогу"
+msgstr "Back to catalog"
 
 #: templates/pages/home.html:4
 msgid "GameVault — магазин відеоігор"
@@ -272,9 +420,9 @@ msgid ""
 "чесні ціни — усе це GameVault!"
 msgstr ""
 "Build a library of your favorite PC and console games! New releases, "
-"classics, and fair prices — all at GameVault!"
-"Build a library of your favorite PC and console games! New releases, "
-"classics, and fair prices — all at GameVault!"
+"classics, and fair prices — all at GameVault!Build a library of your "
+"favorite PC and console games! New releases, classics, and fair prices — all "
+"at GameVault!"
 
 #: templates/pages/home.html:19
 msgid "Дивитися ігри"
@@ -326,8 +474,10 @@ msgstr "Reviews"
 
 #: templates/pages/home.html:74
 msgid "Рейтинги та думки спільноти спростять вибір наступної пригоди."
-msgstr "Community ratings and opinions make choosing your next adventure easier."
-"Community ratings and opinions make choosing your next adventure easier."
+msgstr ""
+"Community ratings and opinions make choosing your next adventure "
+"easier.Community ratings and opinions make choosing your next adventure "
+"easier."
 
 #: templates/pages/home.html:84
 msgid "Обирай за настроєм"
@@ -427,7 +577,7 @@ msgstr "Reviews: %(count)s"
 msgid "Поки немає оцінок"
 msgstr "No ratings yet"
 
-#: templates/products/product_detail.html:53
+#: templates/products/product_detail.html:53 templates/users/dashboard.html:26
 msgid "Не вказано"
 msgstr "Not specified"
 
@@ -594,3 +744,200 @@ msgstr "No games found"
 #: templates/products/product_list.html:213
 msgid "Спробуйте змінити параметри пошуку або скинути фільтри."
 msgstr "Try changing your search options or resetting the filters."
+
+#: templates/users/dashboard.html:4
+msgid "Особистий кабінет — GameVault"
+msgstr "Account — GameVault"
+
+#: templates/users/dashboard.html:9
+msgid "Ваш профіль"
+msgstr "Your profile"
+
+#: templates/users/dashboard.html:11
+msgid "Керуйте даними входу та переглядайте свої покупки."
+msgstr "Manage your login details and review your purchases."
+
+#: templates/users/dashboard.html:18
+msgid "Дані облікового запису"
+msgstr "Account details"
+
+#: templates/users/dashboard.html:21 users/forms.py:24 users/forms.py:36
+msgid "Ім’я користувача"
+msgstr "Username"
+
+#: templates/users/dashboard.html:31
+msgid "Навігація облікового запису"
+msgstr "Account navigation"
+
+#: templates/users/dashboard.html:32
+msgid "Швидкі дії"
+msgstr "Quick actions"
+
+#: templates/users/dashboard.html:34 templates/users/order_history.html:10
+msgid "Історія замовлень"
+msgstr "Order history"
+
+#: templates/users/dashboard.html:35
+msgid "Переглянути покупки, оформлені після входу."
+msgstr "View purchases placed while logged in."
+
+#: templates/users/dashboard.html:38 templates/users/password_change.html:11
+msgid "Змінити пароль"
+msgstr "Change password"
+
+#: templates/users/dashboard.html:39
+msgid "Оновити пароль для входу до облікового запису."
+msgstr "Update the password used to access your account."
+
+#: templates/users/login.html:4
+msgid "Вхід — GameVault"
+msgstr "Log in — GameVault"
+
+#: templates/users/login.html:10
+msgid "Повернення до гри"
+msgstr "Back to the game"
+
+#: templates/users/login.html:11
+msgid "Увійти до облікового запису"
+msgstr "Log in to your account"
+
+#: templates/users/login.html:12
+msgid "Введіть ім’я користувача та пароль."
+msgstr "Enter your username and password."
+
+#: templates/users/login.html:33
+msgid "Ще не маєте облікового запису?"
+msgstr "Do not have an account yet?"
+
+#: templates/users/login.html:34 templates/users/register.html:29
+msgid "Зареєструватися"
+msgstr "Register"
+
+#: templates/users/logout.html:4
+msgid "Вихід — GameVault"
+msgstr "Log out — GameVault"
+
+#: templates/users/logout.html:10
+msgid "Завершення сеансу"
+msgstr "End session"
+
+#: templates/users/logout.html:11
+msgid "Вийти з облікового запису?"
+msgstr "Log out of your account?"
+
+#: templates/users/logout.html:12
+msgid "Ви зможете знову увійти будь-коли."
+msgstr "You can log back in at any time."
+
+#: templates/users/logout.html:16 templates/users/password_change.html:30
+msgid "Скасувати"
+msgstr "Cancel"
+
+#: templates/users/order_history.html:4
+msgid "Історія замовлень — GameVault"
+msgstr "Order history — GameVault"
+
+#: templates/users/order_history.html:9
+msgid "Ваші покупки"
+msgstr "Your purchases"
+
+#: templates/users/order_history.html:11
+msgid "Тут відображаються замовлення, оформлені після входу."
+msgstr "Orders placed while logged in appear here."
+
+#: templates/users/order_history.html:23
+#, python-format
+msgid "Замовлення №%(number)s"
+msgstr "Order #%(number)s"
+
+#: templates/users/order_history.html:31
+#, python-format
+msgid "%(name)s × %(quantity)s"
+msgstr "%(name)s × %(quantity)s"
+
+#: templates/users/order_history.html:46
+msgid "Замовлень поки немає"
+msgstr "No orders yet"
+
+#: templates/users/order_history.html:47
+msgid "Після покупки замовлення з’явиться в цьому розділі."
+msgstr "After a purchase, the order will appear in this section."
+
+#: templates/users/order_history.html:51
+msgid "Повернутися до кабінету"
+msgstr "Back to account"
+
+#: templates/users/password_change.html:4
+msgid "Зміна пароля — GameVault"
+msgstr "Change password — GameVault"
+
+#: templates/users/password_change.html:10
+msgid "Безпека облікового запису"
+msgstr "Account security"
+
+#: templates/users/password_change.html:12
+msgid "Після зміни пароля ви залишитеся в системі."
+msgstr "You will remain logged in after changing your password."
+
+#: templates/users/password_change.html:29
+msgid "Зберегти новий пароль"
+msgstr "Save new password"
+
+#: templates/users/register.html:4
+msgid "Реєстрація — GameVault"
+msgstr "Registration — GameVault"
+
+#: templates/users/register.html:10
+msgid "Новий гравець"
+msgstr "New player"
+
+#: templates/users/register.html:11
+msgid "Створити обліковий запис"
+msgstr "Create an account"
+
+#: templates/users/register.html:12
+msgid "Зареєструйтеся, щоб переглядати історію своїх замовлень."
+msgstr "Register to view your order history."
+
+#: templates/users/register.html:33
+msgid "Вже маєте обліковий запис?"
+msgstr "Already have an account?"
+
+#: users/forms.py:29 users/forms.py:38
+msgid "Пароль"
+msgstr "Password"
+
+#: users/forms.py:30
+msgid "Підтвердження пароля"
+msgstr "Password confirmation"
+
+#: users/forms.py:49
+msgid "Поточний пароль"
+msgstr "Current password"
+
+#: users/forms.py:50
+msgid "Новий пароль"
+msgstr "New password"
+
+#: users/forms.py:51
+msgid "Підтвердження нового пароля"
+msgstr "New password confirmation"
+
+#: users/views.py:45
+msgid "Обліковий запис успішно створено."
+msgstr "Your account was created successfully."
+
+#: users/views.py:58
+msgid "Ви успішно увійшли."
+msgstr "You have logged in successfully."
+
+#: users/views.py:74
+msgid "Ви успішно вийшли."
+msgstr "You have logged out successfully."
+
+#: users/views.py:111
+msgid "Пароль успішно змінено."
+msgstr "Your password was changed successfully."
+
+#~ msgid "Оформлення замовлення буде доступне на наступному етапі."
+#~ msgstr "Checkout will be available in the next stage."

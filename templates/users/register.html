@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Реєстрація — GameVault" %}{% endblock %}
+
+{% block content %}
+<section class="account-section">
+    <div class="container account-shell">
+        <div class="account-card account-card--form">
+            <p class="eyebrow">{% trans "Новий гравець" %}</p>
+            <h1>{% trans "Створити обліковий запис" %}</h1>
+            <p class="account-intro">{% trans "Зареєструйтеся, щоб переглядати історію своїх замовлень." %}</p>
+
+            <form method="post" class="account-form" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="form-errors">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="account-field {% if field.errors %}account-field--error{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}<div class="field-help">{{ field.help_text|safe }}</div>{% endif %}
+                        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="button button--primary">{% trans "Зареєструватися" %}</button>
+            </form>
+
+            <p class="account-alt">
+                {% trans "Вже маєте обліковий запис?" %}
+                <a href="{% url 'account:login' %}">{% trans "Увійти" %}</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

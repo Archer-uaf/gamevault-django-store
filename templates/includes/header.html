@@ -34,16 +34,15 @@
                 {% endif %}
             </a>
 
-            {# TODO: замінити заглушку після додавання URL акаунта. #}
-            <a href="#" class="nav-icon-link">
+            <a href="{% if user.is_authenticated %}{% url 'account:dashboard' %}{% else %}{% url 'account:login' %}{% endif %}" class="nav-icon-link">
                 <img src="{% static 'images/icons/user.svg' %}" alt="" width="20" height="20">
                 {% trans 'Особистий кабінет' %}
             </a>
 
             {% if user.is_authenticated %}
-                <a href="#" class="button button--small button--outline">{% trans 'Вийти' %}</a>
+                <a href="{% url 'account:logout' %}" class="button button--small button--outline">{% trans 'Вийти' %}</a>
             {% else %}
-                <a href="#" class="button button--small button--primary">{% trans 'Увійти' %}</a>
+                <a href="{% url 'account:login' %}" class="button button--small button--primary">{% trans 'Увійти' %}</a>
             {% endif %}
 
             <form action="{% url 'set_language' %}" method="post" class="language-switcher">

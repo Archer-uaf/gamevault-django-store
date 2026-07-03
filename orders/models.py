@@ -5,26 +5,30 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Order(models.Model):
     """A snapshot of customer and shipping data for a purchase."""
 
     class Status(models.TextChoices):
-        PENDING = "pending", "Pending"
-        PAID = "paid", "Paid"
-        SHIPPED = "shipped", "Shipped"
-        DELIVERED = "delivered", "Delivered"
-        CANCELLED = "cancelled", "Cancelled"
+        PENDING = "pending", _("Очікує обробки")
+        PAID = "paid", _("Оплачено")
+        SHIPPED = "shipped", _("Відправлено")
+        DELIVERED = "delivered", _("Доставлено")
+        CANCELLED = "cancelled", _("Скасовано")
 
     class PaymentMethod(models.TextChoices):
-        CASH = "cash", "Cash"
-        CARD_MOCK = "card_mock", "Card (mock)"
+        CARD = "card", _("Картка (тестова оплата)")
+        CASH_ON_DELIVERY = "cash_on_delivery", _("Оплата при отриманні")
+        BALANCE_MOCK = "balance_mock", _("Тестовий баланс")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="orders",
+        null=True,
+        blank=True,
     )
     status = models.CharField(
         max_length=20,

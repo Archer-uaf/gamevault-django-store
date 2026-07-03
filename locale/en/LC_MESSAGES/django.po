@@ -1,0 +1,57 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-03 06:51+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: config/settings.py:107
+msgid "Українська"
+msgstr ""
+
+#: config/settings.py:108
+msgid "English"
+msgstr ""
+
+#: templates/base.html:8
+msgid "GameVault — магазин відеоігор для різних платформ."
+msgstr "GameVault — a video game store for different platforms."
+
+msgid "GameVault — головна"
+msgstr "GameVault — home"
+
+msgid "Відкрити меню"
+msgstr "Open menu"
+
+msgid "Основна навігація"
+msgstr "Main navigation"
+
+msgid "Головна"
+msgstr "Home"
+
+msgid "Ігри"
+msgstr "Games"
+
+msgid "Кошик"
+msgstr "Cart"
+
+msgid "Особистий кабінет"
+msgstr "Account"
+
+msgid "Вийти"
+msgstr "Log out"
+
+msgid "Увійти"
+msgstr "Log in"
+
+msgid "Перемкнути мову на українську"
+msgstr "Switch language to Ukrainian"
+
+msgid "Switch language to English"
+msgstr "Switch language to English"

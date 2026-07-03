@@ -33,3 +33,8 @@ htmlcov/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local package caches
+packages/
+local_packages_folder/
+*.whl

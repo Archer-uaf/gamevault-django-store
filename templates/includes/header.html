@@ -1,7 +1,8 @@
-{% load static %}
+{% load static i18n %}
+
 <header class="site-header">
     <div class="container header-container">
-        <a href="{% url 'home' %}" class="brand" aria-label="GameVault — головна">
+        <a href="{% url 'home' %}" class="brand" aria-label="{% trans 'GameVault — головна' %}">
             <img src="{% static 'images/gamevault-logo.svg' %}" alt="" width="42" height="42">
             <span>GameVault</span>
         </a>
@@ -9,7 +10,7 @@
         <button
             class="nav-toggle"
             type="button"
-            aria-label="Відкрити меню"
+            aria-label="{% trans 'Відкрити меню' %}"
             aria-expanded="false"
             aria-controls="main-navigation"
             data-nav-toggle
@@ -19,23 +20,52 @@
             <span></span>
         </button>
 
-        <nav class="main-nav" id="main-navigation" aria-label="Основна навігація" data-navigation>
-            <a href="{% url 'home' %}">Головна</a>
-            <a href="{% url 'products:product_list' %}">Ігри</a>
-            {# замінити заглушки після додавання URL кошика та акаунта. #}
+        <nav class="main-nav" id="main-navigation" aria-label="{% trans 'Основна навігація' %}" data-navigation>
+            <a href="{% url 'home' %}">{% trans 'Головна' %}</a>
+            <a href="{% url 'products:product_list' %}">{% trans 'Ігри' %}</a>
+
+            {# TODO: замінити заглушки після додавання URL кошика та акаунта. #}
             <a href="#" class="nav-icon-link">
                 <img src="{% static 'images/icons/shopping-bag.svg' %}" alt="" width="20" height="20">
-                Кошик
+                {% trans 'Кошик' %}
             </a>
+
             <a href="#" class="nav-icon-link">
                 <img src="{% static 'images/icons/user.svg' %}" alt="" width="20" height="20">
-                Особистий кабінет
+                {% trans 'Особистий кабінет' %}
             </a>
+
             {% if user.is_authenticated %}
-                <a href="#" class="button button--small button--outline">Вийти</a>
+                <a href="#" class="button button--small button--outline">{% trans 'Вийти' %}</a>
             {% else %}
-                <a href="#" class="button button--small button--primary">Увійти</a>
+                <a href="#" class="button button--small button--primary">{% trans 'Увійти' %}</a>
             {% endif %}
+
+            <form action="{% url 'set_language' %}" method="post" class="language-switcher">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                {% get_current_language as CURRENT_LANGUAGE %}
+
+                <button
+                    type="submit"
+                    name="language"
+                    value="uk"
+                    class="language-switcher__button {% if CURRENT_LANGUAGE == 'uk' %}is-active{% endif %}"
+                    aria-label="{% trans 'Перемкнути мову на українську' %}"
+                >
+                    UA
+                </button>
+
+                <button
+                    type="submit"
+                    name="language"
+                    value="en"
+                    class="language-switcher__button {% if CURRENT_LANGUAGE == 'en' %}is-active{% endif %}"
+                    aria-label="{% trans 'Switch language to English' %}"
+                >
+                    EN
+                </button>
+            </form>
         </nav>
     </div>
 </header>

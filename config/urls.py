@@ -1,4 +1,4 @@
-"""URL configuration for GameVault."""
+"""URL configuration for the GameVault project."""
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,8 +10,9 @@ from products.views import home
 
 urlpatterns = [
     path("", home, name="home"),
-    path("", include("products.urls")),
     path("admin/", admin.site.urls),
+    path("products/", include("products.urls")),
+    path("i18n/", include("django.conf.urls.i18n")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",

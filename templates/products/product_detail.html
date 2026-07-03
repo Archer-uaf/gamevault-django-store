@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}{{ product.name }} — GameVault{% endblock %}
 
 {% block content %}
 <section class="product-detail-section">
     <div class="container">
-        <nav class="breadcrumbs" aria-label="Навігаційний шлях">
-            <a href="{% url 'home' %}">Головна</a>
+        <nav class="breadcrumbs" aria-label="{% trans 'Навігаційний шлях' %}">
+            <a href="{% url 'home' %}">{% trans "Головна" %}</a>
             <span>›</span>
-            <a href="{% url 'products:product_list' %}">Ігри</a>
+            <a href="{% url 'products:product_list' %}">{% trans "Ігри" %}</a>
             <span>›</span>
             <span>{{ product.name }}</span>
         </nav>
@@ -16,7 +17,7 @@
         <div class="product-detail-grid">
             <div class="detail-cover">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="Обкладинка {{ product.name }}">
+                    <img src="{{ product.image.url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                 {% else %}
                     <div class="detail-placeholder" aria-hidden="true">
                         <span>{{ product.get_platform_display }}</span>
@@ -25,7 +26,7 @@
                     </div>
                 {% endif %}
                 {% if product.has_discount %}
-                    <span class="detail-discount">Знижка {{ product.discount_percent }}%</span>
+                    <span class="detail-discount">{% blocktrans with discount=product.discount_percent %}Знижка {{ discount }}%{% endblocktrans %}</span>
                 {% endif %}
             </div>
 
@@ -33,7 +34,7 @@
                 <div class="detail-tags">
                     <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
                     <span>{{ product.get_platform_display }}</span>
-                    {% if product.is_featured %}<span>Featured</span>{% endif %}
+                    {% if product.is_featured %}<span>{% trans "Рекомендовано" %}</span>{% endif %}
                 </div>
                 <h1>{{ product.name }}</h1>
 
@@ -41,24 +42,25 @@
                     <span class="rating-star">★</span>
                     {% if average_rating %}
                         <strong>{{ average_rating|floatformat:1 }}</strong>
-                        <a href="#reviews">{{ reviews_count }} відгуків</a>
+                        <a href="#reviews">{% blocktrans with count=reviews_count %}Відгуків: {{ count }}{% endblocktrans %}</a>
                     {% else %}
-                        <span>Поки немає оцінок</span>
+                        <span>{% trans "Поки немає оцінок" %}</span>
                     {% endif %}
                 </div>
 
                 <p class="detail-description">{{ product.description }}</p>
 
+                {% trans "Не вказано" as not_specified %}
                 <dl class="game-specs">
-                    <div><dt>Розробник</dt><dd>{{ product.developer|default:"Не вказано" }}</dd></div>
-                    <div><dt>Видавець</dt><dd>{{ product.publisher|default:"Не вказано" }}</dd></div>
-                    <div><dt>Дата виходу</dt><dd>{{ product.release_date|date:"d.m.Y"|default:"Не вказана" }}</dd></div>
-                    <div><dt>Платформа</dt><dd>{{ product.get_platform_display }}</dd></div>
+                    <div><dt>{% trans "Розробник" %}</dt><dd>{{ product.developer|default:not_specified }}</dd></div>
+                    <div><dt>{% trans "Видавець" %}</dt><dd>{{ product.publisher|default:not_specified }}</dd></div>
+                    <div><dt>{% trans "Дата виходу" %}</dt><dd>{{ product.release_date|date:"d.m.Y"|default:not_specified }}</dd></div>
+                    <div><dt>{% trans "Платформа" %}</dt><dd>{{ product.get_platform_display }}</dd></div>
                 </dl>
 
                 <div class="purchase-panel">
                     <div>
-                        <p class="purchase-label">Ціна</p>
+                        <p class="purchase-label">{% trans "Ціна" %}</p>
                         <div class="detail-price">
                             {% if product.has_discount %}
                                 <span>₴{{ product.price }}</span>
@@ -69,9 +71,9 @@
                         </div>
                         <p class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
                             {% if product.is_in_stock %}
-                                В наявності: {{ product.stock }}
+                                {% blocktrans with stock=product.stock %}В наявності: {{ stock }}{% endblocktrans %}
                             {% else %}
-                                Немає в наявності
+                                {% trans "Немає в наявності" %}
                             {% endif %}
                         </p>
                     </div>
@@ -81,7 +83,7 @@
                         class="button button--primary {% if not product.is_in_stock %}button--disabled{% endif %}"
                         {% if not product.is_in_stock %}aria-disabled="true"{% endif %}
                     >
-                        Додати до кошика
+                        {% trans "Додати до кошика" %}
                     </a>
                 </div>
             </div>
@@ -93,10 +95,10 @@
     <div class="container detail-content-width">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Думка гравців</p>
-                <h2>Відгуки</h2>
+                <p class="eyebrow">{% trans "Думка гравців" %}</p>
+                <h2>{% trans "Відгуки" %}</h2>
             </div>
-            <p class="section-note">Створення відгуків буде додано окремим етапом.</p>
+            <p class="section-note">{% trans "Створення відгуків буде додано окремим етапом." %}</p>
         </div>
 
         {% if reviews %}
@@ -119,8 +121,8 @@
             </div>
         {% else %}
             <div class="empty-state empty-state--compact">
-                <h3>Відгуків поки немає</h3>
-                <p>Ця гра ще чекає на перші оцінки спільноти.</p>
+                <h3>{% trans "Відгуків поки немає" %}</h3>
+                <p>{% trans "Ця гра ще чекає на перші оцінки спільноти." %}</p>
             </div>
         {% endif %}
     </div>
@@ -131,10 +133,10 @@
     <div class="container">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Вам також може сподобатися</p>
-                <h2>Схожі ігри</h2>
+                <p class="eyebrow">{% trans "Вам також може сподобатися" %}</p>
+                <h2>{% trans "Схожі ігри" %}</h2>
             </div>
-            <a href="{{ product.category.get_absolute_url }}" class="text-link">Усе в категорії →</a>
+            <a href="{{ product.category.get_absolute_url }}" class="text-link">{% trans "Усе в категорії" %} →</a>
         </div>
 
         <div class="related-grid">
@@ -142,7 +144,7 @@
                 <article class="related-card">
                     <a href="{{ related_product.get_absolute_url }}" class="related-card__visual">
                         {% if related_product.image %}
-                            <img src="{{ related_product.image.url }}" alt="Обкладинка {{ related_product.name }}">
+                            <img src="{{ related_product.image.url }}" alt="{% blocktrans with name=related_product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                         {% else %}
                             <div class="game-placeholder" aria-hidden="true">
                                 <span>{{ related_product.get_platform_display }}</span>

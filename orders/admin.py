@@ -3,6 +3,7 @@
 from django.contrib import admin
 from django.db.models import QuerySet
 from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
 
 from orders.models import Order, OrderItem
 
@@ -34,7 +35,7 @@ class OrderAdmin(admin.ModelAdmin):
         "mark_as_cancelled",
     )
 
-    @admin.action(description="Mark selected orders as paid")
+    @admin.action(description=_("Позначити вибрані замовлення як оплачені"))
     def mark_as_paid(
         self,
         request: HttpRequest,
@@ -42,7 +43,7 @@ class OrderAdmin(admin.ModelAdmin):
     ) -> None:
         queryset.update(status=Order.Status.PAID)
 
-    @admin.action(description="Mark selected orders as shipped")
+    @admin.action(description=_("Позначити вибрані замовлення як відправлені"))
     def mark_as_shipped(
         self,
         request: HttpRequest,
@@ -50,7 +51,7 @@ class OrderAdmin(admin.ModelAdmin):
     ) -> None:
         queryset.update(status=Order.Status.SHIPPED)
 
-    @admin.action(description="Mark selected orders as delivered")
+    @admin.action(description=_("Позначити вибрані замовлення як доставлені"))
     def mark_as_delivered(
         self,
         request: HttpRequest,
@@ -58,7 +59,7 @@ class OrderAdmin(admin.ModelAdmin):
     ) -> None:
         queryset.update(status=Order.Status.DELIVERED)
 
-    @admin.action(description="Mark selected orders as cancelled")
+    @admin.action(description=_("Позначити вибрані замовлення як скасовані"))
     def mark_as_cancelled(
         self,
         request: HttpRequest,

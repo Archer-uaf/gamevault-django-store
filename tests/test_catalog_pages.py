@@ -69,7 +69,7 @@ class CatalogPagesTests(TestCase):
             product=cls.active_product,
             user=cls.user,
             rating=5,
-            comment="Отличная игра для теста каталога.",
+            comment="Чудова гра для тесту каталогу.",
         )
 
     @classmethod
@@ -194,6 +194,17 @@ class CatalogPagesTests(TestCase):
         )
         self.assertContains(response, related_products[0].name)
         self.assertLessEqual(len(related_products), 4)
+
+    def test_product_detail_can_be_rendered_in_english(self) -> None:
+        response = self.client.get(
+            self.active_product.get_absolute_url(),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+
+        self.assertContains(response, "Developer")
+        self.assertContains(response, "Price")
+        self.assertContains(response, "Add to cart")
+        self.assertContains(response, "Reviews: 1")
 
 
 class SeedDemoGamesCommandTests(TestCase):

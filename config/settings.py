@@ -140,6 +140,8 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "GameVault API",
-    "DESCRIPTION": "REST API навчального інтернет-магазину відеоігор GameVault.",
+    "DESCRIPTION": _(
+        "REST API навчального інтернет-магазину відеоігор GameVault."
+    ),
     "VERSION": "1.0.0",
 }

@@ -1,20 +1,22 @@
+{% load i18n %}
+
 <footer class="site-footer">
     <div class="container footer-grid">
         <div>
             <p class="footer-brand">GameVault</p>
             <p class="footer-copy">
-                Игры, которые остаются с вами надолго. Один магазин — все любимые платформы.
+                {% trans "Ігри, які залишаються з вами надовго. Один магазин — усі улюблені платформи." %}
             </p>
         </div>
-        <nav class="footer-nav" aria-label="Навигация в подвале">
-            <a href="{% url 'home' %}">Главная</a>
-            <a href="{% url 'products:product_list' %}">Игры</a>
-            <a href="{% url 'home' %}#genres">Жанры</a>
-            <a href="#">Поддержка</a>
+        <nav class="footer-nav" aria-label="{% trans 'Навігація в нижньому колонтитулі' %}">
+            <a href="{% url 'home' %}">{% trans "Головна" %}</a>
+            <a href="{% url 'products:product_list' %}">{% trans "Ігри" %}</a>
+            <a href="{% url 'home' %}#genres">{% trans "Жанри" %}</a>
+            <a href="#">{% trans "Підтримка" %}</a>
         </nav>
     </div>
     <div class="container footer-bottom">
-        <p>© <span data-current-year>2026</span> GameVault. Учебный Django-проект.</p>
-        <p>Визуальная основа адаптирована под магазин видеоигр.</p>
+        <p>© <span data-current-year>2026</span> GameVault. {% trans "Навчальний Django-проєкт." %}</p>
+        <p>{% trans "Візуальну основу адаптовано для магазину відеоігор." %}</p>
     </div>
 </footer>

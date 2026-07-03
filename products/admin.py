@@ -1,6 +1,7 @@
 """Django admin configuration for the product catalog."""
 
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from products.models import Category, Product
 
@@ -14,7 +15,7 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     fieldsets = (
         (None, {"fields": ("name", "slug", "parent")}),
-        ("Timestamps", {"fields": ("created_at", "updated_at")}),
+        (_("Часові позначки"), {"fields": ("created_at", "updated_at")}),
     )
 
 
@@ -44,7 +45,7 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {"fields": ("name", "slug", "description", "category", "image")}),
         (
-            "Sales",
+            _("Продажі"),
             {
                 "fields": (
                     "price",
@@ -56,7 +57,7 @@ class ProductAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "Game details",
+            _("Відомості про гру"),
             {
                 "fields": (
                     "platform",
@@ -66,5 +67,5 @@ class ProductAdmin(admin.ModelAdmin):
                 )
             },
         ),
-        ("Timestamps", {"fields": ("created_at", "updated_at")}),
+        (_("Часові позначки"), {"fields": ("created_at", "updated_at")}),
     )

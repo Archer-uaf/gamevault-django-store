@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Каталог ігор — GameVault{% endblock %}
+{% block title %}{% trans "Каталог ігор — GameVault" %}{% endblock %}
 
 {% block content %}
 <section class="catalog-hero compact-hero">
     <div class="container">
-        <p class="eyebrow">Бібліотека GameVault</p>
-        <h1>Каталог ігор</h1>
-        <p>Знайдіть наступну гру за жанром, платформою, ціною або назвою.</p>
+        <p class="eyebrow">{% trans "Бібліотека GameVault" %}</p>
+        <h1>{% trans "Каталог ігор" %}</h1>
+        <p>{% trans "Знайдіть наступну гру за жанром, платформою, ціною або назвою." %}</p>
     </div>
 </section>
 
@@ -15,25 +16,25 @@
     <div class="container catalog-layout">
         <aside class="filter-panel">
             <div class="filter-panel__heading">
-                <h2>Фільтри</h2>
-                <a href="{% url 'products:product_list' %}">Скинути фільтри</a>
+                <h2>{% trans "Фільтри" %}</h2>
+                <a href="{% url 'products:product_list' %}">{% trans "Скинути фільтри" %}</a>
             </div>
 
             <form method="get" class="filter-form">
                 <label class="field field--wide">
-                    <span>Пошук</span>
+                    <span>{% trans "Пошук" %}</span>
                     <input
                         type="search"
                         name="q"
                         value="{{ current_filters.q }}"
-                        placeholder="Назва, розробник..."
+                        placeholder="{% trans 'Назва, розробник…' %}"
                     >
                 </label>
 
                 <label class="field">
-                    <span>Категорія</span>
+                    <span>{% trans "Категорія" %}</span>
                     <select name="category">
-                        <option value="">Усі категорії</option>
+                        <option value="">{% trans "Усі категорії" %}</option>
                         {% for category in categories %}
                             <option
                                 value="{{ category.slug }}"
@@ -46,9 +47,9 @@
                 </label>
 
                 <label class="field">
-                    <span>Платформа</span>
+                    <span>{% trans "Платформа" %}</span>
                     <select name="platform">
-                        <option value="">Усі платформи</option>
+                        <option value="">{% trans "Усі платформи" %}</option>
                         {% for value, label in platform_choices %}
                             <option
                                 value="{{ value }}"
@@ -62,7 +63,7 @@
 
                 <div class="price-fields">
                     <label class="field">
-                        <span>Ціна від</span>
+                        <span>{% trans "Ціна від" %}</span>
                         <input
                             type="number"
                             name="min_price"
@@ -73,7 +74,7 @@
                         >
                     </label>
                     <label class="field">
-                        <span>Ціна до</span>
+                        <span>{% trans "Ціна до" %}</span>
                         <input
                             type="number"
                             name="max_price"
@@ -86,7 +87,7 @@
                 </div>
 
                 <label class="field">
-                    <span>Сортування</span>
+                    <span>{% trans "Сортування" %}</span>
                     <select name="sort">
                         {% for value, label in sort_options %}
                             <option
@@ -99,7 +100,7 @@
                     </select>
                 </label>
 
-                <button type="submit" class="button button--primary">Застосувати</button>
+                <button type="submit" class="button button--primary">{% trans "Застосувати" %}</button>
             </form>
         </aside>
 
@@ -107,13 +108,13 @@
             <div class="results-heading">
                 <div>
                     <p class="results-count">
-                        Знайдено ігор: <strong>{{ page_obj.paginator.count }}</strong>
+                        {% trans "Знайдено ігор:" %} <strong>{{ page_obj.paginator.count }}</strong>
                     </p>
                     {% if current_filters.q %}
-                        <p class="results-query">За запитом «{{ current_filters.q }}»</p>
+                        <p class="results-query">{% blocktrans with query=current_filters.q %}За запитом «{{ query }}»{% endblocktrans %}</p>
                     {% endif %}
                 </div>
-                <span>Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
+                <span>{% blocktrans with current=page_obj.number total=page_obj.paginator.num_pages %}Сторінка {{ current }} з {{ total }}{% endblocktrans %}</span>
             </div>
 
             {% if products %}
@@ -122,7 +123,7 @@
                         <article class="catalog-card">
                             <a href="{{ product.get_absolute_url }}" class="catalog-card__cover">
                                 {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="Обкладинка {{ product.name }}">
+                                    <img src="{{ product.image.url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                                 {% else %}
                                     <div class="game-placeholder" aria-hidden="true">
                                         <span>{{ product.get_platform_display }}</span>
@@ -146,14 +147,14 @@
                                         <strong>{{ product.average_rating|floatformat:1 }}</strong>
                                         <span>({{ product.reviews_count }})</span>
                                     {% else %}
-                                        <span>Немає оцінок</span>
+                                        <span>{% trans "Немає оцінок" %}</span>
                                     {% endif %}
                                 </div>
                                 <div class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
                                     {% if product.is_in_stock %}
-                                        В наявності: {{ product.stock }}
+                                        {% blocktrans with stock=product.stock %}В наявності: {{ stock }}{% endblocktrans %}
                                     {% else %}
-                                        Немає в наявності
+                                        {% trans "Немає в наявності" %}
                                     {% endif %}
                                 </div>
                                 <div class="card-footer-row">
@@ -166,7 +167,7 @@
                                         {% endif %}
                                     </div>
                                     <a href="{{ product.get_absolute_url }}" class="button button--small button--outline">
-                                        Детальніше
+                                        {% trans "Детальніше" %}
                                     </a>
                                 </div>
                             </div>
@@ -175,13 +176,13 @@
                 </div>
 
                 {% if is_paginated %}
-                    <nav class="pagination" aria-label="Пагінація каталогу">
+                    <nav class="pagination" aria-label="{% trans 'Пагінація каталогу' %}">
                         {% if page_obj.has_previous %}
                             <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
-                                ← Назад
+                                ← {% trans "Назад" %}
                             </a>
                         {% else %}
-                            <span class="pagination__disabled">← Назад</span>
+                            <span class="pagination__disabled">← {% trans "Назад" %}</span>
                         {% endif %}
 
                         <div class="pagination__pages">
@@ -198,20 +199,20 @@
 
                         {% if page_obj.has_next %}
                             <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
-                                Вперед →
+                                {% trans "Уперед" %} →
                             </a>
                         {% else %}
-                            <span class="pagination__disabled">Вперед →</span>
+                            <span class="pagination__disabled">{% trans "Уперед" %} →</span>
                         {% endif %}
                     </nav>
                 {% endif %}
             {% else %}
                 <div class="empty-state">
                     <span aria-hidden="true">⌕</span>
-                    <h2>Ігри не знайдено</h2>
-                    <p>Спробуйте змінити параметри пошуку або скинути фільтри.</p>
+                    <h2>{% trans "Ігри не знайдено" %}</h2>
+                    <p>{% trans "Спробуйте змінити параметри пошуку або скинути фільтри." %}</p>
                     <a href="{% url 'products:product_list' %}" class="button button--primary">
-                        Скинути фільтри
+                        {% trans "Скинути фільтри" %}
                     </a>
                 </div>
             {% endif %}

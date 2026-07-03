@@ -6,6 +6,7 @@ from typing import Any
 from django.db.models import Avg, Count, Q, QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from products.models import Category, Product
@@ -38,10 +39,10 @@ class ProductListView(ListView):
     paginate_by = 9
 
     SORT_OPTIONS = (
-        ("newest", "Сначала новые"),
-        ("price_asc", "Цена: по возрастанию"),
-        ("price_desc", "Цена: по убыванию"),
-        ("popular", "Популярные"),
+        ("newest", _("Спочатку нові")),
+        ("price_asc", _("Ціна: за зростанням")),
+        ("price_desc", _("Ціна: за спаданням")),
+        ("popular", _("Популярні")),
     )
     SORT_FIELDS = {
         "newest": ("-created_at",),

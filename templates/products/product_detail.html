@@ -5,10 +5,10 @@
 {% block content %}
 <section class="product-detail-section">
     <div class="container">
-        <nav class="breadcrumbs" aria-label="Хлебные крошки">
-            <a href="{% url 'home' %}">Главная</a>
+        <nav class="breadcrumbs" aria-label="Навігаційний шлях">
+            <a href="{% url 'home' %}">Головна</a>
             <span>›</span>
-            <a href="{% url 'products:product_list' %}">Игры</a>
+            <a href="{% url 'products:product_list' %}">Ігри</a>
             <span>›</span>
             <span>{{ product.name }}</span>
         </nav>
@@ -16,7 +16,7 @@
         <div class="product-detail-grid">
             <div class="detail-cover">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="Обложка {{ product.name }}">
+                    <img src="{{ product.image.url }}" alt="Обкладинка {{ product.name }}">
                 {% else %}
                     <div class="detail-placeholder" aria-hidden="true">
                         <span>{{ product.get_platform_display }}</span>
@@ -25,7 +25,7 @@
                     </div>
                 {% endif %}
                 {% if product.has_discount %}
-                    <span class="detail-discount">Скидка {{ product.discount_percent }}%</span>
+                    <span class="detail-discount">Знижка {{ product.discount_percent }}%</span>
                 {% endif %}
             </div>
 
@@ -41,24 +41,24 @@
                     <span class="rating-star">★</span>
                     {% if average_rating %}
                         <strong>{{ average_rating|floatformat:1 }}</strong>
-                        <a href="#reviews">{{ reviews_count }} отзывов</a>
+                        <a href="#reviews">{{ reviews_count }} відгуків</a>
                     {% else %}
-                        <span>Пока нет оценок</span>
+                        <span>Поки немає оцінок</span>
                     {% endif %}
                 </div>
 
                 <p class="detail-description">{{ product.description }}</p>
 
                 <dl class="game-specs">
-                    <div><dt>Разработчик</dt><dd>{{ product.developer|default:"Не указан" }}</dd></div>
-                    <div><dt>Издатель</dt><dd>{{ product.publisher|default:"Не указан" }}</dd></div>
-                    <div><dt>Дата выхода</dt><dd>{{ product.release_date|date:"d.m.Y"|default:"Не указана" }}</dd></div>
+                    <div><dt>Розробник</dt><dd>{{ product.developer|default:"Не вказано" }}</dd></div>
+                    <div><dt>Видавець</dt><dd>{{ product.publisher|default:"Не вказано" }}</dd></div>
+                    <div><dt>Дата виходу</dt><dd>{{ product.release_date|date:"d.m.Y"|default:"Не вказана" }}</dd></div>
                     <div><dt>Платформа</dt><dd>{{ product.get_platform_display }}</dd></div>
                 </dl>
 
                 <div class="purchase-panel">
                     <div>
-                        <p class="purchase-label">Цена</p>
+                        <p class="purchase-label">Ціна</p>
                         <div class="detail-price">
                             {% if product.has_discount %}
                                 <span>₴{{ product.price }}</span>
@@ -69,19 +69,19 @@
                         </div>
                         <p class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
                             {% if product.is_in_stock %}
-                                В наличии: {{ product.stock }}
+                                В наявності: {{ product.stock }}
                             {% else %}
-                                Нет в наличии
+                                Немає в наявності
                             {% endif %}
                         </p>
                     </div>
-                    {# TODO: подключить настоящее добавление в корзину на следующем этапе. #}
+                    {# TODO: підключити справжнє додавання до кошика на наступному етапі. #}
                     <a
                         href="#"
                         class="button button--primary {% if not product.is_in_stock %}button--disabled{% endif %}"
                         {% if not product.is_in_stock %}aria-disabled="true"{% endif %}
                     >
-                        Добавить в корзину
+                        Додати до кошика
                     </a>
                 </div>
             </div>
@@ -93,10 +93,10 @@
     <div class="container detail-content-width">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Мнение игроков</p>
-                <h2>Отзывы</h2>
+                <p class="eyebrow">Думка гравців</p>
+                <h2>Відгуки</h2>
             </div>
-            <p class="section-note">Создание отзывов будет добавлено отдельным этапом.</p>
+            <p class="section-note">Створення відгуків буде додано окремим етапом.</p>
         </div>
 
         {% if reviews %}
@@ -119,8 +119,8 @@
             </div>
         {% else %}
             <div class="empty-state empty-state--compact">
-                <h3>Отзывов пока нет</h3>
-                <p>Эта игра ещё ждёт первых оценок сообщества.</p>
+                <h3>Відгуків поки немає</h3>
+                <p>Ця гра ще чекає на перші оцінки спільноти.</p>
             </div>
         {% endif %}
     </div>
@@ -131,10 +131,10 @@
     <div class="container">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Вам также может понравиться</p>
-                <h2>Похожие игры</h2>
+                <p class="eyebrow">Вам також може сподобатися</p>
+                <h2>Схожі ігри</h2>
             </div>
-            <a href="{{ product.category.get_absolute_url }}" class="text-link">Все в категории →</a>
+            <a href="{{ product.category.get_absolute_url }}" class="text-link">Усе в категорії →</a>
         </div>
 
         <div class="related-grid">
@@ -142,7 +142,7 @@
                 <article class="related-card">
                     <a href="{{ related_product.get_absolute_url }}" class="related-card__visual">
                         {% if related_product.image %}
-                            <img src="{{ related_product.image.url }}" alt="Обложка {{ related_product.name }}">
+                            <img src="{{ related_product.image.url }}" alt="Обкладинка {{ related_product.name }}">
                         {% else %}
                             <div class="game-placeholder" aria-hidden="true">
                                 <span>{{ related_product.get_platform_display }}</span>

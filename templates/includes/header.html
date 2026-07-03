@@ -1,7 +1,7 @@
 {% load static %}
 <header class="site-header">
     <div class="container header-container">
-        <a href="{% url 'home' %}" class="brand" aria-label="GameVault — главная">
+        <a href="{% url 'home' %}" class="brand" aria-label="GameVault — головна">
             <img src="{% static 'images/gamevault-logo.svg' %}" alt="" width="42" height="42">
             <span>GameVault</span>
         </a>
@@ -9,7 +9,7 @@
         <button
             class="nav-toggle"
             type="button"
-            aria-label="Открыть меню"
+            aria-label="Відкрити меню"
             aria-expanded="false"
             aria-controls="main-navigation"
             data-nav-toggle
@@ -19,22 +19,22 @@
             <span></span>
         </button>
 
-        <nav class="main-nav" id="main-navigation" aria-label="Основная навигация" data-navigation>
-            <a href="{% url 'home' %}">Главная</a>
-            <a href="{% url 'products:product_list' %}">Игры</a>
-            {# TODO: заменить заглушки после добавления URL корзины и аккаунта. #}
+        <nav class="main-nav" id="main-navigation" aria-label="Основна навігація" data-navigation>
+            <a href="{% url 'home' %}">Головна</a>
+            <a href="{% url 'products:product_list' %}">Ігри</a>
+            {# замінити заглушки після додавання URL кошика та акаунта. #}
             <a href="#" class="nav-icon-link">
                 <img src="{% static 'images/icons/shopping-bag.svg' %}" alt="" width="20" height="20">
-                Корзина
+                Кошик
             </a>
             <a href="#" class="nav-icon-link">
                 <img src="{% static 'images/icons/user.svg' %}" alt="" width="20" height="20">
-                Личный кабинет
+                Особистий кабінет
             </a>
             {% if user.is_authenticated %}
-                <a href="#" class="button button--small button--outline">Выйти</a>
+                <a href="#" class="button button--small button--outline">Вийти</a>
             {% else %}
-                <a href="#" class="button button--small button--primary">Войти</a>
+                <a href="#" class="button button--small button--primary">Увійти</a>
             {% endif %}
         </nav>
     </div>

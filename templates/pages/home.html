@@ -1,34 +1,34 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}GameVault — магазин видеоигр{% endblock %}
+{% block title %}GameVault — магазин відеоігор{% endblock %}
 
 {% block content %}
 <section class="hero">
     <div class="container hero-grid">
         <div class="hero-content">
-            <p class="eyebrow">Твоя следующая история начинается здесь</p>
-            <h1>Открой свой новый <span>игровой мир</span></h1>
+            <p class="eyebrow">Твоя наступна історія починається тут</p>
+            <h1>Відкрий свій новий<span>ігровий світ</span></h1>
             <p class="hero-lead">
-                Собирай библиотеку любимых игр для PC и консолей. Новинки, классика
-                и честные цены — в одном цифровом хранилище.
+                Збирай бібліотеку улюблених ігор для PC та консолей! Новинки, класика
+                та чесні ціни – все це GameVault!
             </p>
             <div class="hero-actions">
-                <a href="{% url 'products:product_list' %}" class="button button--primary">Смотреть игры</a>
-                <a href="#genres" class="button button--secondary">Выбрать жанр</a>
+                <a href="{% url 'products:product_list' %}" class="button button--primary">Дивитися ігри</a>
+                <a href="#genres" class="button button--secondary">Обрати жанр</a>
             </div>
             <dl class="hero-stats">
                 <div>
                     <dt>500+</dt>
-                    <dd>игр в будущем каталоге</dd>
+                    <dd>ігор у майбутньому каталозі</dd>
                 </div>
                 <div>
                     <dt>4</dt>
-                    <dd>игровые платформы</dd>
+                    <dd>ігрові платформи</dd>
                 </div>
                 <div>
                     <dt>24/7</dt>
-                    <dd>доступ к магазину</dd>
+                    <dd>доступ до магазину</dd>
                 </div>
             </dl>
         </div>
@@ -52,24 +52,24 @@
 <section class="advantages section">
     <div class="container">
         <div class="section-heading section-heading--center">
-            <p class="eyebrow">Почему GameVault</p>
-            <h2>Всё необходимое для хорошего выбора</h2>
+            <p class="eyebrow">Чому GameVault</p>
+            <h2>Усе необхідне для гарного вибору!</h2>
         </div>
         <div class="advantage-grid">
             <article class="advantage-card">
                 <span class="feature-icon">◆</span>
-                <h3>Игры для разных платформ</h3>
-                <p>PC, PlayStation, Xbox и Nintendo Switch в одном понятном каталоге.</p>
+                <h3>Ігри для різних платформ</h3>
+                <p>PC, PlayStation, Xbox и Nintendo Switch в одному каталозі.</p>
             </article>
             <article class="advantage-card">
                 <span class="feature-icon">%</span>
-                <h3>Выгодные предложения</h3>
-                <p>Скидки и специальные подборки помогут найти игру по подходящей цене.</p>
+                <h3>Вигідні пропозиції</h3>
+                <p>У нас шалені знижки та гарячі бандли!</p>
             </article>
             <article class="advantage-card">
                 <span class="feature-icon">★</span>
-                <h3>Отзывы игроков</h3>
-                <p>Рейтинги и мнения сообщества упростят выбор следующего приключения.</p>
+                <h3>Відгуки</h3>
+                <p>Рейтинги та думки спільноти спростять вибір наступної пригоди.</p>
             </article>
         </div>
     </div>
@@ -79,17 +79,17 @@
     <div class="container">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Выбирай по настроению</p>
-                <h2>Популярные жанры</h2>
+                <p class="eyebrow">Обирай за настроєм</p>
+                <h2>Популярні жанри</h2>
             </div>
-            <a href="{% url 'products:product_list' %}" class="text-link">Все жанры <span aria-hidden="true">→</span></a>
+            <a href="{% url 'products:product_list' %}" class="text-link">Усі жанри <span aria-hidden="true">→</span></a>
         </div>
         <div class="genre-grid">
-            <a href="#" class="genre-card genre-card--action"><span>01</span><strong>Экшен</strong></a>
+            <a href="#" class="genre-card genre-card--action"><span>01</span><strong>Екшн</strong></a>
             <a href="#" class="genre-card genre-card--rpg"><span>02</span><strong>RPG</strong></a>
-            <a href="#" class="genre-card genre-card--strategy"><span>03</span><strong>Стратегии</strong></a>
+            <a href="#" class="genre-card genre-card--strategy"><span>03</span><strong>Стратегії</strong></a>
             <a href="#" class="genre-card genre-card--racing"><span>04</span><strong>Гонки</strong></a>
-            <a href="#" class="genre-card genre-card--indie"><span>05</span><strong>Инди</strong></a>
+            <a href="#" class="genre-card genre-card--indie"><span>05</span><strong>Інді</strong></a>
             <a href="#" class="genre-card genre-card--sport"><span>06</span><strong>Спорт</strong></a>
         </div>
     </div>
@@ -99,26 +99,26 @@
     <div class="container">
         <div class="section-heading split-heading">
             <div>
-                <p class="eyebrow">Выбор редакции</p>
+                <p class="eyebrow">Вибір редакції</p>
                 <h2>Featured games</h2>
             </div>
-            <p class="section-note">Статические карточки для демонстрации будущего каталога.</p>
+            <p class="section-note">Статичні картки для демонстрації майбутнього каталогу.</p>
         </div>
         <div class="game-grid">
             <article class="game-card">
                 <div class="game-cover">
-                    <img src="{% static 'images/games/neon-drift.svg' %}" alt="Обложка Neon Drift">
+                    <img src="{% static 'images/games/neon-drift.svg' %}" alt="Обкладинка Neon Drift">
                     <span class="game-badge">Новинка</span>
                 </div>
                 <div class="game-info">
                     <p class="game-platform">PC · PlayStation</p>
                     <h3>Neon Drift</h3>
-                    <div class="game-meta"><span>Экшен</span><strong>₴1 299</strong></div>
+                    <div class="game-meta"><span>Екшн</span><strong>₴1 299</strong></div>
                 </div>
             </article>
             <article class="game-card">
                 <div class="game-cover">
-                    <img src="{% static 'images/games/mythic-realms.svg' %}" alt="Обложка Mythic Realms">
+                    <img src="{% static 'images/games/mythic-realms.svg' %}" alt="Обкладинка Mythic Realms">
                     <span class="game-badge game-badge--violet">-20%</span>
                 </div>
                 <div class="game-info">
@@ -129,13 +129,13 @@
             </article>
             <article class="game-card">
                 <div class="game-cover">
-                    <img src="{% static 'images/games/stellar-frontier.svg' %}" alt="Обложка Stellar Frontier">
+                    <img src="{% static 'images/games/stellar-frontier.svg' %}" alt="Обкладинка Stellar Frontier">
                     <span class="game-badge game-badge--blue">Featured</span>
                 </div>
                 <div class="game-info">
                     <p class="game-platform">Nintendo Switch</p>
                     <h3>Stellar Frontier</h3>
-                    <div class="game-meta"><span>Приключение</span><strong>₴1 149</strong></div>
+                    <div class="game-meta"><span>Пригодницькі</span><strong>₴1 149</strong></div>
                 </div>
             </article>
         </div>
@@ -146,11 +146,11 @@
     <div class="container">
         <div class="cta-panel">
             <div>
-                <p class="eyebrow">Готов к следующему уровню?</p>
-                <h2>Найди игру, которую не захочется выключать</h2>
-                <p>Полноценный каталог появится на следующем этапе разработки.</p>
+                <p class="eyebrow">Готовий до наступного рівня?</p>
+                <h2>Знайди гру, яку не захочеться вимикати</h2>
+                <p>Повноцінний каталог з'явиться наступному етапі розробки.</p>
             </div>
-            <a href="{% url 'products:product_list' %}" class="button button--light">Перейти в каталог</a>
+            <a href="{% url 'products:product_list' %}" class="button button--light">Перейти до каталогу</a>
         </div>
     </div>
 </section>

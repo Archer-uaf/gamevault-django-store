@@ -98,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "ru-ru"
+LANGUAGE_CODE = "uk"
 TIME_ZONE = "Europe/Kyiv"
 USE_I18N = True
 USE_TZ = True
@@ -130,6 +130,6 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "GameVault API",
-    "DESCRIPTION": "REST API учебного интернет-магазина видеоигр GameVault.",
+    "DESCRIPTION": "REST API навчального інтернет-магазину відеоігор GameVault.",
     "VERSION": "1.0.0",
 }

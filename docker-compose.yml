@@ -20,6 +20,8 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-unsafe-development-key-change-me-32-characters}
       DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      DJANGO_DEFAULT_FROM_EMAIL: ${DJANGO_DEFAULT_FROM_EMAIL:-GameVault <noreply@gamevault.local>}
+      DJANGO_EMAIL_BACKEND: ${DJANGO_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
       POSTGRES_DB: ${POSTGRES_DB:-gamevault}
       POSTGRES_USER: ${POSTGRES_USER:-gamevault}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gamevault}

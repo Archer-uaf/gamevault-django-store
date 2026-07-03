@@ -96,6 +96,9 @@ class CatalogPagesTests(TestCase):
             is_active=is_active,
         )
 
+    def test_product_list_uses_public_catalog_url(self) -> None:
+        self.assertEqual(reverse("products:product_list"), "/products/")
+
     def test_product_list_returns_200(self) -> None:
         response = self.client.get(reverse("products:product_list"))
 

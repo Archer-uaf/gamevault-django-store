@@ -1,37 +1,25 @@
-# Чек-лист функций GameVault
+# GameVault final feature checklist
 
-Статусы: `[x]` — готово, `[ ]` — ещё не реализовано.
+## Implemented
 
-## Инфраструктура
+- [x] Django project with PostgreSQL and Docker Compose.
+- [x] Product and category catalog with search, filtering, sorting, and pagination.
+- [x] Product detail pages with stock, discounts, and review display.
+- [x] Ukrainian and English i18n with Ukrainian as the default language.
+- [x] Session-based web cart and session-backed API cart.
+- [x] Checkout with stock validation, atomic order creation, and mock payment methods.
+- [x] Development-safe order confirmation emails.
+- [x] Registration, authentication, dashboard, order history, and password changes.
+- [x] Verified-purchase reviews in the web interface and REST API.
+- [x] REST API for catalog data, cart operations, orders, and reviews.
+- [x] JWT registration, token, refresh, and current-user endpoints.
+- [x] Swagger UI and validated OpenAPI schema.
+- [x] Django admin management, bulk actions, and summary analytics.
+- [x] Automated tests plus flake8, mypy, migration, and schema checks.
 
-- [x] Django project `config`.
-- [x] Приложения `products`, `orders`, `users`, `reviews`.
-- [x] PostgreSQL через переменные окружения.
-- [x] Dockerfile и Docker Compose.
-- [x] Базовая конфигурация DRF, JWT, django-filter и OpenAPI.
-- [x] pytest и flake8.
-- [ ] Полная настройка mypy и django-stubs.
+## Intentionally mocked or deferred
 
-## Функциональность
-
-- [x] Базовые модели категорий, товаров, профилей, заказов и отзывов.
-- [x] Django admin для базовых доменных моделей.
-- [x] Базовая интеграция HTML/CSS/JS-шаблона и статическая главная страница.
-- [x] Каталог игр.
-- [x] Поиск по каталогу.
-- [x] Фильтры по категории, платформе и цене.
-- [x] Сортировка каталога.
-- [x] Пагинация каталога с сохранением фильтров.
-- [x] Детальная страница товара.
-- [x] Отображение отзывов на странице товара.
-- [x] Корзина на Django sessions.
-- [ ] Checkout и создание заказа.
-- [ ] Регистрация и личный кабинет.
-- [ ] Создание отзывов и проверка покупки.
-- [ ] REST API для предметной области.
-- [ ] JWT endpoints.
-- [ ] Расширенная документация API.
-- [ ] Полный набор тестов бизнес-логики.
-
-Пока намеренно отсутствуют viewsets, функциональные страницы аккаунта, checkout и
-проверка возможности оставить отзыв только после покупки.
+- [x] Payments use mock methods; no real payment provider or card processing is included.
+- [x] Email uses Django's console backend by default; production SMTP is not configured.
+- [x] GraphQL is outside the project scope.
+- [x] External hosting, production deployment, and infrastructure hardening are deferred.

@@ -1,80 +1,153 @@
 # GameVault
 
-GameVault — учебный интернет-магазин видеоигр на Django и Django REST Framework.
+GameVault is an educational video game store built with Django and Django REST Framework. It combines a server-rendered storefront, a session-backed shopping cart and checkout, user accounts, verified-purchase reviews, a JWT-protected REST API, and an extended Django admin.
 
-В проекте настроены четыре Django-приложения, PostgreSQL, Docker Compose,
-DRF/JWT/OpenAPI и инструменты проверки. Реализованы базовые доменные модели каталога,
-заказов, профилей пользователей и отзывов, а также их Django admin-конфигурация.
-Подключены главная страница, каталог с поиском/фильтрами/сортировкой/пагинацией и
-детальная страница игры на Django templates. Реализована корзина на Django sessions
-с проверкой остатков и управлением количеством. Checkout, auth views, создание
-отзывов и API viewsets ещё не реализованы.
+## Technology stack
 
-## Визуальная тема
+- Python 3.12
+- Django 5
+- Django REST Framework
+- PostgreSQL
+- Docker and Docker Compose
+- pytest, flake8, mypy, and django-stubs
+- drf-spectacular for OpenAPI and Swagger UI
 
-HTML/CSS-шаблон [Hop-and-Barley](https://github.com/MagicCodeGit/Hop-and-Barley),
-указанный в техническом задании, использован как визуальная основа. Структура,
-цветовая тема и контент адаптированы под магазин видеоигр GameVault; клиентская
-имитация авторизации и бизнес-логика исходного шаблона не переносились.
+## Features
 
-## Доменные модели
+- Product catalog with search, filters, sorting, pagination, and product details
+- Ukrainian and English storefront, with Ukrainian as the default language
+- Session-based cart with stock validation and discounted totals
+- Guest checkout with mock payment methods and order confirmation
+- Development-safe order confirmation emails
+- Registration, login, logout, dashboard, order history, and password changes
+- Reviews restricted to verified purchases
+- REST API for authentication, catalog data, cart operations, orders, and reviews
+- JWT authentication and interactive Swagger/OpenAPI documentation
+- Admin management, bulk actions, and dashboard analytics
 
-- `Category` и `Product` — категории и видеоигры каталога.
-- `UserProfile` — контактные данные пользователя.
-- `Order` и `OrderItem` — заказ и снимки его товарных позиций.
-- `Review` — оценка и комментарий пользователя к товару.
+## Quick start with Docker Compose
 
-## Требования
+Requirements: Docker with Docker Compose support.
 
-- Docker с поддержкой Docker Compose.
+1. Copy the example environment file:
 
-## Запуск
+   ```powershell
+   Copy-Item .env.example .env
+   ```
 
-Сборка и запуск приложения и PostgreSQL:
+   On macOS or Linux, use `cp .env.example .env`.
+
+2. Review `.env` and replace the development secrets.
+
+3. Build and start the application and PostgreSQL:
+
+   ```bash
+   docker compose up --build
+   ```
+
+4. In another terminal, prepare the database and optional demo content:
+
+   ```bash
+   docker compose exec web python manage.py migrate
+   docker compose exec web python manage.py createsuperuser
+   docker compose exec web python manage.py seed_demo_games
+   ```
+
+5. Open <http://localhost:8000/>.
+
+The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates.
+
+## Environment variables
+
+The checked-in `.env.example` documents all settings required by the Docker development environment:
+
+- `DJANGO_SECRET_KEY`
+- `DJANGO_DEBUG`
+- `DJANGO_ALLOWED_HOSTS`
+- `DJANGO_DEFAULT_FROM_EMAIL`
+- `DJANGO_EMAIL_BACKEND`
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_HOST`
+- `POSTGRES_PORT`
+
+Docker Compose provides development defaults, but real secrets should always be set explicitly outside local development.
+
+## Main URLs
+
+| Area | URL |
+| --- | --- |
+| Home page | <http://localhost:8000/> |
+| Product catalog | <http://localhost:8000/products/> |
+| Product detail | `/products/product/<slug>/` |
+| Shopping cart | <http://localhost:8000/cart/> |
+| Checkout | <http://localhost:8000/checkout/> |
+| User account | <http://localhost:8000/account/> |
+| Django admin | <http://localhost:8000/admin/> |
+| REST API root | <http://localhost:8000/api/> |
+| Swagger UI | <http://localhost:8000/api/docs/> |
+| OpenAPI schema | <http://localhost:8000/api/schema/> |
+
+## REST API overview
+
+- Authentication: `/api/auth/register/`, `/api/auth/token/`, `/api/auth/token/refresh/`, and `/api/auth/me/`
+- Catalog: read-only `/api/products/` and `/api/categories/`
+- Session cart: `/api/cart/`, `/api/cart/items/`, and `/api/cart/items/<product_id>/`
+- Orders: authenticated list, detail, and create operations at `/api/orders/`
+- Reviews: public list and authenticated verified-purchase creation at `/api/reviews/`
+
+Use Swagger UI for the complete request schemas, response schemas, filters, and authentication requirements.
+
+## Internationalization
+
+Ukrainian is the default interface language and English is the secondary language. User-facing web, admin, email, and API descriptions are maintained in Ukrainian source strings and translated through Django i18n. Russian is not used in the application interface.
+
+English translations are stored under `locale/en/LC_MESSAGES/` and can be rebuilt with:
 
 ```bash
-docker compose up --build
+docker compose exec web django-admin compilemessages -l en
 ```
 
-Проект будет доступен по адресу <http://localhost:8000/>. Корневой маршрут открывает
-статическую главную страницу GameVault; также доступны Django admin и документация API.
+## Email behavior
 
-## Переменные окружения
+Order confirmations use Django's email framework. The default development configuration uses the console email backend, so messages are printed to the web container logs and no external SMTP service is contacted. The sender and backend are configured through `DJANGO_DEFAULT_FROM_EMAIL` and `DJANGO_EMAIL_BACKEND`.
 
-Для локальных значений можно скопировать `.env.example` в `.env` и заменить секреты.
-Без `.env` Docker Compose использует значения для разработки по умолчанию.
+## Admin
 
-## Демо-каталог
+The Django admin supports product, category, order, review, user profile, and user management. It also includes order and stock bulk actions plus summary analytics for orders, revenue, customers, and low-stock products.
 
-После применения миграций можно создать или обновить 6 категорий и 12 демо-игр:
+## Tests and quality checks
 
-```bash
-docker compose exec web python manage.py seed_demo_games
-```
-
-Команда идемпотентна: повторный запуск обновляет существующие записи по slug и не
-создаёт дубликаты.
-
-## Проверки
-
-В запущенном окружении:
+Run the complete project checks in the running Docker environment:
 
 ```bash
 docker compose exec web python manage.py check
-docker compose exec web python manage.py migrate
+docker compose exec web python manage.py makemigrations --check --dry-run
 docker compose exec web pytest
 docker compose exec web flake8
 docker compose exec web mypy .
+docker compose exec web python manage.py spectacular --validate --file /tmp/schema.yml
+git diff --check
 ```
 
-## Доступные служебные маршруты
+## Project structure
 
-- Главная страница: <http://localhost:8000/>
-- Каталог игр: <http://localhost:8000/products/>
-- Страница игры: `http://localhost:8000/product/<slug>/`
-- Корзина: <http://localhost:8000/cart/>
-- Django admin: <http://localhost:8000/admin/>
-- OpenAPI schema: <http://localhost:8000/api/schema/>
-- Swagger UI: <http://localhost:8000/api/docs/>
+```text
+config/       Django settings, root URLs, and API router
+products/     Catalog models, web pages, API, admin, and demo data command
+orders/       Session cart, checkout, orders, emails, API, and admin analytics
+users/        Authentication, account dashboard, profiles, and API auth
+reviews/      Verified-purchase reviews for web, API, and admin
+templates/    Shared and application-specific Django templates
+static/       Storefront styles, scripts, and images
+locale/       English gettext translations for Ukrainian source strings
+tests/        Web, API, admin, email, i18n, and business-logic tests
+docs/         Project plan, workflow notes, and final feature checklist
+```
 
-План разработки находится в [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md).
+## Educational scope
+
+GameVault is a course project, not a production commerce platform. Payment methods are intentionally mocked: no real payment gateway or card processing is included. The default email backend is development-only, production SMTP is not configured, GraphQL is not included, and external deployment is intentionally deferred.
+
+See the [final feature checklist](docs/FEATURE_CHECKLIST.md) for the implemented and intentionally deferred scope.

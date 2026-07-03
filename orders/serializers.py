@@ -91,7 +91,9 @@ class OrderCreateSerializer(serializers.Serializer):
         """Require both a first and last name for the order snapshot."""
         full_name = " ".join(value.split())
         if len(full_name.split(maxsplit=1)) < 2:
-            raise serializers.ValidationError(_("Вкажіть ім’я та прізвище."))
+            raise serializers.ValidationError(
+                _("Вкажіть ім’я та прізвище.")
+            )
         return full_name
 
     def validate_items(self, value: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -99,7 +101,10 @@ class OrderCreateSerializer(serializers.Serializer):
         product_ids = [item["product_id"] for item in value]
         if len(product_ids) != len(set(product_ids)):
             raise serializers.ValidationError(
-                _("Кожен товар можна вказати в замовленні лише один раз.")
+                _(
+                    "Кожен товар можна вказати в замовленні "
+                    "лише один раз."
+                )
             )
         return value
 
@@ -119,10 +124,7 @@ class OrderCreateSerializer(serializers.Serializer):
                     is_active=True,
                 )
             )
-            products_by_id = {
-                int(product.pk): product
-                for product in products
-            }
+            products_by_id = {int(product.pk): product for product in products}
             if products_by_id.keys() != set(product_ids):
                 raise serializers.ValidationError(
                     {"items": _("Один або кілька товарів недоступні.")}
@@ -169,3 +171,42 @@ class OrderCreateSerializer(serializers.Serializer):
                 product.save(update_fields=("stock", "updated_at"))
 
         return order
+
+
+class CartAddItemSerializer(serializers.Serializer):
+    """Validate a product addition to the session cart."""
+
+    product_id = serializers.IntegerField(min_value=1)
+    quantity = serializers.IntegerField(min_value=1, default=1)
+
+
+class CartUpdateItemSerializer(serializers.Serializer):
+    """Validate a cart item quantity update."""
+
+    quantity = serializers.IntegerField(min_value=1)
+
+
+class CartProductOutputSerializer(serializers.Serializer):
+    """Expose the product data embedded in one cart row."""
+
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    slug = serializers.SlugField()
+
+
+class CartItemOutputSerializer(serializers.Serializer):
+    """Expose one session cart row."""
+
+    product = CartProductOutputSerializer()
+    quantity = serializers.IntegerField()
+    unit_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    line_total = serializers.DecimalField(max_digits=10, decimal_places=2)
+    is_available = serializers.BooleanField()
+
+
+class CartOutputSerializer(serializers.Serializer):
+    """Expose the full session cart state."""
+
+    items = CartItemOutputSerializer(many=True)
+    total = serializers.DecimalField(max_digits=10, decimal_places=2)
+    total_items = serializers.IntegerField()

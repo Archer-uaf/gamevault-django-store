@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title id="title">Neon Drift</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#151229"/><stop offset="1" stop-color="#532BE0"/></linearGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#3BE5D2"/><stop offset="1" stop-color="#744BFF"/></linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="585" cy="164" r="112" fill="none" stroke="#FF4F8B" stroke-width="18" opacity=".82"/>
+  <path d="M0 430 800 235v365H0Z" fill="#0D0C18"/>
+  <path d="m282 600 205-365h58L437 600Z" fill="url(#road)" opacity=".76"/>
+  <path d="M0 414 800 219M0 472 800 277" stroke="#36E2D1" stroke-width="4" opacity=".45"/>
+  <text x="64" y="114" fill="#fff" font-family="Arial, sans-serif" font-size="54" font-weight="800" letter-spacing="5">NEON</text>
+  <text x="64" y="168" fill="#36E2D1" font-family="Arial, sans-serif" font-size="54" font-weight="800" letter-spacing="5">DRIFT</text>
+</svg>

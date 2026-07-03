@@ -1,0 +1,41 @@
+{% load static %}
+<header class="site-header">
+    <div class="container header-container">
+        <a href="{% url 'home' %}" class="brand" aria-label="GameVault — главная">
+            <img src="{% static 'images/gamevault-logo.svg' %}" alt="" width="42" height="42">
+            <span>GameVault</span>
+        </a>
+
+        <button
+            class="nav-toggle"
+            type="button"
+            aria-label="Открыть меню"
+            aria-expanded="false"
+            aria-controls="main-navigation"
+            data-nav-toggle
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="main-nav" id="main-navigation" aria-label="Основная навигация" data-navigation>
+            <a href="{% url 'home' %}">Главная</a>
+            {# TODO: заменить заглушки после добавления URL каталога, корзины и аккаунта. #}
+            <a href="#featured-games">Игры</a>
+            <a href="#" class="nav-icon-link">
+                <img src="{% static 'images/icons/shopping-bag.svg' %}" alt="" width="20" height="20">
+                Корзина
+            </a>
+            <a href="#" class="nav-icon-link">
+                <img src="{% static 'images/icons/user.svg' %}" alt="" width="20" height="20">
+                Личный кабинет
+            </a>
+            {% if user.is_authenticated %}
+                <a href="#" class="button button--small button--outline">Выйти</a>
+            {% else %}
+                <a href="#" class="button button--small button--primary">Войти</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог игр — GameVault{% endblock %}
+
+{% block content %}
+<section class="catalog-hero compact-hero">
+    <div class="container">
+        <p class="eyebrow">Библиотека GameVault</p>
+        <h1>Каталог игр</h1>
+        <p>Найдите следующую игру по жанру, платформе, цене или названию.</p>
+    </div>
+</section>
+
+<section class="catalog-section">
+    <div class="container catalog-layout">
+        <aside class="filter-panel">
+            <div class="filter-panel__heading">
+                <h2>Фильтры</h2>
+                <a href="{% url 'products:product_list' %}">Сбросить фильтры</a>
+            </div>
+
+            <form method="get" class="filter-form">
+                <label class="field field--wide">
+                    <span>Поиск</span>
+                    <input
+                        type="search"
+                        name="q"
+                        value="{{ current_filters.q }}"
+                        placeholder="Название, разработчик..."
+                    >
+                </label>
+
+                <label class="field">
+                    <span>Категория</span>
+                    <select name="category">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                            <option
+                                value="{{ category.slug }}"
+                                {% if current_filters.category == category.slug %}selected{% endif %}
+                            >
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label class="field">
+                    <span>Платформа</span>
+                    <select name="platform">
+                        <option value="">Все платформы</option>
+                        {% for value, label in platform_choices %}
+                            <option
+                                value="{{ value }}"
+                                {% if current_filters.platform == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <div class="price-fields">
+                    <label class="field">
+                        <span>Цена от</span>
+                        <input
+                            type="number"
+                            name="min_price"
+                            value="{{ current_filters.min_price }}"
+                            min="0"
+                            step="0.01"
+                            placeholder="0"
+                        >
+                    </label>
+                    <label class="field">
+                        <span>Цена до</span>
+                        <input
+                            type="number"
+                            name="max_price"
+                            value="{{ current_filters.max_price }}"
+                            min="0"
+                            step="0.01"
+                            placeholder="5000"
+                        >
+                    </label>
+                </div>
+
+                <label class="field">
+                    <span>Сортировка</span>
+                    <select name="sort">
+                        {% for value, label in sort_options %}
+                            <option
+                                value="{{ value }}"
+                                {% if current_filters.sort == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <button type="submit" class="button button--primary">Применить</button>
+            </form>
+        </aside>
+
+        <div class="catalog-results">
+            <div class="results-heading">
+                <div>
+                    <p class="results-count">
+                        Найдено игр: <strong>{{ page_obj.paginator.count }}</strong>
+                    </p>
+                    {% if current_filters.q %}
+                        <p class="results-query">По запросу «{{ current_filters.q }}»</p>
+                    {% endif %}
+                </div>
+                <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+            </div>
+
+            {% if products %}
+                <div class="catalog-game-grid">
+                    {% for product in products %}
+                        <article class="catalog-card">
+                            <a href="{{ product.get_absolute_url }}" class="catalog-card__cover">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="Обложка {{ product.name }}">
+                                {% else %}
+                                    <div class="game-placeholder" aria-hidden="true">
+                                        <span>{{ product.get_platform_display }}</span>
+                                        <strong>{{ product.name }}</strong>
+                                    </div>
+                                {% endif %}
+                                {% if product.has_discount %}
+                                    <span class="discount-badge">−{{ product.discount_percent }}%</span>
+                                {% endif %}
+                            </a>
+
+                            <div class="catalog-card__body">
+                                <div class="card-kicker">
+                                    <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+                                    <span>{{ product.get_platform_display }}</span>
+                                </div>
+                                <h2><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+                                <div class="rating-row">
+                                    <span class="rating-star">★</span>
+                                    {% if product.average_rating %}
+                                        <strong>{{ product.average_rating|floatformat:1 }}</strong>
+                                        <span>({{ product.reviews_count }})</span>
+                                    {% else %}
+                                        <span>Нет оценок</span>
+                                    {% endif %}
+                                </div>
+                                <div class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
+                                    {% if product.is_in_stock %}
+                                        В наличии: {{ product.stock }}
+                                    {% else %}
+                                        Нет в наличии
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer-row">
+                                    <div class="price-block">
+                                        {% if product.has_discount %}
+                                            <span class="old-price">₴{{ product.price }}</span>
+                                            <strong>₴{{ product.final_price }}</strong>
+                                        {% else %}
+                                            <strong>₴{{ product.price }}</strong>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{{ product.get_absolute_url }}" class="button button--small button--outline">
+                                        Подробнее
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                {% if is_paginated %}
+                    <nav class="pagination" aria-label="Пагинация каталога">
+                        {% if page_obj.has_previous %}
+                            <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">
+                                ← Назад
+                            </a>
+                        {% else %}
+                            <span class="pagination__disabled">← Назад</span>
+                        {% endif %}
+
+                        <div class="pagination__pages">
+                            {% for page_number in page_obj.paginator.page_range %}
+                                {% if page_number == page_obj.number %}
+                                    <span class="pagination__current">{{ page_number }}</span>
+                                {% else %}
+                                    <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_number }}">
+                                        {{ page_number }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        {% if page_obj.has_next %}
+                            <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}">
+                                Вперёд →
+                            </a>
+                        {% else %}
+                            <span class="pagination__disabled">Вперёд →</span>
+                        {% endif %}
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <span aria-hidden="true">⌕</span>
+                    <h2>Игры не найдены</h2>
+                    <p>Попробуйте изменить параметры поиска или сбросить фильтры.</p>
+                    <a href="{% url 'products:product_list' %}" class="button button--primary">
+                        Сбросить фильтры
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

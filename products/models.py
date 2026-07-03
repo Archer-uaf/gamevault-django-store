@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.urls import NoReverseMatch, reverse
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -32,13 +32,9 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self) -> str:
-        """Return the future catalog URL filtered by this category."""
+        """Return the catalog URL filtered by this category."""
         query = urlencode({"category": self.slug})
-        try:
-            catalog_url = reverse("products:product_list")
-        except NoReverseMatch:
-            # TODO: Remove the fallback after the catalog URL is implemented.
-            catalog_url = "/products/"
+        catalog_url = reverse("products:product_list")
         return f"{catalog_url}?{query}"
 
 
@@ -90,6 +86,10 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def get_absolute_url(self) -> str:
+        """Return the public detail URL for this product."""
+        return reverse("products:product_detail", kwargs={"slug": self.slug})
 
     @property
     def has_discount(self) -> bool:

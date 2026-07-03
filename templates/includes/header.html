@@ -21,8 +21,8 @@
 
         <nav class="main-nav" id="main-navigation" aria-label="Основная навигация" data-navigation>
             <a href="{% url 'home' %}">Главная</a>
-            {# TODO: заменить заглушки после добавления URL каталога, корзины и аккаунта. #}
-            <a href="#featured-games">Игры</a>
+            <a href="{% url 'products:product_list' %}">Игры</a>
+            {# TODO: заменить заглушки после добавления URL корзины и аккаунта. #}
             <a href="#" class="nav-icon-link">
                 <img src="{% static 'images/icons/shopping-bag.svg' %}" alt="" width="20" height="20">
                 Корзина

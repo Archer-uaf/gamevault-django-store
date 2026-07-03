@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — GameVault{% endblock %}
+
+{% block content %}
+<section class="product-detail-section">
+    <div class="container">
+        <nav class="breadcrumbs" aria-label="Хлебные крошки">
+            <a href="{% url 'home' %}">Главная</a>
+            <span>›</span>
+            <a href="{% url 'products:product_list' %}">Игры</a>
+            <span>›</span>
+            <span>{{ product.name }}</span>
+        </nav>
+
+        <div class="product-detail-grid">
+            <div class="detail-cover">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="Обложка {{ product.name }}">
+                {% else %}
+                    <div class="detail-placeholder" aria-hidden="true">
+                        <span>{{ product.get_platform_display }}</span>
+                        <strong>{{ product.name }}</strong>
+                        <small>GAMEVAULT EDITION</small>
+                    </div>
+                {% endif %}
+                {% if product.has_discount %}
+                    <span class="detail-discount">Скидка {{ product.discount_percent }}%</span>
+                {% endif %}
+            </div>
+
+            <div class="detail-summary">
+                <div class="detail-tags">
+                    <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+                    <span>{{ product.get_platform_display }}</span>
+                    {% if product.is_featured %}<span>Featured</span>{% endif %}
+                </div>
+                <h1>{{ product.name }}</h1>
+
+                <div class="detail-rating">
+                    <span class="rating-star">★</span>
+                    {% if average_rating %}
+                        <strong>{{ average_rating|floatformat:1 }}</strong>
+                        <a href="#reviews">{{ reviews_count }} отзывов</a>
+                    {% else %}
+                        <span>Пока нет оценок</span>
+                    {% endif %}
+                </div>
+
+                <p class="detail-description">{{ product.description }}</p>
+
+                <dl class="game-specs">
+                    <div><dt>Разработчик</dt><dd>{{ product.developer|default:"Не указан" }}</dd></div>
+                    <div><dt>Издатель</dt><dd>{{ product.publisher|default:"Не указан" }}</dd></div>
+                    <div><dt>Дата выхода</dt><dd>{{ product.release_date|date:"d.m.Y"|default:"Не указана" }}</dd></div>
+                    <div><dt>Платформа</dt><dd>{{ product.get_platform_display }}</dd></div>
+                </dl>
+
+                <div class="purchase-panel">
+                    <div>
+                        <p class="purchase-label">Цена</p>
+                        <div class="detail-price">
+                            {% if product.has_discount %}
+                                <span>₴{{ product.price }}</span>
+                                <strong>₴{{ product.final_price }}</strong>
+                            {% else %}
+                                <strong>₴{{ product.price }}</strong>
+                            {% endif %}
+                        </div>
+                        <p class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
+                            {% if product.is_in_stock %}
+                                В наличии: {{ product.stock }}
+                            {% else %}
+                                Нет в наличии
+                            {% endif %}
+                        </p>
+                    </div>
+                    {# TODO: подключить настоящее добавление в корзину на следующем этапе. #}
+                    <a
+                        href="#"
+                        class="button button--primary {% if not product.is_in_stock %}button--disabled{% endif %}"
+                        {% if not product.is_in_stock %}aria-disabled="true"{% endif %}
+                    >
+                        Добавить в корзину
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="reviews-section section" id="reviews">
+    <div class="container detail-content-width">
+        <div class="section-heading split-heading">
+            <div>
+                <p class="eyebrow">Мнение игроков</p>
+                <h2>Отзывы</h2>
+            </div>
+            <p class="section-note">Создание отзывов будет добавлено отдельным этапом.</p>
+        </div>
+
+        {% if reviews %}
+            <div class="reviews-list">
+                {% for review in reviews %}
+                    <article class="review-card">
+                        <div class="review-card__header">
+                            <div class="review-avatar">{{ review.user.username|first|upper }}</div>
+                            <div>
+                                <h3>{{ review.user.username }}</h3>
+                                <time datetime="{{ review.created_at|date:'c' }}">
+                                    {{ review.created_at|date:"d.m.Y" }}
+                                </time>
+                            </div>
+                            <span class="review-rating">★ {{ review.rating }}/5</span>
+                        </div>
+                        <p>{{ review.comment }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state empty-state--compact">
+                <h3>Отзывов пока нет</h3>
+                <p>Эта игра ещё ждёт первых оценок сообщества.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% if related_products %}
+<section class="related-section section">
+    <div class="container">
+        <div class="section-heading split-heading">
+            <div>
+                <p class="eyebrow">Вам также может понравиться</p>
+                <h2>Похожие игры</h2>
+            </div>
+            <a href="{{ product.category.get_absolute_url }}" class="text-link">Все в категории →</a>
+        </div>
+
+        <div class="related-grid">
+            {% for related_product in related_products %}
+                <article class="related-card">
+                    <a href="{{ related_product.get_absolute_url }}" class="related-card__visual">
+                        {% if related_product.image %}
+                            <img src="{{ related_product.image.url }}" alt="Обложка {{ related_product.name }}">
+                        {% else %}
+                            <div class="game-placeholder" aria-hidden="true">
+                                <span>{{ related_product.get_platform_display }}</span>
+                                <strong>{{ related_product.name }}</strong>
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div>
+                        <p>{{ related_product.get_platform_display }}</p>
+                        <h3><a href="{{ related_product.get_absolute_url }}">{{ related_product.name }}</a></h3>
+                        <strong>₴{{ related_product.final_price }}</strong>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -5,8 +5,9 @@ GameVault — учебный интернет-магазин видеоигр н
 В проекте настроены четыре Django-приложения, PostgreSQL, Docker Compose,
 DRF/JWT/OpenAPI и инструменты проверки. Реализованы базовые доменные модели каталога,
 заказов, профилей пользователей и отзывов, а также их Django admin-конфигурация.
-Подключена статическая главная страница на Django templates. Корзина, checkout,
-auth views и API viewsets ещё не реализованы.
+Подключены главная страница, каталог с поиском/фильтрами/сортировкой/пагинацией и
+детальная страница игры на Django templates. Корзина, checkout, auth views,
+создание отзывов и API viewsets ещё не реализованы.
 
 ## Визуальная тема
 
@@ -42,6 +43,17 @@ docker compose up --build
 Для локальных значений можно скопировать `.env.example` в `.env` и заменить секреты.
 Без `.env` Docker Compose использует значения для разработки по умолчанию.
 
+## Демо-каталог
+
+После применения миграций можно создать или обновить 6 категорий и 12 демо-игр:
+
+```bash
+docker compose exec web python manage.py seed_demo_games
+```
+
+Команда идемпотентна: повторный запуск обновляет существующие записи по slug и не
+создаёт дубликаты.
+
 ## Проверки
 
 В запущенном окружении:
@@ -57,6 +69,8 @@ docker compose exec web mypy .
 ## Доступные служебные маршруты
 
 - Главная страница: <http://localhost:8000/>
+- Каталог игр: <http://localhost:8000/products/>
+- Страница игры: `http://localhost:8000/product/<slug>/`
 - Django admin: <http://localhost:8000/admin/>
 - OpenAPI schema: <http://localhost:8000/api/schema/>
 - Swagger UI: <http://localhost:8000/api/docs/>

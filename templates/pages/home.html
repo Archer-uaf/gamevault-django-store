@@ -14,7 +14,7 @@
                 и честные цены — в одном цифровом хранилище.
             </p>
             <div class="hero-actions">
-                <a href="#featured-games" class="button button--primary">Смотреть игры</a>
+                <a href="{% url 'products:product_list' %}" class="button button--primary">Смотреть игры</a>
                 <a href="#genres" class="button button--secondary">Выбрать жанр</a>
             </div>
             <dl class="hero-stats">
@@ -82,7 +82,7 @@
                 <p class="eyebrow">Выбирай по настроению</p>
                 <h2>Популярные жанры</h2>
             </div>
-            <a href="#" class="text-link">Все жанры <span aria-hidden="true">→</span></a>
+            <a href="{% url 'products:product_list' %}" class="text-link">Все жанры <span aria-hidden="true">→</span></a>
         </div>
         <div class="genre-grid">
             <a href="#" class="genre-card genre-card--action"><span>01</span><strong>Экшен</strong></a>
@@ -150,7 +150,7 @@
                 <h2>Найди игру, которую не захочется выключать</h2>
                 <p>Полноценный каталог появится на следующем этапе разработки.</p>
             </div>
-            <a href="#featured-games" class="button button--light">Перейти в каталог</a>
+            <a href="{% url 'products:product_list' %}" class="button button--light">Перейти в каталог</a>
         </div>
     </div>
 </section>

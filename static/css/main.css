@@ -886,3 +886,794 @@ dd {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Catalog and product detail pages */
+.compact-hero {
+    padding: 74px 0 68px;
+    color: var(--white);
+    background:
+        radial-gradient(circle at 82% 20%, rgba(39, 214, 196, 0.18), transparent 24%),
+        linear-gradient(130deg, #171525, #2a2052);
+}
+
+.compact-hero .eyebrow {
+    color: var(--accent);
+}
+
+.compact-hero h1 {
+    font-size: clamp(2.6rem, 5vw, 4.4rem);
+    line-height: 1;
+    letter-spacing: -0.055em;
+}
+
+.compact-hero p:last-child {
+    max-width: 620px;
+    margin-top: 18px;
+    color: #bdb9ce;
+}
+
+.catalog-section {
+    padding: 52px 0 100px;
+    background: var(--surface-alt);
+}
+
+.catalog-layout {
+    display: grid;
+    grid-template-columns: 282px minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+}
+
+.filter-panel {
+    position: sticky;
+    top: 104px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 0 12px 35px rgba(25, 21, 53, 0.06);
+}
+
+.filter-panel__heading {
+    margin-bottom: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.filter-panel__heading h2 {
+    font-size: 1.2rem;
+}
+
+.filter-panel__heading a {
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 750;
+}
+
+.filter-form {
+    display: grid;
+    gap: 18px;
+}
+
+.field {
+    display: grid;
+    gap: 7px;
+}
+
+.field > span {
+    color: #4f5061;
+    font-size: 0.78rem;
+    font-weight: 750;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--ink);
+    background: #fbfbfd;
+    font: inherit;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(104, 66, 245, 0.12);
+}
+
+.price-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.filter-form .button {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.catalog-results {
+    min-width: 0;
+}
+
+.results-heading {
+    min-height: 44px;
+    margin-bottom: 23px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+}
+
+.results-count {
+    color: var(--ink);
+    font-size: 1rem;
+}
+
+.results-query {
+    margin-top: 3px;
+}
+
+.catalog-game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.catalog-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: 0 10px 28px rgba(25, 21, 53, 0.06);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.catalog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.catalog-card__cover {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    display: block;
+    background: var(--night);
+}
+
+.catalog-card__cover > img,
+.related-card__visual > img,
+.detail-cover > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.game-placeholder,
+.detail-placeholder {
+    position: relative;
+    height: 100%;
+    padding: 22px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--white);
+    background:
+        radial-gradient(circle at 80% 25%, rgba(39, 214, 196, 0.38), transparent 25%),
+        linear-gradient(145deg, #211b42, #6842f5);
+}
+
+.game-placeholder::after,
+.detail-placeholder::after {
+    position: absolute;
+    right: -58px;
+    bottom: -75px;
+    width: 190px;
+    height: 190px;
+    border: 28px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    content: "";
+}
+
+.game-placeholder span,
+.detail-placeholder span {
+    font-size: 0.63rem;
+    font-weight: 850;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.game-placeholder strong,
+.detail-placeholder strong {
+    position: relative;
+    z-index: 1;
+    max-width: 90%;
+    margin-top: auto;
+    font-size: 1.55rem;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+}
+
+.discount-badge,
+.detail-discount {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 6px 9px;
+    border-radius: 7px;
+    color: #09201e;
+    background: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+.catalog-card__body {
+    padding: 18px;
+}
+
+.card-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--ink-soft);
+    font-size: 0.67rem;
+    font-weight: 780;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.card-kicker a {
+    color: var(--primary);
+}
+
+.catalog-card h2 {
+    min-height: 49px;
+    margin-top: 9px;
+    font-size: 1.15rem;
+    line-height: 1.25;
+}
+
+.catalog-card h2 a:hover,
+.related-card h3 a:hover {
+    color: var(--primary);
+}
+
+.rating-row,
+.detail-rating {
+    margin-top: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+}
+
+.rating-star {
+    color: #f5a623;
+    font-size: 1rem;
+}
+
+.rating-row strong,
+.detail-rating strong {
+    color: var(--ink);
+}
+
+.stock-state {
+    margin-top: 11px;
+    color: #168473;
+    font-size: 0.77rem;
+    font-weight: 720;
+}
+
+.stock-state--empty {
+    color: #b54558;
+}
+
+.card-footer-row {
+    margin-top: 16px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.price-block {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.price-block strong {
+    font-size: 1.05rem;
+}
+
+.old-price {
+    color: #9492a0;
+    font-size: 0.75rem;
+    text-decoration: line-through;
+}
+
+.catalog-card .button {
+    min-height: 36px;
+    padding-inline: 12px;
+    font-size: 0.75rem;
+}
+
+.pagination {
+    margin-top: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    color: var(--primary);
+    font-size: 0.82rem;
+    font-weight: 750;
+}
+
+.pagination__pages {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.pagination__pages a,
+.pagination__current {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+}
+
+.pagination__current {
+    color: var(--white);
+    border-color: var(--primary);
+    background: var(--primary);
+}
+
+.pagination__disabled {
+    color: #aaa8b5;
+}
+
+.empty-state {
+    min-height: 410px;
+    padding: 55px 25px;
+    border: 1px dashed #c8c5d6;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: var(--surface);
+}
+
+.empty-state > span {
+    color: var(--primary);
+    font-size: 3rem;
+}
+
+.empty-state h2,
+.empty-state h3 {
+    margin-top: 10px;
+    font-size: 1.55rem;
+}
+
+.empty-state p {
+    max-width: 430px;
+    margin: 8px 0 22px;
+    color: var(--ink-soft);
+}
+
+.product-detail-section {
+    padding: 38px 0 90px;
+    background: var(--surface-alt);
+}
+
+.breadcrumbs {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+}
+
+.breadcrumbs a:hover {
+    color: var(--primary);
+}
+
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(360px, 0.85fr) minmax(0, 1.15fr);
+    gap: 58px;
+    align-items: center;
+}
+
+.detail-cover {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--night);
+    box-shadow: 0 28px 55px rgba(27, 21, 60, 0.2);
+}
+
+.detail-placeholder {
+    padding: 42px;
+}
+
+.detail-placeholder::after {
+    right: -110px;
+    bottom: -95px;
+    width: 390px;
+    height: 390px;
+    border-width: 55px;
+}
+
+.detail-placeholder strong {
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+}
+
+.detail-placeholder small {
+    position: relative;
+    z-index: 1;
+    margin-top: 20px;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+}
+
+.detail-discount {
+    top: 22px;
+    right: 22px;
+    padding: 8px 12px;
+}
+
+.detail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.detail-tags a,
+.detail-tags span {
+    padding: 6px 10px;
+    border: 1px solid #d8d4ec;
+    border-radius: 999px;
+    color: var(--primary);
+    background: #f0edff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.detail-summary h1 {
+    margin-top: 18px;
+    font-size: clamp(2.7rem, 5vw, 4.7rem);
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+}
+
+.detail-rating {
+    margin-top: 19px;
+    font-size: 0.9rem;
+}
+
+.detail-rating a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.detail-description {
+    max-width: 680px;
+    margin-top: 25px;
+    color: var(--ink-soft);
+    font-size: 1rem;
+}
+
+.game-specs {
+    margin-top: 30px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 30px;
+}
+
+.game-specs dt {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+}
+
+.game-specs dd {
+    margin-top: 2px;
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.purchase-panel {
+    margin-top: 30px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    background: var(--surface);
+}
+
+.purchase-label {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+}
+
+.detail-price {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+}
+
+.detail-price span {
+    color: #9794a2;
+    text-decoration: line-through;
+}
+
+.detail-price strong {
+    font-size: 1.65rem;
+}
+
+.purchase-panel .stock-state {
+    margin-top: 1px;
+}
+
+.button--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.detail-content-width {
+    max-width: 920px;
+}
+
+.reviews-section {
+    padding-bottom: 70px;
+}
+
+.reviews-list {
+    display: grid;
+    gap: 15px;
+}
+
+.review-card {
+    padding: 25px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: var(--surface);
+}
+
+.review-card__header {
+    margin-bottom: 17px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.review-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: var(--white);
+    background: var(--primary);
+    font-weight: 850;
+}
+
+.review-card h3 {
+    font-size: 0.95rem;
+}
+
+.review-card time {
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+}
+
+.review-rating {
+    color: #b96f00;
+    font-size: 0.8rem;
+    font-weight: 820;
+}
+
+.review-card > p {
+    color: #4e4f60;
+}
+
+.empty-state--compact {
+    min-height: 230px;
+}
+
+.related-section {
+    background: var(--surface-alt);
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.related-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+}
+
+.related-card__visual {
+    height: 165px;
+    display: block;
+    overflow: hidden;
+}
+
+.related-card__visual .game-placeholder {
+    padding: 17px;
+}
+
+.related-card__visual .game-placeholder strong {
+    font-size: 1.15rem;
+}
+
+.related-card > div:last-child {
+    padding: 17px;
+}
+
+.related-card p {
+    color: var(--primary);
+    font-size: 0.64rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.related-card h3 {
+    min-height: 43px;
+    margin: 5px 0 13px;
+    font-size: 0.95rem;
+    line-height: 1.25;
+}
+
+@media (max-width: 1100px) {
+    .catalog-game-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .product-detail-grid {
+        gap: 35px;
+    }
+
+    .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 820px) {
+    .catalog-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-panel {
+        position: static;
+    }
+
+    .filter-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .field--wide,
+    .filter-form .button {
+        grid-column: 1 / -1;
+    }
+
+    .product-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-cover {
+        width: min(100%, 520px);
+        margin-inline: auto;
+    }
+}
+
+@media (max-width: 560px) {
+    .compact-hero {
+        padding: 55px 0;
+    }
+
+    .catalog-section {
+        padding-top: 28px;
+    }
+
+    .filter-form,
+    .catalog-game-grid,
+    .game-specs,
+    .related-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .price-fields {
+        grid-column: 1 / -1;
+    }
+
+    .results-heading,
+    .card-footer-row,
+    .purchase-panel {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .catalog-card__cover {
+        height: 250px;
+    }
+
+    .pagination {
+        align-items: stretch;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pagination__pages {
+        justify-content: center;
+        order: -1;
+    }
+
+    .product-detail-section {
+        padding-top: 24px;
+    }
+
+    .detail-cover {
+        border-radius: 18px;
+    }
+
+    .detail-placeholder {
+        padding: 25px;
+    }
+
+    .detail-summary h1 {
+        font-size: 2.8rem;
+    }
+
+    .purchase-panel .button {
+        width: 100%;
+    }
+
+    .review-card__header {
+        grid-template-columns: auto 1fr;
+    }
+
+    .review-rating {
+        grid-column: 1 / -1;
+    }
+}

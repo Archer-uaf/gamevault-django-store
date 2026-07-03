@@ -2,9 +2,17 @@
 
 GameVault — учебный интернет-магазин видеоигр на Django и Django REST Framework.
 
-На текущем этапе создан только проектный каркас: четыре Django-приложения,
-PostgreSQL, Docker Compose, базовые настройки DRF/JWT/OpenAPI и инструменты проверки.
-Модели предметной области, корзина, заказы, API viewsets и HTML-страницы ещё не реализованы.
+В проекте настроены четыре Django-приложения, PostgreSQL, Docker Compose,
+DRF/JWT/OpenAPI и инструменты проверки. Реализованы базовые доменные модели каталога,
+заказов, профилей пользователей и отзывов, а также их Django admin-конфигурация.
+Корзина, checkout, API viewsets и HTML-страницы ещё не реализованы.
+
+## Доменные модели
+
+- `Category` и `Product` — категории и видеоигры каталога.
+- `UserProfile` — контактные данные пользователя.
+- `Order` и `OrderItem` — заказ и снимки его товарных позиций.
+- `Review` — оценка и комментарий пользователя к товару.
 
 ## Требования
 
@@ -35,6 +43,7 @@ docker compose exec web python manage.py check
 docker compose exec web python manage.py migrate
 docker compose exec web pytest
 docker compose exec web flake8
+docker compose exec web mypy .
 ```
 
 ## Доступные служебные маршруты

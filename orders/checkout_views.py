@@ -7,6 +7,7 @@ from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBase
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
 from django.views.generic import FormView, TemplateView
+from orders.emails import send_order_confirmation_email
 
 from orders.cart import Cart, CartItem
 from orders.checkout import (
@@ -78,6 +79,7 @@ class CheckoutView(FormView):
             return redirect("cart:detail")
 
         cart.clear()
+        send_order_confirmation_email(order)
         self.request.session[LAST_ORDER_SESSION_KEY] = order.pk
         messages.success(
             self.request,

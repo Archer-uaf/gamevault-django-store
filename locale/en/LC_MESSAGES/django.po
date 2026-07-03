@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 10:36+0000\n"
+"POT-Creation-Date: 2026-07-03 12:15+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -19,7 +19,7 @@ msgstr "Ukrainian"
 msgid "English"
 msgstr "English"
 
-#: config/settings.py:155
+#: config/settings.py:165
 msgid "REST API навчального інтернет-магазину відеоігор GameVault."
 msgstr "REST API for the educational GameVault video game store."
 
@@ -39,20 +39,49 @@ msgstr "Mark selected orders as delivered"
 msgid "Позначити вибрані замовлення як скасовані"
 msgstr "Mark selected orders as cancelled"
 
-#: orders/checkout_views.py:38 orders/checkout_views.py:67
+#: orders/api_views.py:112 orders/api_views.py:138
+#, fuzzy
+#| msgid "Недостатньо товару «%(product)s» на складі."
+msgid "Недостатньо товару на складі."
+msgstr "There is not enough stock for “%(product)s”."
+
+#: orders/checkout_views.py:39 orders/checkout_views.py:68
 msgid "Ваш кошик порожній. Додайте ігри перед оформленням."
 msgstr "Your cart is empty. Add games before checking out."
 
-#: orders/checkout_views.py:74
+#: orders/checkout_views.py:75
 msgid ""
 "Залишки товарів змінилися. Перевірте кількість у кошику та спробуйте ще раз."
 msgstr ""
 "Product stock has changed. Check the quantities in your cart and try again."
 
-#: orders/checkout_views.py:84 templates/orders/checkout_success.html:14
+#: orders/checkout_views.py:86 templates/orders/checkout_success.html:14
 #, python-format
 msgid "Замовлення №%(number)s успішно створено."
 msgstr "Order #%(number)s was created successfully."
+
+#: orders/emails.py:12
+#, fuzzy, python-format
+#| msgid "Підтвердити замовлення"
+msgid "Підтвердження замовлення №%(number)s"
+msgstr "Order confirmation #%(number)s"
+
+msgid ""
+"Дякуємо за замовлення в GameVault.\n"
+"\n"
+"Номер замовлення: %(number)s\n"
+"Сума: ₴%(total)s\n"
+"Статус: %(status)s\n"
+"\n"
+"Ми повідомимо вас, коли статус замовлення зміниться."
+msgstr ""
+"Thank you for your order at GameVault.\n"
+"\n"
+"Order number: %(number)s\n"
+"Total: ₴%(total)s\n"
+"Status: %(status)s\n"
+"\n"
+"We will notify you when the order status changes."
 
 #: orders/forms.py:15 templates/orders/cart_detail.html:59
 #: templates/products/product_detail.html:84
@@ -88,7 +117,7 @@ msgstr "Delivery address"
 msgid "Спосіб оплати"
 msgstr "Payment method"
 
-#: orders/forms.py:80 orders/serializers.py:94
+#: orders/forms.py:80 orders/serializers.py:95
 msgid "Вкажіть ім’я та прізвище."
 msgstr "Enter your first and last name."
 
@@ -124,15 +153,15 @@ msgstr "Cash on delivery"
 msgid "Тестовий баланс"
 msgstr "Test balance"
 
-#: orders/serializers.py:102
+#: orders/serializers.py:105
 msgid "Кожен товар можна вказати в замовленні лише один раз."
 msgstr "Each product can appear only once in an order."
 
-#: orders/serializers.py:128
+#: orders/serializers.py:130
 msgid "Один або кілька товарів недоступні."
 msgstr "One or more products are unavailable."
 
-#: orders/serializers.py:140
+#: orders/serializers.py:142
 #, python-format
 msgid "Недостатньо товару «%(product)s» на складі."
 msgstr "There is not enough stock for “%(product)s”."

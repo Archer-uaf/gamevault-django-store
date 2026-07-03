@@ -126,6 +126,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+DEFAULT_FROM_EMAIL = config(
+    "DJANGO_DEFAULT_FROM_EMAIL",
+    default="GameVault <noreply@gamevault.local>",
+)
+
+EMAIL_BACKEND = config(
+    "DJANGO_EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
+)
+
 LOGIN_URL = "account:login"
 LOGIN_REDIRECT_URL = "account:dashboard"
 

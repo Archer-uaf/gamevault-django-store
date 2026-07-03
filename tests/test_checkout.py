@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.core import mail
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -43,6 +44,18 @@ class CheckoutFlowTests(TestCase):
             reverse("cart:add", args=[self.product.pk]),
             {"quantity": quantity},
         )
+
+    def test_valid_checkout_sends_confirmation_email(self) -> None:
+        self.add_to_cart()
+
+        self.client.post(reverse("checkout:form"), self.checkout_data())
+
+        order = Order.objects.get()
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[0]
+        self.assertIn(str(order.pk), email.subject)
+        self.assertEqual(email.to, [order.email])
+        self.assertIn(str(order.total_price), email.body)
 
     def test_checkout_redirects_empty_cart(self) -> None:
         response = self.client.get(reverse("checkout:form"), follow=True)

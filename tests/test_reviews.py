@@ -69,6 +69,19 @@ class VerifiedPurchaseReviewTests(TestCase):
             "Залишити відгук можна лише після покупки цієї гри.",
         )
 
+    def test_user_with_cancelled_order_cannot_review(self) -> None:
+        order = self.create_purchase(user=self.user)
+        order.status = Order.Status.CANCELLED
+        order.save(update_fields=("status",))
+        self.client.force_login(self.user)
+
+        self.client.post(
+            self.product.get_absolute_url(),
+            {"rating": "5", "comment": "Скасоване замовлення."},
+        )
+
+        self.assertFalse(Review.objects.exists())
+
     def test_guest_purchase_does_not_allow_review(self) -> None:
         self.create_purchase(user=None)
         self.client.force_login(self.user)

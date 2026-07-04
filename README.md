@@ -18,8 +18,8 @@ GameVault is an educational video game store built with Django and Django REST F
 - Ukrainian and English storefront, with Ukrainian as the default language
 - Session-based cart with stock validation and discounted totals
 - Guest checkout with mock payment methods and order confirmation
-- Development-safe order confirmation emails
-- Registration, login, logout, dashboard, order history, and password changes
+- Development-safe customer confirmations and optional administrator notifications
+- Registration, login, logout, profile editing, dashboard, order history, and password changes
 - Reviews restricted to verified purchases
 - REST API for authentication, catalog data, cart operations, orders, and reviews
 - JWT authentication and interactive Swagger/OpenAPI documentation
@@ -59,12 +59,13 @@ The demo seed command is idempotent: repeated runs update records by slug instea
 
 ## Environment variables
 
-The checked-in `.env.example` documents all settings required by the Docker development environment:
+The checked-in `.env.example` documents the settings used by the Docker development environment:
 
 - `DJANGO_SECRET_KEY`
 - `DJANGO_DEBUG`
 - `DJANGO_ALLOWED_HOSTS`
 - `DJANGO_DEFAULT_FROM_EMAIL`
+- `DJANGO_ADMIN_EMAIL`
 - `DJANGO_EMAIL_BACKEND`
 - `POSTGRES_DB`
 - `POSTGRES_USER`
@@ -101,7 +102,7 @@ Use Swagger UI for the complete request schemas, response schemas, filters, and 
 
 ## Internationalization
 
-Ukrainian is the default interface language and English is the secondary language. User-facing web, admin, email, and API descriptions are maintained in Ukrainian source strings and translated through Django i18n. Russian is not used in the application interface.
+Ukrainian is the default interface language and English is the secondary language. Web, admin, email, and API-facing text uses Ukrainian or English; Russian is not used in the application interface.
 
 English translations are stored under `locale/en/LC_MESSAGES/` and can be rebuilt with:
 
@@ -111,11 +112,11 @@ docker compose exec web django-admin compilemessages -l en
 
 ## Email behavior
 
-Order confirmations use Django's email framework. The default development configuration uses the console email backend, so messages are printed to the web container logs and no external SMTP service is contacted. The sender and backend are configured through `DJANGO_DEFAULT_FROM_EMAIL` and `DJANGO_EMAIL_BACKEND`.
+Order notifications use Django's email framework. The customer receives a confirmation after checkout. If `DJANGO_ADMIN_EMAIL` is set, the configured administrator also receives a new-order notification. The default development configuration uses the console email backend, so messages are printed to the web container logs and no external SMTP service is contacted. The sender and backend are configured through `DJANGO_DEFAULT_FROM_EMAIL` and `DJANGO_EMAIL_BACKEND`.
 
 ## Admin
 
-The Django admin supports product, category, order, review, user profile, and user management. It also includes order and stock bulk actions plus summary analytics for orders, revenue, customers, and low-stock products.
+The Django admin supports product, category, order, review, user profile, and user management. It includes order and product actions, order count and revenue summaries, pending and paid order counts, and product review count and rating aggregates.
 
 ## Tests and quality checks
 

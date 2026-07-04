@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from orders.models import Order
+from users.models import UserProfile
 
 
 class AccountFlowTests(TestCase):
@@ -81,6 +82,69 @@ class AccountFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
         self.assertContains(response, self.user.email)
+
+    def test_profile_page_requires_login(self) -> None:
+        response = self.client.get(reverse("account:profile"))
+
+        self.assertRedirects(
+            response,
+            f"{reverse('account:login')}?next={reverse('account:profile')}",
+        )
+
+    def test_authenticated_user_can_open_profile_page(self) -> None:
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("account:profile"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/profile.html")
+        self.assertContains(response, self.user.email)
+
+    def test_authenticated_user_can_update_profile(self) -> None:
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("account:profile"),
+            {
+                "first_name": "Олена",
+                "last_name": "Коваль",
+                "email": "olena@example.com",
+                "phone": "+380501234567",
+                "city": "Київ",
+                "address": "вул. Хрещатик, 1",
+            },
+        )
+
+        self.assertRedirects(response, reverse("account:profile"))
+        self.user.refresh_from_db()
+        profile = UserProfile.objects.get(user=self.user)
+        self.assertEqual(self.user.first_name, "Олена")
+        self.assertEqual(self.user.last_name, "Коваль")
+        self.assertEqual(self.user.email, "olena@example.com")
+        self.assertEqual(profile.phone, "+380501234567")
+        self.assertEqual(profile.city, "Київ")
+        self.assertEqual(profile.address, "вул. Хрещатик, 1")
+
+    def test_profile_page_displays_updated_data(self) -> None:
+        self.client.force_login(self.user)
+        profile = UserProfile.objects.get(user=self.user)
+        profile.city = "Львів"
+        profile.save(update_fields=("city",))
+
+        response = self.client.get(reverse("account:profile"))
+
+        self.assertContains(response, "Львів")
+
+    def test_profile_page_can_be_rendered_in_english(self) -> None:
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse("account:profile"),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+
+        self.assertContains(response, "Edit profile")
+        self.assertContains(response, "Save changes")
 
     def test_order_history_requires_login(self) -> None:
         response = self.client.get(reverse("account:orders"))

@@ -30,6 +30,10 @@
 
         <nav class="account-card account-navigation" aria-label="{% trans 'Навігація облікового запису' %}">
             <p class="eyebrow">{% trans "Швидкі дії" %}</p>
+            <a href="{% url 'account:profile' %}">
+                <strong>{% trans "Редагувати профіль" %}</strong>
+                <span>{% trans "Оновити ім’я, контакти та адресу доставки." %}</span>
+            </a>
             <a href="{% url 'account:orders' %}">
                 <strong>{% trans "Історія замовлень" %}</strong>
                 <span>{% trans "Переглянути покупки, оформлені після входу." %}</span>

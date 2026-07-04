@@ -1,6 +1,6 @@
 """Business rules for verified-purchase reviews."""
 
-from orders.models import OrderItem
+from orders.models import Order, OrderItem
 
 
 def user_has_purchased_product(*, user_id: int, product_id: int) -> bool:
@@ -8,4 +8,4 @@ def user_has_purchased_product(*, user_id: int, product_id: int) -> bool:
     return OrderItem.objects.filter(
         order__user_id=user_id,
         product_id=product_id,
-    ).exists()
+    ).exclude(order__status=Order.Status.CANCELLED).exists()

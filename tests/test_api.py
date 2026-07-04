@@ -391,6 +391,19 @@ class ReviewAPITests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertFalse(Review.objects.exists())
 
+    def test_user_with_cancelled_order_cannot_create_review(self) -> None:
+        self.create_purchase(status=Order.Status.CANCELLED)
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            reverse("api:review-list"),
+            self.review_payload(),
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(Review.objects.exists())
+
     def test_authenticated_buyer_can_create_review(self) -> None:
         self.create_purchase()
         self.client.force_authenticate(user=self.user)
@@ -433,9 +446,14 @@ class ReviewAPITests(TestCase):
             "comment": "Verified API review.",
         }
 
-    def create_purchase(self) -> None:
+    def create_purchase(
+        self,
+        *,
+        status: str = Order.Status.PENDING,
+    ) -> Order:
         order = Order.objects.create(
             user=self.user,
+            status=status,
             total_price=self.product.price,
             first_name="Review",
             last_name="Buyer",
@@ -451,6 +469,7 @@ class ReviewAPITests(TestCase):
             quantity=1,
             price=self.product.price,
         )
+        return order
 
 
 class OpenAPIEndpointTests(TestCase):

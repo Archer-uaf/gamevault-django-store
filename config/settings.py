@@ -131,6 +131,8 @@ DEFAULT_FROM_EMAIL = config(
     default="GameVault <noreply@gamevault.local>",
 )
 
+ADMIN_EMAIL = config("DJANGO_ADMIN_EMAIL", default="")
+
 EMAIL_BACKEND = config(
     "DJANGO_EMAIL_BACKEND",
     default="django.core.mail.backends.console.EmailBackend",

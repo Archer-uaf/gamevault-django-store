@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.core import mail
 from django.contrib.auth import get_user_model
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from orders.cart import CART_SESSION_KEY
@@ -45,7 +45,8 @@ class CheckoutFlowTests(TestCase):
             {"quantity": quantity},
         )
 
-    def test_valid_checkout_sends_confirmation_email(self) -> None:
+    @override_settings(ADMIN_EMAIL="")
+    def test_valid_checkout_sends_customer_email_without_admin_email(self) -> None:
         self.add_to_cart()
 
         self.client.post(reverse("checkout:form"), self.checkout_data())
@@ -56,6 +57,24 @@ class CheckoutFlowTests(TestCase):
         self.assertIn(str(order.pk), email.subject)
         self.assertEqual(email.to, [order.email])
         self.assertIn(str(order.total_price), email.body)
+
+    @override_settings(ADMIN_EMAIL="admin@example.com")
+    def test_valid_checkout_sends_admin_notification(self) -> None:
+        self.add_to_cart()
+
+        response = self.client.post(
+            reverse("checkout:form"),
+            self.checkout_data(),
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 2)
+        admin_email = next(
+            email for email in mail.outbox if email.to == ["admin@example.com"]
+        )
+        order = Order.objects.get()
+        self.assertIn(str(order.pk), admin_email.subject)
+        self.assertIn(order.email, admin_email.body)
 
     def test_checkout_redirects_empty_cart(self) -> None:
         response = self.client.get(reverse("checkout:form"), follow=True)

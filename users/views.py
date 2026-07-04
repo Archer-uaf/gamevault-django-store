@@ -18,8 +18,10 @@ from orders.models import Order
 from users.forms import (
     AccountAuthenticationForm,
     AccountPasswordChangeForm,
+    ProfileUpdateForm,
     RegistrationForm,
 )
+from users.models import UserProfile
 
 
 class RegisterView(FormView):
@@ -79,6 +81,25 @@ class AccountDashboardView(LoginRequiredMixin, TemplateView):
     """Display basic account information and account navigation."""
 
     template_name = "users/dashboard.html"
+
+
+class AccountProfileView(LoginRequiredMixin, FormView):
+    """Edit the current user's account and delivery details."""
+
+    template_name = "users/profile.html"
+    form_class = ProfileUpdateForm
+    success_url = reverse_lazy("account:profile")
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        kwargs.update({"user": self.request.user, "instance": profile})
+        return kwargs
+
+    def form_valid(self, form: ProfileUpdateForm) -> HttpResponse:
+        form.save()
+        messages.success(self.request, _("Профіль успішно оновлено."))
+        return super().form_valid(form)
 
 
 class OrderHistoryView(LoginRequiredMixin, ListView):

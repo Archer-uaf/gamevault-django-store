@@ -8,13 +8,13 @@
 - [x] Ukrainian and English i18n with Ukrainian as the default language.
 - [x] Session-based web cart and session-backed API cart.
 - [x] Checkout with stock validation, atomic order creation, and mock payment methods.
-- [x] Development-safe order confirmation emails.
-- [x] Registration, authentication, dashboard, order history, and password changes.
+- [x] Development-safe customer confirmations and optional administrator notifications.
+- [x] Registration, authentication, profile editing, dashboard, order history, and password changes.
 - [x] Verified-purchase reviews in the web interface and REST API.
 - [x] REST API for catalog data, cart operations, orders, and reviews.
 - [x] JWT registration, token, refresh, and current-user endpoints.
 - [x] Swagger UI and validated OpenAPI schema.
-- [x] Django admin management, bulk actions, and summary analytics.
+- [x] Django admin actions, order/revenue/status summaries, and product review aggregates.
 - [x] Automated tests plus flake8, mypy, migration, and schema checks.
 
 ## Intentionally mocked or deferred

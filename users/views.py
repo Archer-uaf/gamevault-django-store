@@ -73,7 +73,7 @@ class AccountLogoutView(LoginRequiredMixin, TemplateView):
     ) -> HttpResponse:
         logout(request)
         messages.success(request, _("Ви успішно вийшли."))
-        return redirect("home")
+        return redirect("/")
 
 
 class AccountDashboardView(LoginRequiredMixin, TemplateView):

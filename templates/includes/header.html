@@ -2,7 +2,7 @@
 
 <header class="site-header">
     <div class="container header-container">
-        <a href="{% url 'home' %}" class="brand" aria-label="{% trans 'GameVault — головна' %}">
+        <a href="/" class="brand" aria-label="{% trans 'GameVault — головна' %}">
             <img src="{% static 'images/gamevault-logo.svg' %}" alt="" width="42" height="42">
             <span>GameVault</span>
         </a>
@@ -21,7 +21,7 @@
         </button>
 
         <nav class="main-nav" id="main-navigation" aria-label="{% trans 'Основна навігація' %}" data-navigation>
-            <a href="{% url 'home' %}">{% trans 'Головна' %}</a>
+            <a href="/">{% trans 'Головна' %}</a>
             <a href="{% url 'products:product_list' %}">{% trans 'Ігри' %}</a>
 
             <a href="{% url 'cart:detail' %}" class="nav-icon-link">

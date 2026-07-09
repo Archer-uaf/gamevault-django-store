@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Xbox">
-  <path fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round" d="M28 34c5-12 35-12 40 0l9 26c4 12-8 20-17 11l-6-6H42l-6 6c-9 9-21 1-17-11l9-26Z"/>
-  <path fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" d="M34 48h12M40 42v12M61 43h.1M67 51h.1"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#dbe7ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><path d="M15 14c6 2 12 8 18 20M33 14c-6 2-12 8-18 20"/></svg>

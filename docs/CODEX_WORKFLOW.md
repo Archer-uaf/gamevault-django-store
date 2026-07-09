@@ -17,15 +17,16 @@
 
 ## Verification
 
-Preferred cycle:
+Preferred Docker verification cycle:
 
 ```bash
-docker compose config
-docker compose up --build
 docker compose exec web python manage.py check
-docker compose exec web python manage.py migrate
+docker compose exec web python manage.py makemigrations --check --dry-run
 docker compose exec web pytest
 docker compose exec web flake8
+docker compose exec web mypy .
+docker compose exec web python manage.py spectacular --validate --file /tmp/schema.yml
+git diff --check
 ```
 
 Equivalent commands in an activated virtual environment are acceptable for local development.

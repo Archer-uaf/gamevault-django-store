@@ -49,6 +49,12 @@ class Order(models.Model):
 
     class Meta:
         ordering = ("-created_at",)
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(total_price__gte=0),
+                name="order_total_price_non_negative",
+            ),
+        ]
         indexes = [
             models.Index(fields=("user",), name="order_user_idx"),
             models.Index(fields=("status",), name="order_status_idx"),
@@ -102,6 +108,18 @@ class OrderItem(models.Model):
     product = models.ForeignKey("products.Product", on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(price__gte=0),
+                name="order_item_price_non_negative",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(quantity__gt=0),
+                name="order_item_quantity_positive",
+            ),
+        ]
 
     def __str__(self) -> str:
         return f"{self.product} × {self.quantity}"

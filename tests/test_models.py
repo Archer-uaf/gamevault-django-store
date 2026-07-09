@@ -78,6 +78,28 @@ def test_product_is_in_stock(product: Product) -> None:
     assert product.is_in_stock is False
 
 
+def test_product_money_and_percent_db_constraints(category: Category) -> None:
+    invalid_products = (
+        ("zero-price-game", Decimal("0.00"), 0, 1),
+        ("large-discount-game", Decimal("10.00"), 91, 1),
+        ("negative-stock-game", Decimal("10.00"), 0, -1),
+    )
+
+    for slug, price, discount_percent, stock in invalid_products:
+        with pytest.raises(IntegrityError):
+            with transaction.atomic():
+                Product.objects.create(
+                    name=slug,
+                    slug=slug,
+                    description="Invalid product.",
+                    category=category,
+                    platform=Product.Platform.PC,
+                    price=price,
+                    discount_percent=discount_percent,
+                    stock=stock,
+                )
+
+
 def test_product_localized_description_uses_english_when_available(
     product: Product,
 ) -> None:
@@ -140,6 +162,51 @@ def test_order_item_total_price(user: Any, product: Product) -> None:
     assert item.total_price == Decimal("59.97")
 
 
+def test_order_total_price_db_constraint(user: Any) -> None:
+    with pytest.raises(IntegrityError):
+        with transaction.atomic():
+            Order.objects.create(
+                user=user,
+                total_price=Decimal("-0.01"),
+                first_name="Alex",
+                last_name="Player",
+                email="alex@example.com",
+                phone="+380000000000",
+                city="Kyiv",
+                shipping_address="Test street, 1",
+                payment_method=Order.PaymentMethod.CARD,
+            )
+
+
+def test_order_item_price_and_quantity_db_constraints(
+    user: Any,
+    product: Product,
+) -> None:
+    order = Order.objects.create(
+        user=user,
+        first_name="Alex",
+        last_name="Player",
+        email="alex@example.com",
+        phone="+380000000000",
+        city="Kyiv",
+        shipping_address="Test street, 1",
+        payment_method=Order.PaymentMethod.CARD,
+    )
+
+    invalid_items = (
+        {"quantity": 1, "price": Decimal("-0.01")},
+        {"quantity": 0, "price": Decimal("10.00")},
+    )
+    for data in invalid_items:
+        with pytest.raises(IntegrityError):
+            with transaction.atomic():
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    **data,
+                )
+
+
 def test_create_review(user: Any, product: Product) -> None:
     review = Review.objects.create(
         user=user,
@@ -150,6 +217,18 @@ def test_create_review(user: Any, product: Product) -> None:
 
     assert review.pk is not None
     assert review.rating == 5
+
+
+def test_review_rating_db_constraints(user: Any, product: Product) -> None:
+    for rating in (0, 6):
+        with pytest.raises(IntegrityError):
+            with transaction.atomic():
+                Review.objects.create(
+                    user=user,
+                    product=product,
+                    rating=rating,
+                    comment="Invalid rating.",
+                )
 
 
 def test_user_cannot_review_same_product_twice(

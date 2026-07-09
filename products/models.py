@@ -81,6 +81,24 @@ class Product(models.Model):
 
     class Meta:
         ordering = ("-created_at",)
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(price__gt=0),
+                name="product_price_positive",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(discount_percent__gte=0),
+                name="product_discount_percent_min",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(discount_percent__lte=90),
+                name="product_discount_percent_max",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(stock__gte=0),
+                name="product_stock_non_negative",
+            ),
+        ]
         indexes = [
             models.Index(fields=("slug",), name="product_slug_idx"),
             models.Index(fields=("is_active",), name="product_active_idx"),

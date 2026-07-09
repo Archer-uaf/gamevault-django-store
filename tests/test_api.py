@@ -30,6 +30,7 @@ class CatalogAPITests(TestCase):
             category=self.rpg,
             price=Decimal("100.00"),
             description="Searchable kingdom adventure.",
+            platform=Product.Platform.PLAYSTATION,
         )
         self.inactive_product = self.create_product(
             name="Hidden API Game",
@@ -48,6 +49,16 @@ class CatalogAPITests(TestCase):
         self.assertIn(self.first_product.pk, product_ids)
         self.assertIn(self.second_product.pk, product_ids)
         self.assertNotIn(self.inactive_product.pk, product_ids)
+
+    def test_products_list_without_platform_returns_default_list(self) -> None:
+        response = self.client.get(reverse("api:product-list"))
+
+        self.assertEqual(response.status_code, 200)
+        product_ids = {product["id"] for product in response.json()["results"]}
+        self.assertEqual(
+            product_ids,
+            {self.first_product.pk, self.second_product.pk},
+        )
 
     def test_product_detail_is_public(self) -> None:
         response = self.client.get(
@@ -108,6 +119,39 @@ class CatalogAPITests(TestCase):
             self.first_product.pk,
         )
 
+    def test_product_list_filters_by_platform(self) -> None:
+        pc_response = self.client.get(
+            reverse("api:product-list"),
+            {"platform": Product.Platform.PC},
+        )
+        playstation_response = self.client.get(
+            reverse("api:product-list"),
+            {"platform": Product.Platform.PLAYSTATION},
+        )
+
+        self.assertEqual(pc_response.status_code, 200)
+        self.assertEqual(playstation_response.status_code, 200)
+        self.assertEqual(
+            [product["id"] for product in pc_response.json()["results"]],
+            [self.first_product.pk],
+        )
+        self.assertEqual(
+            [
+                product["id"]
+                for product in playstation_response.json()["results"]
+            ],
+            [self.second_product.pk],
+        )
+
+    def test_product_list_rejects_invalid_platform_filter(self) -> None:
+        response = self.client.get(
+            reverse("api:product-list"),
+            {"platform": "steam-deck"},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("platform", response.json())
+
     def test_product_popularity_sort_uses_review_count(self) -> None:
         first_user = get_user_model().objects.create_user(username="api-reviewer-1")
         second_user = get_user_model().objects.create_user(username="api-reviewer-2")
@@ -151,6 +195,7 @@ class CatalogAPITests(TestCase):
         price: Decimal,
         description: str = "API product description.",
         is_active: bool = True,
+        platform: str = Product.Platform.PC,
     ) -> Product:
         return Product.objects.create(
             name=name,
@@ -158,7 +203,7 @@ class CatalogAPITests(TestCase):
             description=description,
             price=price,
             category=category,
-            platform=Product.Platform.PC,
+            platform=platform,
             stock=10,
             is_active=is_active,
         )
@@ -493,6 +538,13 @@ class OpenAPIEndpointTests(TestCase):
         response = self.client.get(reverse("schema"))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_schema_documents_product_platform_filter(self) -> None:
+        response = self.client.get(reverse("schema"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "name: platform")
+        self.assertContains(response, "in: query")
 
     def test_swagger_endpoint_works(self) -> None:
         response = self.client.get(reverse("swagger-ui"))

@@ -9,9 +9,10 @@ from products.models import Product
 
 
 class ProductFilter(filters.FilterSet):
-    """Filter products by category identifier or slug and price range."""
+    """Filter products by category, platform, and price range."""
 
     category = filters.CharFilter(method="filter_category")
+    platform = filters.ChoiceFilter(choices=Product.Platform.choices)
     price_min = filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = filters.NumberFilter(field_name="price", lookup_expr="lte")
 

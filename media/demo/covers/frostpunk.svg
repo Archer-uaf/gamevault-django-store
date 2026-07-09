@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Frostpunk demo cover placeholder</title>
+  <rect width="420" height="560" fill="#dbeafe"/>
+  <circle cx="210" cy="238" r="112" fill="#1e3a8a"/>
+  <circle cx="210" cy="238" r="60" fill="#bfdbfe"/>
+  <path d="M210 78v320M50 238h320M98 126l224 224M322 126L98 350" stroke="#0f172a" stroke-width="12" opacity=".65"/>
+  <text x="38" y="72" fill="#0f172a" font-family="Arial, sans-serif" font-size="30" font-weight="700">STRATEGY</text>
+  <text x="38" y="466" fill="#0f172a" font-family="Arial, sans-serif" font-size="64" font-weight="900">FROSTPUNK</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Baldur's Gate 3 demo cover placeholder</title>
+  <rect width="420" height="560" fill="#421016"/>
+  <path d="M210 72c62 58 102 122 102 194 0 78-44 126-102 164-58-38-102-86-102-164 0-72 40-136 102-194z" fill="#d98932"/>
+  <path d="M210 116c36 50 58 94 58 142 0 45-22 76-58 104-36-28-58-59-58-104 0-48 22-92 58-142z" fill="#421016"/>
+  <text x="38" y="72" fill="#f7c26b" font-family="Arial, sans-serif" font-size="30" font-weight="700">RPG</text>
+  <text x="38" y="430" fill="#fff7ed" font-family="Arial, sans-serif" font-size="48" font-weight="900">BALDUR&apos;S</text>
+  <text x="38" y="486" fill="#fff7ed" font-family="Arial, sans-serif" font-size="58" font-weight="900">GATE 3</text>
+</svg>

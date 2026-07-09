@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Hades demo cover placeholder</title>
+  <rect width="420" height="560" fill="#151515"/>
+  <path d="M210 70c70 78 102 152 102 226 0 82-44 126-102 174-58-48-102-92-102-174 0-74 32-148 102-226z" fill="#16a34a"/>
+  <path d="M210 118c42 58 62 108 62 158 0 48-22 80-62 116-40-36-62-68-62-116 0-50 20-100 62-158z" fill="#ef4444"/>
+  <text x="42" y="72" fill="#86efac" font-family="Arial, sans-serif" font-size="30" font-weight="700">INDIE</text>
+  <text x="42" y="455" fill="#fff" font-family="Arial, sans-serif" font-size="74" font-weight="900">HADES</text>
+</svg>

@@ -1,243 +1,344 @@
-"""Create or update demo catalog data for local development."""
+"""Create or update realistic demo catalog data for local development."""
 
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from products.models import Category, Product
 
+DEMO_COVER_DIR = "demo/covers"
+
+
+def demo_cover_path(filename: str) -> str:
+    """Return a media-relative cover path when the local placeholder exists."""
+    media_path = Path(settings.MEDIA_ROOT) / DEMO_COVER_DIR / filename
+    if media_path.exists():
+        return f"{DEMO_COVER_DIR}/{filename}"
+    return ""
+
 
 class Command(BaseCommand):
-    help = "Create or update demo categories and games for GameVault."
+    help = "Create or update demo categories and recognizable games for GameVault."
 
     CATEGORIES = (
         ("Action", "action"),
         ("RPG", "rpg"),
-        ("Strategy", "strategy"),
+        ("Adventure", "adventure"),
         ("Horror", "horror"),
-        ("Racing", "racing"),
         ("Indie", "indie"),
+        ("Strategy", "strategy"),
+        ("Racing", "racing"),
+        ("Simulation", "simulation"),
     )
 
     GAMES: tuple[dict[str, Any], ...] = (
         {
-            "name": "Neon Drift",
-            "slug": "neon-drift",
+            "name": "Cyberpunk 2077",
+            "slug": "cyberpunk-2077",
             "description": (
-                "Динамічний екшн у неоновому мегаполісі, де швидкість і точність "
-                "вирішують результат кожної місії."
+                "Неоновий рольовий бойовик про найманця у мегаполісі майбутнього, "
+                "де імпланти, вибір і репутація змінюють кожне завдання."
             ),
-            "price": Decimal("1299.00"),
-            "category_slug": "action",
-            "platform": Product.Platform.PC,
-            "developer": "Pulse Arc Studio",
-            "publisher": "GameVault Publishing",
-            "release_date": date(2025, 11, 14),
-            "stock": 25,
-            "discount_percent": 10,
-            "is_active": True,
-            "is_featured": True,
-        },
-        {
-            "name": "Mythic Realms",
-            "slug": "mythic-realms",
-            "description": (
-                "Велика рольова гра про стародавні королівства, забутих богів і "
-                "рішення, що змінюють долю світу."
-            ),
-            "price": Decimal("999.00"),
+            "price": Decimal("1599.00"),
             "category_slug": "rpg",
-            "platform": Product.Platform.XBOX,
-            "developer": "Northwind Forge",
-            "publisher": "Aurora Interactive",
-            "release_date": date(2024, 9, 20),
-            "stock": 18,
+            "platform": Product.Platform.PC,
+            "developer": "CD Projekt Red",
+            "publisher": "CD Projekt",
+            "release_date": date(2020, 12, 10),
+            "stock": 36,
             "discount_percent": 20,
             "is_active": True,
             "is_featured": True,
+            "cover": "cyberpunk-2077.svg",
         },
         {
-            "name": "Stellar Frontier",
-            "slug": "stellar-frontier",
+            "name": "The Witcher 3: Wild Hunt",
+            "slug": "the-witcher-3-wild-hunt",
             "description": (
-                "Досліджуйте далекі планети, збирайте команду та розкрийте таємницю "
-                "зниклої космічної експедиції."
+                "Велика фентезійна RPG про мисливця на чудовиськ, політичні інтриги "
+                "та подорожі відкритим світом із сильними сюжетними виборами."
             ),
-            "price": Decimal("1149.00"),
-            "category_slug": "indie",
-            "platform": Product.Platform.NINTENDO_SWITCH,
-            "developer": "Blue Comet Games",
-            "publisher": "Orbit House",
-            "release_date": date(2025, 6, 6),
-            "stock": 12,
+            "price": Decimal("899.00"),
+            "category_slug": "rpg",
+            "platform": Product.Platform.PC,
+            "developer": "CD Projekt Red",
+            "publisher": "CD Projekt",
+            "release_date": date(2015, 5, 19),
+            "stock": 44,
+            "discount_percent": 35,
+            "is_active": True,
+            "is_featured": True,
+            "cover": "the-witcher-3-wild-hunt.svg",
+        },
+        {
+            "name": "Red Dead Redemption 2",
+            "slug": "red-dead-redemption-2",
+            "description": (
+                "Кінематографічна пригода про банду на згасаючому Дикому Заході, "
+                "де спокійні поїздки, перестрілки й моральні рішення мають вагу."
+            ),
+            "price": Decimal("1499.00"),
+            "category_slug": "adventure",
+            "platform": Product.Platform.PLAYSTATION,
+            "developer": "Rockstar Games",
+            "publisher": "Rockstar Games",
+            "release_date": date(2018, 10, 26),
+            "stock": 28,
+            "discount_percent": 15,
+            "is_active": True,
+            "is_featured": True,
+            "cover": "red-dead-redemption-2.svg",
+        },
+        {
+            "name": "Grand Theft Auto V Enhanced",
+            "slug": "grand-theft-auto-v-enhanced",
+            "description": (
+                "Сатиричний кримінальний екшн у великому місті з трьома героями, "
+                "пограбуваннями, погонями й відкритим світом для експериментів."
+            ),
+            "price": Decimal("1199.00"),
+            "category_slug": "action",
+            "platform": Product.Platform.XBOX,
+            "developer": "Rockstar North",
+            "publisher": "Rockstar Games",
+            "release_date": date(2022, 3, 15),
+            "stock": 31,
+            "discount_percent": 10,
+            "is_active": True,
+            "is_featured": False,
+            "cover": "grand-theft-auto-v-enhanced.svg",
+        },
+        {
+            "name": "Elden Ring",
+            "slug": "elden-ring",
+            "description": (
+                "Темне фентезі з відкритим світом, складними босами та свободою "
+                "будувати героя під власний стиль бою й дослідження."
+            ),
+            "price": Decimal("1799.00"),
+            "category_slug": "rpg",
+            "platform": Product.Platform.PLAYSTATION,
+            "developer": "FromSoftware",
+            "publisher": "Bandai Namco Entertainment",
+            "release_date": date(2022, 2, 25),
+            "stock": 22,
             "discount_percent": 0,
             "is_active": True,
             "is_featured": True,
+            "cover": "elden-ring.svg",
         },
         {
-            "name": "Iron Protocol",
-            "slug": "iron-protocol",
+            "name": "Baldur's Gate 3",
+            "slug": "baldurs-gate-3",
             "description": (
-                "Тактичний бойовик про спецзагін, що протистоїть автономній "
-                "армії машин."
+                "Партійна RPG з тактичними боями, живими діалогами та рішеннями, "
+                "які помітно змінюють пригоди загону."
             ),
-            "price": Decimal("1599.00"),
-            "category_slug": "action",
-            "platform": Product.Platform.PLAYSTATION,
-            "developer": "Red Sector",
-            "publisher": "Blackbird Digital",
-            "release_date": date(2025, 3, 28),
-            "stock": 9,
+            "price": Decimal("1999.00"),
+            "category_slug": "rpg",
+            "platform": Product.Platform.PC,
+            "developer": "Larian Studios",
+            "publisher": "Larian Studios",
+            "release_date": date(2023, 8, 3),
+            "stock": 18,
             "discount_percent": 0,
             "is_active": True,
-            "is_featured": False,
+            "is_featured": True,
+            "cover": "baldurs-gate-3.svg",
         },
         {
-            "name": "Kingdoms of Aether",
-            "slug": "kingdoms-of-aether",
+            "name": "Resident Evil Village",
+            "slug": "resident-evil-village",
             "description": (
-                "Будуйте міста на летючих островах, розвивайте торгівлю та "
-                "захищайте королівство від повітряних флотів."
-            ),
-            "price": Decimal("899.00"),
-            "category_slug": "strategy",
-            "platform": Product.Platform.PC,
-            "developer": "Skyfoundry",
-            "publisher": "Maple Crown",
-            "release_date": date(2023, 12, 5),
-            "stock": 31,
-            "discount_percent": 15,
-            "is_active": True,
-            "is_featured": False,
-        },
-        {
-            "name": "Echoes in the Dark",
-            "slug": "echoes-in-the-dark",
-            "description": (
-                "Психологічний горор у покинутій обсерваторії, де кожен "
-                "звук може виявитися попередженням."
-            ),
-            "price": Decimal("749.00"),
-            "category_slug": "horror",
-            "platform": Product.Platform.PLAYSTATION,
-            "developer": "Quiet Room",
-            "publisher": "Midnight Label",
-            "release_date": date(2024, 10, 31),
-            "stock": 7,
-            "discount_percent": 5,
-            "is_active": True,
-            "is_featured": False,
-        },
-        {
-            "name": "Velocity Apex",
-            "slug": "velocity-apex",
-            "description": (
-                "Аркадні перегони трасами майбутнього зі швидкими заїздами, "
-                "тюнінгом і глобальними таблицями лідерів."
+                "Напружений горор у засніженому селищі з дослідженням, ресурсним "
+                "менеджментом і небезпечними зустрічами за кожними дверима."
             ),
             "price": Decimal("1099.00"),
-            "category_slug": "racing",
-            "platform": Product.Platform.XBOX,
-            "developer": "Overtake Lab",
-            "publisher": "Rapid Works",
-            "release_date": date(2025, 2, 18),
-            "stock": 20,
-            "discount_percent": 0,
+            "category_slug": "horror",
+            "platform": Product.Platform.PLAYSTATION,
+            "developer": "Capcom",
+            "publisher": "Capcom",
+            "release_date": date(2021, 5, 7),
+            "stock": 16,
+            "discount_percent": 25,
             "is_active": True,
             "is_featured": False,
+            "cover": "resident-evil-village.svg",
         },
         {
-            "name": "Pixelbound",
-            "slug": "pixelbound",
+            "name": "DOOM Eternal",
+            "slug": "doom-eternal",
             "description": (
-                "Тепла піксельна пригода про дружбу, подорожі й таємниці "
-                "невеликого приморського міста."
+                "Швидкий шутер із агресивним ритмом, важким саундтреком і аренами, "
+                "де постійний рух важливіший за укриття."
             ),
-            "price": Decimal("399.00"),
+            "price": Decimal("999.00"),
+            "category_slug": "action",
+            "platform": Product.Platform.XBOX,
+            "developer": "id Software",
+            "publisher": "Bethesda Softworks",
+            "release_date": date(2020, 3, 20),
+            "stock": 24,
+            "discount_percent": 30,
+            "is_active": True,
+            "is_featured": False,
+            "cover": "doom-eternal.svg",
+        },
+        {
+            "name": "Hades",
+            "slug": "hades",
+            "description": (
+                "Динамічний roguelike про втечу з підземного світу, де кожна спроба "
+                "відкриває нові здібності, жарти й сімейні конфлікти богів."
+            ),
+            "price": Decimal("699.00"),
             "category_slug": "indie",
             "platform": Product.Platform.NINTENDO_SWITCH,
-            "developer": "Small Lantern",
-            "publisher": "Indie Harbor",
-            "release_date": date(2023, 8, 11),
+            "developer": "Supergiant Games",
+            "publisher": "Supergiant Games",
+            "release_date": date(2020, 9, 17),
+            "stock": 38,
+            "discount_percent": 15,
+            "is_active": True,
+            "is_featured": True,
+            "cover": "hades.svg",
+        },
+        {
+            "name": "Hollow Knight",
+            "slug": "hollow-knight",
+            "description": (
+                "Атмосферна метроїдванія про підземне королівство з точними боями, "
+                "таємними проходами й меланхолійною казковою подачею."
+            ),
+            "price": Decimal("449.00"),
+            "category_slug": "indie",
+            "platform": Product.Platform.NINTENDO_SWITCH,
+            "developer": "Team Cherry",
+            "publisher": "Team Cherry",
+            "release_date": date(2017, 2, 24),
             "stock": 42,
             "discount_percent": 0,
             "is_active": True,
             "is_featured": False,
+            "cover": "hollow-knight.svg",
         },
         {
-            "name": "Ashen Crown",
-            "slug": "ashen-crown",
+            "name": "Stardew Valley",
+            "slug": "stardew-valley",
             "description": (
-                "Похмура RPG із глибоким розвитком персонажа, небезпечними "
-                "підземеллями "
-                "та нелінійною історією."
+                "Затишна фермерська симуляція про врожай, ремесло, дружбу з містянами "
+                "та повільне облаштування власного куточка."
             ),
-            "price": Decimal("1399.00"),
-            "category_slug": "rpg",
+            "price": Decimal("399.00"),
+            "category_slug": "simulation",
             "platform": Product.Platform.PC,
-            "developer": "Grey Wolf Studio",
-            "publisher": "Aurora Interactive",
-            "release_date": date(2025, 1, 24),
-            "stock": 14,
-            "discount_percent": 25,
-            "is_active": True,
-            "is_featured": True,
-        },
-        {
-            "name": "Tactical Horizon",
-            "slug": "tactical-horizon",
-            "description": (
-                "Покрокова стратегія про протистояння колоній на далекій планеті "
-                "з руйнівним оточенням."
-            ),
-            "price": Decimal("829.00"),
-            "category_slug": "strategy",
-            "platform": Product.Platform.PC,
-            "developer": "Hexline Games",
-            "publisher": "Maple Crown",
-            "release_date": date(2024, 4, 16),
-            "stock": 23,
+            "developer": "ConcernedApe",
+            "publisher": "ConcernedApe",
+            "release_date": date(2016, 2, 26),
+            "stock": 55,
             "discount_percent": 0,
             "is_active": True,
             "is_featured": False,
+            "cover": "stardew-valley.svg",
         },
         {
-            "name": "Night Signal",
-            "slug": "night-signal",
+            "name": "Forza Horizon 5",
+            "slug": "forza-horizon-5",
             "description": (
-                "Камерний горор про нічного радіоведучого, який приймає сигнал "
-                "із місця, якого немає на карті."
+                "Яскраві перегони відкритим світом із фестивальною атмосферою, "
+                "великим автопарком і трасами від пустелі до тропічних доріг."
             ),
-            "price": Decimal("549.00"),
-            "category_slug": "horror",
+            "price": Decimal("1699.00"),
+            "category_slug": "racing",
             "platform": Product.Platform.XBOX,
-            "developer": "Static Door",
-            "publisher": "Midnight Label",
-            "release_date": date(2023, 10, 13),
-            "stock": 0,
+            "developer": "Playground Games",
+            "publisher": "Xbox Game Studios",
+            "release_date": date(2021, 11, 9),
+            "stock": 21,
+            "discount_percent": 10,
+            "is_active": True,
+            "is_featured": False,
+            "cover": "forza-horizon-5.svg",
+        },
+        {
+            "name": "Sid Meier's Civilization VI",
+            "slug": "sid-meiers-civilization-vi",
+            "description": (
+                "Покрокова стратегія про розвиток цивілізації від перших міст до "
+                "космічних амбіцій, дипломатії та культурного суперництва."
+            ),
+            "price": Decimal("799.00"),
+            "category_slug": "strategy",
+            "platform": Product.Platform.PC,
+            "developer": "Firaxis Games",
+            "publisher": "2K",
+            "release_date": date(2016, 10, 21),
+            "stock": 33,
+            "discount_percent": 40,
+            "is_active": True,
+            "is_featured": False,
+            "cover": "sid-meiers-civilization-vi.svg",
+        },
+        {
+            "name": "Frostpunk",
+            "slug": "frostpunk",
+            "description": (
+                "Сувора стратегія виживання про місто серед льодової катастрофи, "
+                "де кожен закон і виробниче рішення має людську ціну."
+            ),
+            "price": Decimal("649.00"),
+            "category_slug": "strategy",
+            "platform": Product.Platform.PC,
+            "developer": "11 bit studios",
+            "publisher": "11 bit studios",
+            "release_date": date(2018, 4, 24),
+            "stock": 27,
+            "discount_percent": 20,
+            "is_active": True,
+            "is_featured": False,
+            "cover": "frostpunk.svg",
+        },
+        {
+            "name": "Disco Elysium",
+            "slug": "disco-elysium",
+            "description": (
+                "Детективна RPG без звичних боїв, зате з гострими діалогами, "
+                "психологічними перевірками й містом, яке пам'ятає кожну поразку."
+            ),
+            "price": Decimal("749.00"),
+            "category_slug": "adventure",
+            "platform": Product.Platform.PC,
+            "developer": "ZA/UM",
+            "publisher": "ZA/UM",
+            "release_date": date(2019, 10, 15),
+            "stock": 19,
             "discount_percent": 30,
             "is_active": True,
             "is_featured": False,
+            "cover": "disco-elysium.svg",
         },
         {
-            "name": "Circuit Legends",
-            "slug": "circuit-legends",
+            "name": "Terraria",
+            "slug": "terraria",
             "description": (
-                "Змагальний автосимулятор із легендарними трасами, "
-                "динамічною погодою та детальним налаштуванням машин."
+                "Пісочниця про копання, будівництво й битви з босами, де маленький "
+                "піксельний світ швидко перетворюється на особисту пригоду."
             ),
-            "price": Decimal("1799.00"),
-            "category_slug": "racing",
-            "platform": Product.Platform.PLAYSTATION,
-            "developer": "Gridline Motorsport",
-            "publisher": "Rapid Works",
-            "release_date": date(2025, 9, 12),
-            "stock": 11,
+            "price": Decimal("299.00"),
+            "category_slug": "adventure",
+            "platform": Product.Platform.PC,
+            "developer": "Re-Logic",
+            "publisher": "Re-Logic",
+            "release_date": date(2011, 5, 16),
+            "stock": 60,
             "discount_percent": 0,
             "is_active": True,
-            "is_featured": True,
+            "is_featured": False,
+            "cover": "terraria.svg",
         },
     )
 
@@ -256,7 +357,9 @@ class Command(BaseCommand):
             data = game.copy()
             category_slug = data.pop("category_slug")
             slug = data.pop("slug")
+            cover = data.pop("cover")
             data["category"] = categories[category_slug]
+            data["image"] = demo_cover_path(cover)
             _, created = Product.objects.update_or_create(
                 slug=slug,
                 defaults=data,

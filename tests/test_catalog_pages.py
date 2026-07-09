@@ -105,6 +105,15 @@ class CatalogPagesTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "products/product_list.html")
 
+    def test_product_list_renders_fallback_cover_without_image(self) -> None:
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Alpha"},
+        )
+
+        self.assertContains(response, "game-placeholder")
+        self.assertContains(response, self.active_product.name)
+
     def test_product_list_shows_only_active_products(self) -> None:
         response = self.client.get(reverse("products:product_list"))
         products = list(response.context["products"])
@@ -220,4 +229,37 @@ class SeedDemoGamesCommandTests(TestCase):
 
         self.assertEqual(Category.objects.count(), category_count)
         self.assertEqual(Product.objects.count(), product_count)
-        self.assertGreaterEqual(product_count, 12)
+        self.assertGreaterEqual(product_count, 16)
+
+    def test_command_creates_realistic_game_catalog(self) -> None:
+        call_command("seed_demo_games", verbosity=0)
+
+        category_slugs = set(Category.objects.values_list("slug", flat=True))
+        product_slugs = set(Product.objects.values_list("slug", flat=True))
+        expected_categories = {
+            "action",
+            "rpg",
+            "adventure",
+            "horror",
+            "indie",
+            "strategy",
+            "racing",
+            "simulation",
+        }
+        expected_products = {
+            "cyberpunk-2077",
+            "the-witcher-3-wild-hunt",
+            "elden-ring",
+            "baldurs-gate-3",
+            "forza-horizon-5",
+        }
+
+        self.assertTrue(expected_categories.issubset(category_slugs))
+        self.assertTrue(expected_products.issubset(product_slugs))
+
+        cyberpunk = Product.objects.get(slug="cyberpunk-2077")
+        self.assertEqual(cyberpunk.category.slug, "rpg")
+        self.assertEqual(cyberpunk.developer, "CD Projekt Red")
+        self.assertEqual(cyberpunk.image.name, "demo/covers/cyberpunk-2077.svg")
+        self.assertGreater(cyberpunk.price, Decimal("0"))
+        self.assertGreater(cyberpunk.stock, 0)

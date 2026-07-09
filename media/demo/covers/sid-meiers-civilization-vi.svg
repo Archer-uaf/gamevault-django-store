@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Sid Meier's Civilization VI demo cover placeholder</title>
+  <rect width="420" height="560" fill="#123458"/>
+  <path d="M74 312h272v166H74z" fill="#d4af37"/>
+  <path d="M112 312V184h44v128M188 312V140h44v172M264 312V208h44v104" stroke="#fff7d6" stroke-width="26"/>
+  <text x="38" y="72" fill="#fef3c7" font-family="Arial, sans-serif" font-size="30" font-weight="700">STRATEGY</text>
+  <text x="38" y="422" fill="#fff" font-family="Arial, sans-serif" font-size="42" font-weight="900">CIVILIZATION</text>
+  <text x="38" y="486" fill="#fef3c7" font-family="Arial, sans-serif" font-size="72" font-weight="900">VI</text>
+</svg>

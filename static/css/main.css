@@ -483,7 +483,7 @@ dd {
 
 .genre-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 14px;
 }
 
@@ -517,6 +517,8 @@ dd {
 }
 
 .genre-card span {
+    position: relative;
+    z-index: 1;
     font-size: 0.7rem;
     font-weight: 850;
     opacity: 0.7;
@@ -528,12 +530,25 @@ dd {
     font-size: 1rem;
 }
 
+.genre-card__icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 1;
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 255, 255, 0.72);
+}
+
 .genre-card--action { background: #eb4d6d; }
 .genre-card--rpg { background: #6c48e8; }
 .genre-card--strategy { background: #1f8d82; }
 .genre-card--racing { background: #e07b2d; }
 .genre-card--indie { background: #2d71ca; }
 .genre-card--sport { background: #303240; }
+.genre-card--horror { background: #303240; }
+.genre-card--adventure { background: #b45f24; }
+.genre-card--simulation { background: #3f6f5f; }
 
 .game-grid {
     display: grid;
@@ -545,6 +560,7 @@ dd {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    display: block;
     background: var(--surface);
     box-shadow: 0 12px 35px rgba(25, 21, 53, 0.07);
     transition: transform 180ms ease, box-shadow 180ms ease;

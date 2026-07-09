@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Red Dead Redemption 2 demo cover placeholder</title>
+  <rect width="420" height="560" fill="#b7192b"/>
+  <circle cx="96" cy="112" r="58" fill="#f6c453"/>
+  <path d="M0 350c98-48 211-66 420-48v258H0z" fill="#31110e"/>
+  <path d="M86 308h88l-20 150h-48zM245 294h70l24 164h-58z" fill="#111"/>
+  <text x="38" y="70" fill="#f6c453" font-family="Arial, sans-serif" font-size="28" font-weight="700">ADVENTURE</text>
+  <text x="38" y="420" fill="#fff" font-family="Arial, sans-serif" font-size="48" font-weight="900">RED DEAD</text>
+  <text x="38" y="472" fill="#fff" font-family="Arial, sans-serif" font-size="39" font-weight="900">REDEMPTION</text>
+  <text x="338" y="516" fill="#f6c453" font-family="Arial, sans-serif" font-size="56" font-weight="900">2</text>
+</svg>

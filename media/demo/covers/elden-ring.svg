@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Elden Ring demo cover placeholder</title>
+  <rect width="420" height="560" fill="#15130f"/>
+  <circle cx="210" cy="205" r="116" fill="none" stroke="#d6a84f" stroke-width="18"/>
+  <circle cx="210" cy="205" r="70" fill="none" stroke="#6f4d21" stroke-width="10"/>
+  <path d="M210 58v304M88 205h244M142 110l136 190M278 110L142 300" stroke="#e4c36a" stroke-width="8" opacity=".72"/>
+  <text x="42" y="72" fill="#d6a84f" font-family="Arial, sans-serif" font-size="30" font-weight="700">RPG</text>
+  <text x="42" y="432" fill="#f9f4e5" font-family="Arial, sans-serif" font-size="58" font-weight="900">ELDEN</text>
+  <text x="42" y="492" fill="#d6a84f" font-family="Arial, sans-serif" font-size="58" font-weight="900">RING</text>
+</svg>

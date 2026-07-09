@@ -87,12 +87,38 @@
             <a href="{% url 'products:product_list' %}" class="text-link">{% trans "Усі жанри" %} <span aria-hidden="true">→</span></a>
         </div>
         <div class="genre-grid">
-            <a href="#" class="genre-card genre-card--action"><span>01</span><strong>{% trans "Екшн" %}</strong></a>
-            <a href="#" class="genre-card genre-card--rpg"><span>02</span><strong>RPG</strong></a>
-            <a href="#" class="genre-card genre-card--strategy"><span>03</span><strong>{% trans "Стратегії" %}</strong></a>
-            <a href="#" class="genre-card genre-card--racing"><span>04</span><strong>{% trans "Гонки" %}</strong></a>
-            <a href="#" class="genre-card genre-card--indie"><span>05</span><strong>{% trans "Інді" %}</strong></a>
-            <a href="#" class="genre-card genre-card--sport"><span>06</span><strong>{% trans "Спорт" %}</strong></a>
+            <a href="{% url 'products:product_list' %}?category=action" class="genre-card genre-card--action">
+                <img src="{% static 'images/categories/action.svg' %}" alt="" class="genre-card__icon">
+                <span>01</span><strong>{% trans "Екшн" %}</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=rpg" class="genre-card genre-card--rpg">
+                <img src="{% static 'images/categories/rpg.svg' %}" alt="" class="genre-card__icon">
+                <span>02</span><strong>RPG</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=adventure" class="genre-card genre-card--adventure">
+                <img src="{% static 'images/categories/adventure.svg' %}" alt="" class="genre-card__icon">
+                <span>03</span><strong>{% trans "Пригоди" %}</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=horror" class="genre-card genre-card--horror">
+                <img src="{% static 'images/categories/horror.svg' %}" alt="" class="genre-card__icon">
+                <span>04</span><strong>{% trans "Горор" %}</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=strategy" class="genre-card genre-card--strategy">
+                <img src="{% static 'images/categories/strategy.svg' %}" alt="" class="genre-card__icon">
+                <span>05</span><strong>{% trans "Стратегії" %}</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=racing" class="genre-card genre-card--racing">
+                <img src="{% static 'images/categories/racing.svg' %}" alt="" class="genre-card__icon">
+                <span>06</span><strong>{% trans "Гонки" %}</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=indie" class="genre-card genre-card--indie">
+                <img src="{% static 'images/categories/indie.svg' %}" alt="" class="genre-card__icon">
+                <span>07</span><strong>{% trans "Інді" %}</strong>
+            </a>
+            <a href="{% url 'products:product_list' %}?category=simulation" class="genre-card genre-card--simulation">
+                <img src="{% static 'images/categories/simulation.svg' %}" alt="" class="genre-card__icon">
+                <span>08</span><strong>{% trans "Симулятори" %}</strong>
+            </a>
         </div>
     </div>
 </section>
@@ -107,39 +133,39 @@
             <p class="section-note">{% trans "Добірка ігор від редакції GameVault." %}</p>
         </div>
         <div class="game-grid">
-            <article class="game-card">
+            <a href="{% url 'products:product_detail' slug='cyberpunk-2077' %}" class="game-card">
                 <div class="game-cover">
-                    <img src="{% static 'images/games/neon-drift.svg' %}" alt="{% trans 'Обкладинка Neon Drift' %}">
+                    <img src="/media/demo/covers/cyberpunk-2077.svg" alt="{% trans 'Обкладинка Cyberpunk 2077' %}">
                     <span class="game-badge">{% trans "Новинка" %}</span>
                 </div>
                 <div class="game-info">
-                    <p class="game-platform">PC · PlayStation</p>
-                    <h3>Neon Drift</h3>
-                    <div class="game-meta"><span>{% trans "Екшн" %}</span><strong>₴1 299</strong></div>
+                    <p class="game-platform">PC</p>
+                    <h3>Cyberpunk 2077</h3>
+                    <div class="game-meta"><span>RPG</span><strong>₴1 599</strong></div>
                 </div>
-            </article>
-            <article class="game-card">
+            </a>
+            <a href="{% url 'products:product_detail' slug='the-witcher-3-wild-hunt' %}" class="game-card">
                 <div class="game-cover">
-                    <img src="{% static 'images/games/mythic-realms.svg' %}" alt="{% trans 'Обкладинка Mythic Realms' %}">
-                    <span class="game-badge game-badge--violet">-20%</span>
+                    <img src="/media/demo/covers/the-witcher-3-wild-hunt.svg" alt="{% trans 'Обкладинка The Witcher 3: Wild Hunt' %}">
+                    <span class="game-badge game-badge--violet">-35%</span>
                 </div>
                 <div class="game-info">
-                    <p class="game-platform">PC · Xbox</p>
-                    <h3>Mythic Realms</h3>
-                    <div class="game-meta"><span>RPG</span><strong>₴999</strong></div>
+                    <p class="game-platform">PC</p>
+                    <h3>The Witcher 3: Wild Hunt</h3>
+                    <div class="game-meta"><span>RPG</span><strong>₴899</strong></div>
                 </div>
-            </article>
-            <article class="game-card">
+            </a>
+            <a href="{% url 'products:product_detail' slug='elden-ring' %}" class="game-card">
                 <div class="game-cover">
-                    <img src="{% static 'images/games/stellar-frontier.svg' %}" alt="{% trans 'Обкладинка Stellar Frontier' %}">
+                    <img src="/media/demo/covers/elden-ring.svg" alt="{% trans 'Обкладинка Elden Ring' %}">
                     <span class="game-badge game-badge--blue">{% trans "Рекомендовано" %}</span>
                 </div>
                 <div class="game-info">
-                    <p class="game-platform">Nintendo Switch</p>
-                    <h3>Stellar Frontier</h3>
-                    <div class="game-meta"><span>{% trans "Пригодницькі" %}</span><strong>₴1 149</strong></div>
+                    <p class="game-platform">PlayStation</p>
+                    <h3>Elden Ring</h3>
+                    <div class="game-meta"><span>RPG</span><strong>₴1 799</strong></div>
                 </div>
-            </article>
+            </a>
         </div>
     </div>
 </section>

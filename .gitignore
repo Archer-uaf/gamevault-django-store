@@ -15,6 +15,9 @@ db.sqlite3
 db.sqlite3-journal
 media/*
 !media/.gitkeep
+!media/demo/
+!media/demo/covers/
+!media/demo/covers/*.svg
 staticfiles/
 
 # Environment and secrets

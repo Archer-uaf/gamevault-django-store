@@ -55,7 +55,9 @@ Requirements: Docker with Docker Compose support.
 
 5. Open <http://localhost:8000/>.
 
-The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates.
+The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates. It creates a realistic demo video game catalog with recognizable titles, genres, prices, stock values, discounts, and lightweight local SVG cover placeholders.
+
+Official game cover art is not bundled. To use user-provided assets, place local cover files in `media/demo/covers/` with the expected slug-based filenames used by `products/management/commands/seed_demo_games.py`; the seed command falls back to an empty image field if a file is missing.
 
 ## Environment variables
 

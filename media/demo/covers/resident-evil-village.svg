@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Resident Evil Village demo cover placeholder</title>
+  <rect width="420" height="560" fill="#18211d"/>
+  <path d="M0 330c120-80 270-80 420 0v230H0z" fill="#0b0f0e"/>
+  <path d="M102 320l108-190 108 190h-54l-54-92-54 92z" fill="#d9d3bd"/>
+  <circle cx="210" cy="150" r="42" fill="#d9d3bd"/>
+  <text x="36" y="72" fill="#d9d3bd" font-family="Arial, sans-serif" font-size="30" font-weight="700">HORROR</text>
+  <text x="36" y="426" fill="#f8fafc" font-family="Arial, sans-serif" font-size="42" font-weight="900">RESIDENT</text>
+  <text x="36" y="478" fill="#f8fafc" font-family="Arial, sans-serif" font-size="54" font-weight="900">EVIL</text>
+  <text x="36" y="518" fill="#bda76b" font-family="Arial, sans-serif" font-size="30" font-weight="700">VILLAGE</text>
+</svg>

@@ -4,6 +4,7 @@
 
 - [x] Django project with PostgreSQL and Docker Compose.
 - [x] Product and category catalog with search, filtering, sorting, and pagination.
+- [x] Idempotent demo video game catalog with recognizable titles, genres, and local SVG cover placeholders.
 - [x] Product detail pages with stock, discounts, and review display.
 - [x] Ukrainian and English i18n with Ukrainian as the default language.
 - [x] Session-based web cart and session-backed API cart.
@@ -20,6 +21,7 @@
 ## Intentionally mocked or deferred
 
 - [x] Payments use mock methods; no real payment provider or card processing is included.
+- [x] Official game cover images are not bundled; local user-provided assets can replace demo placeholders.
 - [x] Email uses Django's console backend by default; production SMTP is not configured.
 - [x] GraphQL is outside the project scope.
 - [x] External hosting, production deployment, and infrastructure hardening are deferred.

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Cyberpunk 2077 demo cover placeholder</title>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8e64c"/>
+      <stop offset="0.55" stop-color="#ff2f70"/>
+      <stop offset="1" stop-color="#11142c"/>
+    </linearGradient>
+  </defs>
+  <rect width="420" height="560" fill="url(#g)"/>
+  <path d="M0 120h420M0 315h420M90 0v560M290 0v560" stroke="#11142c" stroke-width="5" opacity=".35"/>
+  <circle cx="320" cy="92" r="54" fill="none" stroke="#00f0ff" stroke-width="14"/>
+  <path d="M80 420h260l-32 58H112z" fill="#11142c" opacity=".75"/>
+  <text x="42" y="68" fill="#11142c" font-family="Arial, sans-serif" font-size="30" font-weight="700">RPG</text>
+  <text x="42" y="378" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="900">CYBER</text>
+  <text x="42" y="436" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="900">PUNK</text>
+  <text x="42" y="493" fill="#00f0ff" font-family="Arial, sans-serif" font-size="44" font-weight="900">2077</text>
+</svg>

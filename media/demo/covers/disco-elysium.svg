@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Disco Elysium demo cover placeholder</title>
+  <rect width="420" height="560" fill="#2b124c"/>
+  <circle cx="136" cy="170" r="82" fill="#fb7185" opacity=".9"/>
+  <circle cx="264" cy="190" r="98" fill="#38bdf8" opacity=".75"/>
+  <path d="M0 360c100-44 240-48 420 20v180H0z" fill="#111827" opacity=".85"/>
+  <text x="38" y="72" fill="#f0abfc" font-family="Arial, sans-serif" font-size="27" font-weight="700">ADVENTURE</text>
+  <text x="38" y="432" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="900">DISCO</text>
+  <text x="38" y="492" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="900">ELYSIUM</text>
+</svg>

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-04 13:16+0000\n"
+"POT-Creation-Date: 2026-07-09 01:23+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -481,7 +481,7 @@ msgstr "Your cart is empty"
 msgid "Додайте ігри з каталогу, щоб вони з’явилися тут."
 msgstr "Add games from the catalog to see them here."
 
-#: templates/orders/cart_detail.html:114 templates/pages/home.html:155
+#: templates/orders/cart_detail.html:114 templates/pages/home.html:181
 #: templates/users/order_history.html:48
 msgid "Перейти до каталогу"
 msgstr "Go to catalog"
@@ -640,71 +640,75 @@ msgstr "Popular genres"
 msgid "Усі жанри"
 msgstr "All genres"
 
-#: templates/pages/home.html:90 templates/pages/home.html:118
+#: templates/pages/home.html:92
 msgid "Екшн"
 msgstr "Action"
 
-#: templates/pages/home.html:92
+#: templates/pages/home.html:100
+msgid "Пригоди"
+msgstr "Adventure"
+
+#: templates/pages/home.html:104
+msgid "Горор"
+msgstr "Horror"
+
+#: templates/pages/home.html:108
 msgid "Стратегії"
 msgstr "Strategy"
 
-#: templates/pages/home.html:93
+#: templates/pages/home.html:112
 msgid "Гонки"
 msgstr "Racing"
 
-#: templates/pages/home.html:94
+#: templates/pages/home.html:116
 msgid "Інді"
 msgstr "Indie"
 
-#: templates/pages/home.html:95
-msgid "Спорт"
-msgstr "Sports"
+#: templates/pages/home.html:120
+msgid "Симулятори"
+msgstr "Simulation"
 
-#: templates/pages/home.html:104
+#: templates/pages/home.html:130
 msgid "Вибір редакції"
 msgstr "Editor's choice"
 
-#: templates/pages/home.html:105
+#: templates/pages/home.html:131
 msgid "Рекомендовані ігри"
 msgstr "Featured games"
 
-#: templates/pages/home.html:107
+#: templates/pages/home.html:133
 msgid "Добірка ігор від редакції GameVault."
 msgstr "A selection of games from the GameVault team."
 
-#: templates/pages/home.html:112
-msgid "Обкладинка Neon Drift"
-msgstr "Neon Drift cover"
+#: templates/pages/home.html:138
+msgid "Обкладинка Cyberpunk 2077"
+msgstr "Cyberpunk 2077 cover"
 
-#: templates/pages/home.html:113
+#: templates/pages/home.html:139
 msgid "Новинка"
 msgstr "New release"
 
-#: templates/pages/home.html:123
-msgid "Обкладинка Mythic Realms"
-msgstr "Mythic Realms cover"
+#: templates/pages/home.html:149
+msgid "Обкладинка The Witcher 3: Wild Hunt"
+msgstr "The Witcher 3: Wild Hunt cover"
 
-#: templates/pages/home.html:134
-msgid "Обкладинка Stellar Frontier"
-msgstr "Stellar Frontier cover"
+#: templates/pages/home.html:160
+msgid "Обкладинка Elden Ring"
+msgstr "Elden Ring cover"
 
-#: templates/pages/home.html:135 templates/products/product_detail.html:37
+#: templates/pages/home.html:161 templates/products/product_detail.html:37
 msgid "Рекомендовано"
 msgstr "Featured"
 
-#: templates/pages/home.html:140
-msgid "Пригодницькі"
-msgstr "Adventure"
-
-#: templates/pages/home.html:151
+#: templates/pages/home.html:177
 msgid "Готовий до наступного рівня?"
 msgstr "Ready for the next level?"
 
-#: templates/pages/home.html:152
+#: templates/pages/home.html:178
 msgid "Знайди гру, яку не захочеться вимикати"
 msgstr "Find a game you won't want to turn off"
 
-#: templates/pages/home.html:153
+#: templates/pages/home.html:179
 msgid "Шукай ігри за жанром, платформою, ціною або назвою."
 msgstr "Search for games by genre, platform, price, or title."
 
@@ -1165,6 +1169,15 @@ msgstr "Your profile was updated successfully."
 #: users/views.py:132
 msgid "Пароль успішно змінено."
 msgstr "Your password was changed successfully."
+
+#~ msgid "Спорт"
+#~ msgstr "Sports"
+
+#~ msgid "Обкладинка Mythic Realms"
+#~ msgstr "Mythic Realms cover"
+
+#~ msgid "Обкладинка Stellar Frontier"
+#~ msgstr "Stellar Frontier cover"
 
 #~ msgid "Створення відгуків буде додано окремим етапом."
 #~ msgstr "Review creation will be added in a separate stage."

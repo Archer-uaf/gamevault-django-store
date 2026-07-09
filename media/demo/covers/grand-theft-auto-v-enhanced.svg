@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Grand Theft Auto V Enhanced demo cover placeholder</title>
+  <rect width="420" height="560" fill="#0f766e"/>
+  <path d="M0 310l420-95v345H0z" fill="#111827"/>
+  <path d="M52 146h112v112H52zM178 118h190v86H178zM208 230h132v132H208z" fill="#f8fafc" opacity=".9"/>
+  <path d="M75 168h66v66H75zM200 140h146v42H200zM232 252h84v84h-84z" fill="#0f766e"/>
+  <text x="36" y="78" fill="#f8fafc" font-family="Arial, sans-serif" font-size="28" font-weight="700">ACTION</text>
+  <text x="36" y="424" fill="#fff" font-family="Arial, sans-serif" font-size="42" font-weight="900">GRAND THEFT</text>
+  <text x="36" y="474" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="900">AUTO V</text>
+  <text x="36" y="516" fill="#99f6e4" font-family="Arial, sans-serif" font-size="26" font-weight="700">ENHANCED</text>
+</svg>

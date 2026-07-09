@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Terraria demo cover placeholder</title>
+  <rect width="420" height="560" fill="#38bdf8"/>
+  <path d="M0 260h420v300H0z" fill="#16a34a"/>
+  <rect x="0" y="360" width="420" height="200" fill="#7c2d12"/>
+  <path d="M88 250h44v110H88zM60 230h100v44H60zM250 278h38v82h-38zM228 256h82v38h-82z" fill="#166534"/>
+  <text x="38" y="72" fill="#14532d" font-family="Arial, sans-serif" font-size="27" font-weight="700">ADVENTURE</text>
+  <text x="38" y="466" fill="#fff" font-family="Arial, sans-serif" font-size="70" font-weight="900">TERRARIA</text>
+</svg>

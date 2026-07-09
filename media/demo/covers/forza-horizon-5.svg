@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Forza Horizon 5 demo cover placeholder</title>
+  <rect width="420" height="560" fill="#0ea5e9"/>
+  <path d="M0 322h420v238H0z" fill="#111827"/>
+  <path d="M70 300h280l38 62H32z" fill="#f97316"/>
+  <circle cx="112" cy="370" r="34" fill="#0f172a" stroke="#e5e7eb" stroke-width="12"/>
+  <circle cx="308" cy="370" r="34" fill="#0f172a" stroke="#e5e7eb" stroke-width="12"/>
+  <text x="38" y="72" fill="#fff" font-family="Arial, sans-serif" font-size="30" font-weight="700">RACING</text>
+  <text x="38" y="438" fill="#fff" font-family="Arial, sans-serif" font-size="58" font-weight="900">FORZA</text>
+  <text x="38" y="492" fill="#f97316" font-family="Arial, sans-serif" font-size="44" font-weight="900">HORIZON 5</text>
+</svg>

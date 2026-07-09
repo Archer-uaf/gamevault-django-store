@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>Stardew Valley demo cover placeholder</title>
+  <rect width="420" height="560" fill="#7dd3fc"/>
+  <circle cx="330" cy="90" r="46" fill="#fde68a"/>
+  <path d="M0 300c95-58 190-64 420 0v260H0z" fill="#22c55e"/>
+  <path d="M76 286h132v118H76z" fill="#f59e0b"/>
+  <path d="M62 286l80-76 80 76z" fill="#b45309"/>
+  <text x="38" y="72" fill="#14532d" font-family="Arial, sans-serif" font-size="27" font-weight="700">SIMULATION</text>
+  <text x="38" y="448" fill="#fff" font-family="Arial, sans-serif" font-size="54" font-weight="900">STARDEW</text>
+  <text x="38" y="504" fill="#fff" font-family="Arial, sans-serif" font-size="54" font-weight="900">VALLEY</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title">
+  <title>DOOM Eternal demo cover placeholder</title>
+  <rect width="420" height="560" fill="#53120f"/>
+  <path d="M0 0h420v280L210 190 0 280z" fill="#f97316" opacity=".88"/>
+  <path d="M92 170h236l-36 145H128z" fill="#111827"/>
+  <path d="M150 198h120l-22 74h-76z" fill="#ef4444"/>
+  <text x="38" y="72" fill="#fff" font-family="Arial, sans-serif" font-size="30" font-weight="700">ACTION</text>
+  <text x="38" y="436" fill="#fff" font-family="Arial, sans-serif" font-size="76" font-weight="900">DOOM</text>
+  <text x="38" y="492" fill="#fdba74" font-family="Arial, sans-serif" font-size="42" font-weight="900">ETERNAL</text>
+</svg>

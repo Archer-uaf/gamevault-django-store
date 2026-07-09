@@ -78,7 +78,6 @@ class CheckoutView(FormView):
             )
             return redirect("cart:detail")
 
-        cart.clear()
         send_order_notifications(order)
         self.request.session[LAST_ORDER_SESSION_KEY] = order.pk
         messages.success(

@@ -167,6 +167,20 @@ class CheckoutFlowTests(TestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock, 2)
 
+    def test_checkout_rejects_inactive_product_from_cart(self) -> None:
+        self.add_to_cart()
+        Product.objects.filter(pk=self.product.pk).update(is_active=False)
+
+        response = self.client.post(
+            reverse("checkout:form"),
+            self.checkout_data(),
+        )
+
+        self.assertRedirects(response, reverse("cart:detail"))
+        self.assertFalse(Order.objects.exists())
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock, 5)
+
     def test_success_page_renders_order_number_and_total(self) -> None:
         self.add_to_cart()
         self.client.post(reverse("checkout:form"), self.checkout_data())

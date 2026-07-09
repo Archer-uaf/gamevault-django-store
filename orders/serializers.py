@@ -1,14 +1,18 @@
 """Serializers for authenticated API order creation and history."""
 
-from decimal import Decimal
 from typing import Any
 
-from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from orders.checkout import (
+    EmptyCartError,
+    InsufficientStockError,
+    OrderLine,
+    ProductUnavailableError,
+    create_order_from_items,
+)
 from orders.models import Order, OrderItem
-from products.models import Product
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -143,68 +147,53 @@ class OrderCreateSerializer(serializers.Serializer):
         return value
 
     def create(self, validated_data: dict[str, Any]) -> Order:
-        """Lock products, validate stock, create snapshots, and decrement stock."""
+        """Create an order through the shared checkout service."""
         request = self.context["request"]
         user = request.user
         item_data = validated_data.pop("items")
         first_name, last_name = validated_data.pop("full_name").split(maxsplit=1)
         address = validated_data.pop("address")
-        product_ids = [item["product_id"] for item in item_data]
 
-        with transaction.atomic():
-            products = list(
-                Product.objects.select_for_update().filter(
-                    pk__in=product_ids,
-                    is_active=True,
-                )
+        customer_data = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": str(validated_data["email"]),
+            "phone": str(validated_data["phone"]),
+            "city": str(validated_data["city"]),
+            "shipping_address": str(address),
+            "payment_method": str(validated_data["payment_method"]),
+        }
+        items = [
+            OrderLine(
+                product_id=int(item["product_id"]),
+                quantity=int(item["quantity"]),
             )
-            products_by_id = {int(product.pk): product for product in products}
-            if products_by_id.keys() != set(product_ids):
-                raise serializers.ValidationError(
-                    {"items": _("Один або кілька товарів недоступні.")}
-                )
+            for item in item_data
+        ]
 
-            total_price = Decimal("0.00")
-            order_items: list[OrderItem] = []
-            for item in item_data:
-                product = products_by_id[item["product_id"]]
-                quantity = item["quantity"]
-                if product.stock < quantity:
-                    raise serializers.ValidationError(
-                        {
-                            "items": _(
-                                "Недостатньо товару «%(product)s» на складі."
-                            )
-                            % {"product": product.name}
-                        }
-                    )
-
-                unit_price = product.final_price
-                total_price += unit_price * quantity
-                product.stock -= quantity
-                order_items.append(
-                    OrderItem(
-                        product=product,
-                        quantity=quantity,
-                        price=unit_price,
-                    )
-                )
-
-            order = Order.objects.create(
+        try:
+            return create_order_from_items(
+                items=items,
+                customer_data=customer_data,
                 user=user,
-                total_price=total_price,
-                first_name=first_name,
-                last_name=last_name,
-                shipping_address=address,
-                **validated_data,
             )
-            for order_item in order_items:
-                order_item.order = order
-            OrderItem.objects.bulk_create(order_items)
-            for product in products:
-                product.save(update_fields=("stock", "updated_at"))
-
-        return order
+        except EmptyCartError as error:
+            raise serializers.ValidationError(
+                {"items": _("Список товарів не може бути порожнім.")}
+            ) from error
+        except ProductUnavailableError as error:
+            raise serializers.ValidationError(
+                {"items": _("Один або кілька товарів недоступні.")}
+            ) from error
+        except InsufficientStockError as error:
+            raise serializers.ValidationError(
+                {
+                    "items": _(
+                        "Недостатньо товару «%(product)s» на складі."
+                    )
+                    % {"product": error.product_name}
+                }
+            ) from error
 
 
 class CartAddItemSerializer(serializers.Serializer):

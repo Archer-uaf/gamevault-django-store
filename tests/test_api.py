@@ -284,6 +284,16 @@ class OrderAPITests(TestCase):
             platform=Product.Platform.PC,
             stock=5,
         )
+        self.inactive_product = Product.objects.create(
+            name="Inactive API Order Game",
+            slug="inactive-api-order-game",
+            description="A hidden game that cannot be ordered.",
+            price=Decimal("80.00"),
+            category=category,
+            platform=Product.Platform.PC,
+            stock=5,
+            is_active=False,
+        )
 
     def test_orders_list_requires_authentication(self) -> None:
         response = self.client.get(reverse("api:order-list"))
@@ -339,6 +349,8 @@ class OrderAPITests(TestCase):
         self.assertEqual(item.product, self.product)
         self.assertEqual(item.quantity, 2)
         self.assertEqual(item.price, Decimal("90.00"))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock, 3)
 
     def test_valid_api_order_decreases_stock(self) -> None:
         self.client.force_authenticate(user=self.user)
@@ -366,9 +378,53 @@ class OrderAPITests(TestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock, 5)
 
+    def test_cannot_order_inactive_product(self) -> None:
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            reverse("api:order-list"),
+            self.order_payload_for_product(
+                quantity=1,
+                product_id=self.inactive_product.pk,
+            ),
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("items", response.json())
+        self.assertFalse(Order.objects.exists())
+        self.inactive_product.refresh_from_db()
+        self.assertEqual(self.inactive_product.stock, 5)
+
+    def test_cannot_create_order_with_empty_items(self) -> None:
+        self.client.force_authenticate(user=self.user)
+        payload = self.order_payload(quantity=1)
+        payload["items"] = []
+
+        response = self.client.post(
+            reverse("api:order-list"),
+            payload,
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("items", response.json())
+        self.assertFalse(Order.objects.exists())
+
     def order_payload(self, *, quantity: int) -> dict[str, Any]:
+        return self.order_payload_for_product(
+            product_id=self.product.pk,
+            quantity=quantity,
+        )
+
+    def order_payload_for_product(
+        self,
+        *,
+        product_id: int,
+        quantity: int,
+    ) -> dict[str, Any]:
         return {
-            "items": [{"product_id": self.product.pk, "quantity": quantity}],
+            "items": [{"product_id": product_id, "quantity": quantity}],
             "full_name": "Олена Коваль",
             "email": "olena@example.com",
             "phone": "+380501234567",

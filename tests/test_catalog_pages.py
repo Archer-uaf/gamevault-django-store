@@ -176,6 +176,12 @@ class CatalogPagesTests(TestCase):
         self.assertTemplateUsed(response, "products/product_detail.html")
         self.assertContains(response, self.active_product.name)
 
+    def test_product_detail_uses_fallback_when_cover_is_missing(self) -> None:
+        response = self.client.get(self.active_product.get_absolute_url())
+
+        self.assertContains(response, "detail-placeholder")
+        self.assertContains(response, self.active_product.name)
+
     def test_inactive_product_detail_returns_404(self) -> None:
         response = self.client.get(self.inactive_product.get_absolute_url())
 
@@ -211,6 +217,39 @@ class CatalogPagesTests(TestCase):
 
 
 class SeedDemoGamesCommandTests(TestCase):
+    def test_command_creates_expected_real_games_and_categories(self) -> None:
+        call_command("seed_demo_games", verbosity=0)
+
+        expected_product_slugs = {
+            "cyberpunk-2077",
+            "the-witcher-3-wild-hunt",
+            "elden-ring",
+            "baldurs-gate-3",
+        }
+        expected_category_slugs = {"rpg", "action", "horror", "strategy"}
+
+        self.assertTrue(
+            expected_product_slugs.issubset(
+                set(Product.objects.values_list("slug", flat=True))
+            )
+        )
+        self.assertTrue(
+            expected_category_slugs.issubset(
+                set(Category.objects.values_list("slug", flat=True))
+            )
+        )
+
+    def test_product_list_shows_seeded_real_game(self) -> None:
+        call_command("seed_demo_games", verbosity=0)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Cyberpunk"},
+        )
+
+        self.assertContains(response, "Cyberpunk 2077")
+        self.assertNotContains(response, "Neon Drift")
+
     def test_command_is_idempotent(self) -> None:
         call_command("seed_demo_games", verbosity=0)
         category_count = Category.objects.count()
@@ -220,4 +259,23 @@ class SeedDemoGamesCommandTests(TestCase):
 
         self.assertEqual(Category.objects.count(), category_count)
         self.assertEqual(Product.objects.count(), product_count)
-        self.assertGreaterEqual(product_count, 12)
+        self.assertGreaterEqual(product_count, 20)
+
+    def test_reset_recreates_demo_catalog(self) -> None:
+        category = Category.objects.create(name="Old Action", slug="old-action")
+        Product.objects.create(
+            name="Neon Drift",
+            slug="neon-drift",
+            description="Old demo product.",
+            price=Decimal("10.00"),
+            category=category,
+            platform=Product.Platform.PC,
+            stock=5,
+            is_active=True,
+        )
+
+        call_command("seed_demo_games", "--reset", verbosity=0)
+
+        self.assertFalse(Product.objects.filter(slug="neon-drift").exists())
+        self.assertEqual(Product.objects.filter(slug="cyberpunk-2077").count(), 1)
+        self.assertEqual(Product.objects.count(), 20)

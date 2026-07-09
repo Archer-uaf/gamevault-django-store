@@ -55,7 +55,13 @@ Requirements: Docker with Docker Compose support.
 
 5. Open <http://localhost:8000/>.
 
-The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates.
+The demo seed command creates a realistic video game catalog with 20 recognizable games and 10 genres. It is idempotent: repeated runs update records by slug instead of creating duplicates. To recreate the known demo catalog and remove older seeded demo products, run:
+
+```bash
+docker compose exec web python manage.py seed_demo_games --reset
+```
+
+Official cover images are not bundled. If the project owner provides local cover files, place them in `static/images/demo/covers/` with filenames matching product slugs, for example `cyberpunk-2077.webp` or `elden-ring.webp`, then run `seed_demo_games --reset`. Supported extensions are `.webp`, `.jpg`, `.jpeg`, and `.png`. When a local cover is absent, the storefront uses its built-in CSS fallback instead of a generated poster image.
 
 ## Environment variables
 

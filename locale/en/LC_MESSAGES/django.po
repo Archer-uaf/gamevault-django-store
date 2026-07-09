@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-04 13:16+0000\n"
+"POT-Creation-Date: 2026-07-09 01:40+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -260,32 +260,32 @@ msgstr "Mark selected products as inactive"
 msgid "Скинути знижку для вибраних товарів"
 msgstr "Reset discount for selected products"
 
-#: products/views.py:49
+#: products/views.py:118
 msgid "Спочатку нові"
 msgstr "Newest first"
 
-#: products/views.py:50
+#: products/views.py:119
 msgid "Ціна: за зростанням"
 msgstr "Price: low to high"
 
-#: products/views.py:51
+#: products/views.py:120
 msgid "Ціна: за спаданням"
 msgstr "Price: high to low"
 
-#: products/views.py:52
+#: products/views.py:121
 msgid "Популярні"
 msgstr "Most popular"
 
-#: products/views.py:211 products/views.py:239 reviews/serializers.py:56
+#: products/views.py:280 products/views.py:308 reviews/serializers.py:56
 #: reviews/serializers.py:67
 msgid "Ви вже опублікували відгук про цю гру."
 msgstr "You have already published a review for this game."
 
-#: products/views.py:221 reviews/serializers.py:52
+#: products/views.py:290 reviews/serializers.py:52
 msgid "Залишити відгук можна лише після покупки цієї гри."
 msgstr "You can review this game only after purchasing it."
 
-#: products/views.py:242
+#: products/views.py:311
 msgid "Дякуємо! Ваш відгук опубліковано."
 msgstr "Thank you! Your review has been published."
 
@@ -418,7 +418,7 @@ msgstr "Your order"
 msgid "Перевірте вибрані ігри та їхню кількість."
 msgstr "Review the selected games and their quantities."
 
-#: templates/orders/cart_detail.html:26
+#: templates/orders/cart_detail.html:26 templates/pages/home.html:115
 #: templates/products/product_detail.html:20
 #: templates/products/product_detail.html:215
 #: templates/products/product_list.html:126
@@ -481,8 +481,8 @@ msgstr "Your cart is empty"
 msgid "Додайте ігри з каталогу, щоб вони з’явилися тут."
 msgstr "Add games from the catalog to see them here."
 
-#: templates/orders/cart_detail.html:114 templates/pages/home.html:155
-#: templates/users/order_history.html:48
+#: templates/orders/cart_detail.html:114 templates/pages/home.html:142
+#: templates/pages/home.html:157 templates/users/order_history.html:48
 msgid "Перейти до каталогу"
 msgstr "Go to catalog"
 
@@ -584,8 +584,8 @@ msgid "Обрати жанр"
 msgstr "Choose a genre"
 
 #: templates/pages/home.html:25
-msgid "ігор у каталозі"
-msgstr "games in the catalog"
+msgid "демоігор у каталозі"
+msgstr "demo games in the catalog"
 
 #: templates/pages/home.html:29
 msgid "ігрові платформи"
@@ -640,71 +640,39 @@ msgstr "Popular genres"
 msgid "Усі жанри"
 msgstr "All genres"
 
-#: templates/pages/home.html:90 templates/pages/home.html:118
-msgid "Екшн"
-msgstr "Action"
-
-#: templates/pages/home.html:92
-msgid "Стратегії"
-msgstr "Strategy"
-
-#: templates/pages/home.html:93
-msgid "Гонки"
-msgstr "Racing"
-
-#: templates/pages/home.html:94
-msgid "Інді"
-msgstr "Indie"
-
-#: templates/pages/home.html:95
-msgid "Спорт"
-msgstr "Sports"
-
-#: templates/pages/home.html:104
+#: templates/pages/home.html:105
 msgid "Вибір редакції"
 msgstr "Editor's choice"
 
-#: templates/pages/home.html:105
+#: templates/pages/home.html:106
 msgid "Рекомендовані ігри"
 msgstr "Featured games"
 
-#: templates/pages/home.html:107
-msgid "Добірка ігор від редакції GameVault."
-msgstr "A selection of games from the GameVault team."
+#: templates/pages/home.html:108
+msgid "Добірка ігор із реального демокаталогу GameVault."
+msgstr "A selection of games from the realistic GameVault demo catalog."
 
-#: templates/pages/home.html:112
-msgid "Обкладинка Neon Drift"
-msgstr "Neon Drift cover"
-
-#: templates/pages/home.html:113
-msgid "Новинка"
-msgstr "New release"
-
-#: templates/pages/home.html:123
-msgid "Обкладинка Mythic Realms"
-msgstr "Mythic Realms cover"
-
-#: templates/pages/home.html:134
-msgid "Обкладинка Stellar Frontier"
-msgstr "Stellar Frontier cover"
-
-#: templates/pages/home.html:135 templates/products/product_detail.html:37
+#: templates/pages/home.html:125 templates/products/product_detail.html:37
 msgid "Рекомендовано"
 msgstr "Featured"
 
 #: templates/pages/home.html:140
-msgid "Пригодницькі"
-msgstr "Adventure"
+msgid "Рекомендовані ігри з’являться після наповнення каталогу"
+msgstr "Featured games will appear after the catalog is populated"
 
-#: templates/pages/home.html:151
+#: templates/pages/home.html:141
+msgid "Запустіть seed_demo_games, щоб побачити добірку реальних демоігор."
+msgstr "Run seed_demo_games to see a selection of real demo games."
+
+#: templates/pages/home.html:153
 msgid "Готовий до наступного рівня?"
 msgstr "Ready for the next level?"
 
-#: templates/pages/home.html:152
+#: templates/pages/home.html:154
 msgid "Знайди гру, яку не захочеться вимикати"
 msgstr "Find a game you won't want to turn off"
 
-#: templates/pages/home.html:153
+#: templates/pages/home.html:155
 msgid "Шукай ігри за жанром, платформою, ціною або назвою."
 msgstr "Search for games by genre, platform, price, or title."
 
@@ -1165,6 +1133,36 @@ msgstr "Your profile was updated successfully."
 #: users/views.py:132
 msgid "Пароль успішно змінено."
 msgstr "Your password was changed successfully."
+
+#~ msgid "Екшн"
+#~ msgstr "Action"
+
+#~ msgid "Стратегії"
+#~ msgstr "Strategy"
+
+#~ msgid "Гонки"
+#~ msgstr "Racing"
+
+#~ msgid "Інді"
+#~ msgstr "Indie"
+
+#~ msgid "Спорт"
+#~ msgstr "Sports"
+
+#~ msgid "Обкладинка Neon Drift"
+#~ msgstr "Neon Drift cover"
+
+#~ msgid "Новинка"
+#~ msgstr "New release"
+
+#~ msgid "Обкладинка Mythic Realms"
+#~ msgstr "Mythic Realms cover"
+
+#~ msgid "Обкладинка Stellar Frontier"
+#~ msgstr "Stellar Frontier cover"
+
+#~ msgid "Пригодницькі"
+#~ msgstr "Adventure"
 
 #~ msgid "Створення відгуків буде додано окремим етапом."
 #~ msgstr "Review creation will be added in a separate stage."

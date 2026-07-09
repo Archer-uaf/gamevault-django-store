@@ -73,6 +73,7 @@ def create_order_from_cart(
             city=customer_data["city"],
             shipping_address=customer_data["shipping_address"],
             payment_method=customer_data["payment_method"],
+            comment=customer_data.get("comment", ""),
         )
         for order_item in order_items:
             order_item.order = order

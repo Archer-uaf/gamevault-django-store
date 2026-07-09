@@ -534,6 +534,7 @@ dd {
 .genre-card--racing { background: #e07b2d; }
 .genre-card--indie { background: #2d71ca; }
 .genre-card--sport { background: #303240; }
+.genre-card--horror { background: #303240; }
 
 .game-grid {
     display: grid;
@@ -545,6 +546,7 @@ dd {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    display: block;
     background: var(--surface);
     box-shadow: 0 12px 35px rgba(25, 21, 53, 0.07);
     transition: transform 180ms ease, box-shadow 180ms ease;

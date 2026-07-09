@@ -53,6 +53,19 @@ class CheckoutView(FormView):
         )
         return context
 
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Pass the current user to build digital delivery defaults."""
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_initial(self) -> dict[str, str]:
+        """Prefill the checkout email for authenticated customers."""
+        initial = super().get_initial()
+        if self.request.user.is_authenticated and self.request.user.email:
+            initial["email"] = self.request.user.email
+        return initial
+
     def form_valid(self, form: CheckoutForm) -> HttpResponse:
         cart = Cart(self.request)
         user = self.request.user if self.request.user.is_authenticated else None

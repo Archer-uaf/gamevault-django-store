@@ -13,6 +13,8 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import UserProfile
 
+USERNAME_HELP_TEXT = _("До 15 символів. Дозволені літери, цифри та @/./+/-/_.")
+
 
 class RegistrationForm(UserCreationForm):
     """Create a Django user with a required email address."""
@@ -28,19 +30,47 @@ class RegistrationForm(UserCreationForm):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
+        username_field = self.fields["username"]
+        username_field.max_length = 15
+        username_field.help_text = USERNAME_HELP_TEXT
+        username_field.widget.attrs["maxlength"] = 15
         self.fields["password1"].label = _("Пароль")
         self.fields["password2"].label = _("Підтвердження пароля")
 
+    def clean_username(self) -> str:
+        """Limit public usernames to a short storefront-friendly value."""
+        username = self.cleaned_data["username"]
+        if len(username) > 15:
+            raise forms.ValidationError(
+                _("Ім’я користувача має містити не більше 15 символів."),
+                code="username_too_long",
+            )
+        return username
+
 
 class AccountAuthenticationForm(AuthenticationForm):
-    """Use Ukrainian source labels on the site login form."""
+    """Authenticate by username or email while keeping Django's session login."""
 
-    username = forms.CharField(label=_("Ім’я користувача"))
+    username = forms.CharField(label=_("Ім’я користувача або email"))
     password = forms.CharField(
         label=_("Пароль"),
         strip=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
     )
+
+    def clean(self) -> dict[str, Any]:
+        """Resolve a submitted email address to the matching username."""
+        identifier = self.cleaned_data.get("username")
+        if identifier and "@" in identifier:
+            user = (
+                get_user_model()
+                ._default_manager.filter(email__iexact=identifier)
+                .order_by("pk")
+                .first()
+            )
+            if user is not None:
+                self.cleaned_data["username"] = user.get_username()
+        return super().clean()
 
 
 class AccountPasswordChangeForm(PasswordChangeForm):

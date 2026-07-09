@@ -8,7 +8,7 @@
     <div class="container">
         <p class="eyebrow">{% trans "Останній крок" %}</p>
         <h1>{% trans "Оформлення замовлення" %}</h1>
-        <p>{% trans "Вкажіть контактні дані та оберіть тестовий спосіб оплати." %}</p>
+        <p>{% trans "Вкажіть email для цифрового замовлення та оберіть тестову онлайн-оплату." %}</p>
     </div>
 </section>
 
@@ -18,7 +18,7 @@
             {% csrf_token %}
             <div class="section-heading">
                 <p class="eyebrow">{% trans "Контактні дані" %}</p>
-                <h2>{% trans "Дані отримувача" %}</h2>
+                <h2>{% trans "Цифрова доставка" %}</h2>
             </div>
 
             {% if form.non_field_errors %}
@@ -41,7 +41,7 @@
 
             <div class="checkout-notice">
                 <strong>{% trans "Тестова оплата" %}</strong>
-                <p>{% trans "Платіжні дані не запитуються та реальні кошти не списуються." %}</p>
+                <p>{% trans "Платіжні дані не запитуються, реальні кошти не списуються, а цифрове замовлення прив’язується до email." %}</p>
             </div>
 
             <button type="submit" class="button button--primary checkout-submit">

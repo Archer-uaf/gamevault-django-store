@@ -4,8 +4,13 @@ from typing import Any
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, permissions
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from users.serializers import RegisterSerializer, UserSerializer
+from users.serializers import (
+    EmailOrUsernameTokenObtainPairSerializer,
+    RegisterSerializer,
+    UserSerializer,
+)
 
 
 @extend_schema_view(post=extend_schema(auth=[]))
@@ -24,3 +29,10 @@ class CurrentUserAPIView(generics.RetrieveAPIView):
 
     def get_object(self) -> Any:
         return self.request.user
+
+
+@extend_schema_view(post=extend_schema(auth=[]))
+class EmailOrUsernameTokenObtainPairView(TokenObtainPairView):
+    """Issue JWT tokens for a username or email credential."""
+
+    serializer_class = EmailOrUsernameTokenObtainPairSerializer

@@ -21,8 +21,15 @@
         </button>
 
         <nav class="main-nav" id="main-navigation" aria-label="{% trans 'Основна навігація' %}" data-navigation>
-            <a href="/">{% trans 'Головна' %}</a>
-            <a href="{% url 'products:product_list' %}">{% trans 'Ігри' %}</a>
+            <a href="/" class="nav-icon-link">
+                <img src="{% static 'images/icons/home.svg' %}" alt="" width="20" height="20" aria-hidden="true">
+                <span>{% trans "Головна" %}</span>
+            </a>
+
+            <a href="{% url 'products:product_list' %}" class="nav-icon-link">
+                <img src="{% static 'images/icons/games.svg' %}" alt="" width="20" height="20" aria-hidden="true">
+                <span>{% trans "Ігри" %}</span>
+            </a>
 
             <a href="{% url 'cart:detail' %}" class="nav-icon-link">
                 <img src="{% static 'images/icons/shopping-bag.svg' %}" alt="" width="20" height="20">

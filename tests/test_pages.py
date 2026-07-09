@@ -61,7 +61,7 @@ class HomePageTests(TestCase):
             slug__in=(
                 "cyberpunk-2077",
                 "the-witcher-3-wild-hunt",
-                "elden-ring",
+                "hearts-of-iron-iv",
             )
         )
 

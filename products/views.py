@@ -85,12 +85,12 @@ HOME_GENRE_CARDS = (
 HOME_HERO_SLUGS = (
     "cyberpunk-2077",
     "the-witcher-3-wild-hunt",
-    "elden-ring",
+    "hearts-of-iron-iv",
 )
 HOME_RECOMMENDED_SLUGS = (
     "cyberpunk-2077",
     "the-witcher-3-wild-hunt",
-    "elden-ring",
+    "hearts-of-iron-iv",
 )
 HOME_PLATFORM_CARDS = (
     {

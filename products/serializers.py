@@ -25,6 +25,7 @@ class ProductSerializer(serializers.ModelSerializer):
     )
     reviews_count = serializers.IntegerField(source="popularity", read_only=True)
     average_rating = serializers.FloatField(read_only=True)
+    localized_description = serializers.CharField(read_only=True)
 
     class Meta:
         model = Product
@@ -33,10 +34,13 @@ class ProductSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "description",
+            "description_en",
+            "localized_description",
             "price",
             "final_price",
             "category",
             "image",
+            "cover_url",
             "platform",
             "developer",
             "publisher",

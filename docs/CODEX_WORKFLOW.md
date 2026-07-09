@@ -1,23 +1,23 @@
-# Рабочий процесс Codex
+# Codex workflow
 
-## Перед изменениями
+## Before changes
 
-1. Прочитать `AGENTS.md` и задачу пользователя.
-2. Проверить структуру проекта и `git status`.
-3. Определить границы текущего этапа.
-4. Не изменять несвязанные пользовательские файлы.
+1. Read `AGENTS.md` and the user task.
+2. Check the project structure and `git status`.
+3. Define the boundaries of the current stage.
+4. Do not modify unrelated user files.
 
-## Во время работы
+## During work
 
-1. Делать минимальные изменения, необходимые для задачи.
-2. Не копировать код ментора или стороннего учебного проекта.
-3. Не реализовывать функциональность будущих этапов.
-4. Обновлять тесты и документацию только в пределах текущих изменений.
-5. Не добавлять секреты в репозиторий; новые переменные описывать в `.env.example`.
+1. Make the smallest changes needed for the task.
+2. Do not copy code from a mentor repository or another educational project.
+3. Do not implement functionality from future stages early.
+4. Update tests and documentation only within the scope of current changes.
+5. Do not commit secrets; document new variables in `.env.example`.
 
-## Проверка
+## Verification
 
-Предпочтительный цикл:
+Preferred cycle:
 
 ```bash
 docker compose config
@@ -28,11 +28,11 @@ docker compose exec web pytest
 docker compose exec web flake8
 ```
 
-При локальной разработке допустимы эквивалентные команды в активированном виртуальном окружении.
+Equivalent commands in an activated virtual environment are acceptable for local development.
 
-## Завершение
+## Completion
 
-1. Проверить итоговый `git diff` и отсутствие секретов.
-2. Убедиться, что критерии готовности из `AGENTS.md` выполнены.
-3. Сделать локальный commit с точным сообщением, если пользователь это запросил.
-4. Не выполнять `git push`, не добавлять remote и не создавать GitHub-репозиторий.
+1. Review the final `git diff` and confirm there are no secrets.
+2. Confirm the readiness criteria from `AGENTS.md` are met.
+3. Create a local commit with the requested message when the user asks for it.
+4. Do not run `git push`, add remotes, or create a GitHub repository.

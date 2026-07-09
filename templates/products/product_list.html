@@ -124,6 +124,8 @@
                             <a href="{{ product.get_absolute_url }}" class="catalog-card__cover">
                                 {% if product.image %}
                                     <img src="{{ product.image.url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
+                                {% elif product.cover_url %}
+                                    <img src="{{ product.cover_url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                                 {% else %}
                                     <div class="game-placeholder" aria-hidden="true">
                                         <span>{{ product.get_platform_display }}</span>

@@ -4,12 +4,15 @@
 
 - [x] Django project with PostgreSQL and Docker Compose.
 - [x] Product and category catalog with search, filtering, sorting, and pagination.
+- [x] Real-game demo catalog seeded by `seed_demo_games --reset`.
+- [x] Demo product covers via external cover URLs; official cover files are not bundled.
+- [x] Localized product descriptions with Ukrainian source text and English demo text.
 - [x] Product detail pages with stock, discounts, and review display.
 - [x] Ukrainian and English i18n with Ukrainian as the default language.
 - [x] Session-based web cart and session-backed API cart.
 - [x] Checkout with stock validation, atomic order creation, and mock payment methods.
 - [x] Development-safe customer confirmations and optional administrator notifications.
-- [x] Registration, authentication, profile editing, dashboard, order history, and password changes.
+- [x] Registration, authentication, digital profile editing, dashboard, order history, and password changes.
 - [x] Verified-purchase reviews in the web interface and REST API.
 - [x] REST API for catalog data, cart operations, orders, and reviews.
 - [x] JWT registration, token, refresh, and current-user endpoints.

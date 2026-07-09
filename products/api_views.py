@@ -25,7 +25,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         filters.OrderingFilter,
     )
     filterset_class = ProductFilter
-    search_fields = ("name", "description")
+    search_fields = ("name", "description", "description_en")
     ordering_fields = ("price", "created_at", "popularity")
     ordering = ("-created_at",)
 

@@ -19,9 +19,103 @@ from reviews.models import Review
 from reviews.services import user_has_purchased_product
 
 
+HOME_GENRE_CARDS = (
+    {
+        "slug": "action",
+        "label": _("Екшн"),
+        "icon": "images/categories/action.svg",
+        "class": "action",
+    },
+    {
+        "slug": "rpg",
+        "label": "RPG",
+        "icon": "images/categories/rpg.svg",
+        "class": "rpg",
+    },
+    {
+        "slug": "adventure",
+        "label": _("Пригоди"),
+        "icon": "images/categories/adventure.svg",
+        "class": "adventure",
+    },
+    {
+        "slug": "horror",
+        "label": _("Горор"),
+        "icon": "images/categories/horror.svg",
+        "class": "horror",
+    },
+    {
+        "slug": "strategy",
+        "label": _("Стратегії"),
+        "icon": "images/categories/strategy.svg",
+        "class": "strategy",
+    },
+    {
+        "slug": "racing",
+        "label": _("Гонки"),
+        "icon": "images/categories/racing.svg",
+        "class": "racing",
+    },
+    {
+        "slug": "indie",
+        "label": _("Інді"),
+        "icon": "images/categories/indie.svg",
+        "class": "indie",
+    },
+    {
+        "slug": "simulation",
+        "label": _("Симулятори"),
+        "icon": "images/categories/simulation.svg",
+        "class": "simulation",
+    },
+    {
+        "slug": "open-world",
+        "label": _("Відкритий світ"),
+        "icon": "images/categories/open-world.svg",
+        "class": "open-world",
+    },
+    {
+        "slug": "shooter",
+        "label": _("Шутери"),
+        "icon": "images/categories/shooter.svg",
+        "class": "shooter",
+    },
+)
+
+HOME_HERO_SLUGS = (
+    "cyberpunk-2077",
+    "the-witcher-3-wild-hunt",
+    "elden-ring",
+)
+HOME_RECOMMENDED_SLUGS = (
+    "cyberpunk-2077",
+    "the-witcher-3-wild-hunt",
+    "elden-ring",
+    "baldurs-gate-3",
+)
+
+
+def _products_by_slugs(slugs: tuple[str, ...]) -> list[Product]:
+    """Return active products ordered by the supplied slug sequence."""
+    products = Product.objects.filter(is_active=True, slug__in=slugs).select_related(
+        "category",
+    )
+    products_by_slug = {product.slug: product for product in products}
+    return [
+        product
+        for slug in slugs
+        if (product := products_by_slug.get(slug)) is not None
+    ]
+
+
 def home(request: HttpRequest) -> HttpResponse:
-    """Render the static GameVault landing page."""
-    return render(request, "pages/home.html")
+    """Render the GameVault landing page using real catalog records."""
+    context = {
+        "genre_cards": HOME_GENRE_CARDS,
+        "hero_products": _products_by_slugs(HOME_HERO_SLUGS),
+        "recommended_products": _products_by_slugs(HOME_RECOMMENDED_SLUGS),
+    }
+    return render(request, "pages/home.html", context)
 
 
 def _parse_price(value: str) -> Decimal | None:
@@ -78,6 +172,7 @@ class ProductListView(ListView):
             queryset = queryset.filter(
                 Q(name__icontains=query)
                 | Q(description__icontains=query)
+                | Q(description_en__icontains=query)
                 | Q(developer__icontains=query)
                 | Q(publisher__icontains=query)
             )

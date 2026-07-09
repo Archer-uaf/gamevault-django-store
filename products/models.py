@@ -6,6 +6,7 @@ from urllib.parse import urlencode
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import get_language
 
 
 class Category(models.Model):
@@ -50,6 +51,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
+    description_en = models.TextField(blank=True)
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -61,6 +63,7 @@ class Product(models.Model):
         on_delete=models.PROTECT,
     )
     image = models.ImageField(upload_to="products/", blank=True)
+    cover_url = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     stock = models.PositiveIntegerField(default=0)
     platform = models.CharField(max_length=20, choices=Platform.choices)
@@ -90,6 +93,14 @@ class Product(models.Model):
     def get_absolute_url(self) -> str:
         """Return the public detail URL for this product."""
         return reverse("products:product_detail", kwargs={"slug": self.slug})
+
+    @property
+    def localized_description(self) -> str:
+        """Return the product description for the active site language."""
+        language = get_language() or ""
+        if language.startswith("en") and self.description_en:
+            return self.description_en
+        return self.description
 
     @property
     def has_discount(self) -> bool:

@@ -4,6 +4,7 @@ from typing import Any
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
+from django.utils.translation import override
 
 from orders.models import Order, OrderItem
 from products.models import Category, Product
@@ -75,6 +76,16 @@ def test_product_is_in_stock(product: Product) -> None:
     product.stock = 0
 
     assert product.is_in_stock is False
+
+
+def test_product_localized_description_uses_english_when_available(
+    product: Product,
+) -> None:
+    product.description = "Український опис."
+    product.description_en = "English description."
+
+    with override("en"):
+        assert product.localized_description == "English description."
 
 
 def test_user_profile_is_created_automatically(user: Any) -> None:

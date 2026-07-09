@@ -43,14 +43,27 @@ class ProductAdmin(admin.ModelAdmin):
         "is_active",
         "created_at",
     )
-    search_fields = ("name", "description", "developer", "publisher")
+    search_fields = ("name", "description", "description_en", "developer", "publisher")
     ordering = ("-created_at",)
     list_select_related = ("category",)
     prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ("created_at", "updated_at")
     actions = ("mark_active", "mark_inactive", "reset_discount")
     fieldsets = (
-        (None, {"fields": ("name", "slug", "description", "category", "image")}),
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "slug",
+                    "description",
+                    "description_en",
+                    "category",
+                    "image",
+                    "cover_url",
+                )
+            },
+        ),
         (
             _("Продажі"),
             {

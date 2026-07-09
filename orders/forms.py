@@ -45,7 +45,7 @@ class CheckoutForm(forms.Form):
     """Validate customer and delivery data for a session checkout."""
 
     full_name = forms.CharField(
-        label=_("Повне ім’я"),
+        label=_("Повне ім'я"),
         max_length=241,
         widget=forms.TextInput(attrs={"autocomplete": "name"}),
     )
@@ -77,7 +77,7 @@ class CheckoutForm(forms.Form):
         full_name = " ".join(self.cleaned_data["full_name"].split())
         if len(full_name.split(maxsplit=1)) < 2:
             raise forms.ValidationError(
-                _("Вкажіть ім’я та прізвище."),
+                _("Вкажіть ім'я та прізвище."),
                 code="incomplete_name",
             )
         return full_name

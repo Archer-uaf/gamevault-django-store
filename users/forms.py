@@ -11,8 +11,6 @@ from django.contrib.auth.forms import (
 )
 from django.utils.translation import gettext_lazy as _
 
-from users.models import UserProfile
-
 
 class RegistrationForm(UserCreationForm):
     """Create a Django user with a required email address."""
@@ -23,7 +21,7 @@ class RegistrationForm(UserCreationForm):
         model = get_user_model()
         fields = ("username", "email", "password1", "password2")
         labels = {
-            "username": _("Ім’я користувача"),
+            "username": _("Нікнейм"),
         }
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -35,7 +33,7 @@ class RegistrationForm(UserCreationForm):
 class AccountAuthenticationForm(AuthenticationForm):
     """Use Ukrainian source labels on the site login form."""
 
-    username = forms.CharField(label=_("Ім’я користувача"))
+    username = forms.CharField(label=_("Нікнейм"))
     password = forms.CharField(
         label=_("Пароль"),
         strip=False,
@@ -53,24 +51,11 @@ class AccountPasswordChangeForm(PasswordChangeForm):
         self.fields["new_password2"].label = _("Підтвердження нового пароля")
 
 
-class ProfileUpdateForm(forms.ModelForm):
-    """Update Django user details and the related delivery profile."""
+class ProfileUpdateForm(forms.Form):
+    """Update account identity fields for digital purchases."""
 
-    first_name = forms.CharField(label=_("Ім’я"), max_length=150, required=False)
-    last_name = forms.CharField(label=_("Прізвище"), max_length=150, required=False)
+    username = forms.CharField(label=_("Нікнейм"), max_length=150, required=True)
     email = forms.EmailField(label=_("Електронна пошта"), required=True)
-
-    class Meta:
-        model = UserProfile
-        fields = ("phone", "city", "address")
-        labels = {
-            "phone": _("Телефон"),
-            "city": _("Місто"),
-            "address": _("Адреса доставки"),
-        }
-        widgets = {
-            "address": forms.Textarea(attrs={"rows": 3}),
-        }
 
     def __init__(
         self,
@@ -80,17 +65,25 @@ class ProfileUpdateForm(forms.ModelForm):
     ) -> None:
         self.user = user
         super().__init__(*args, **kwargs)
-        self.fields["first_name"].initial = user.first_name
-        self.fields["last_name"].initial = user.last_name
+        self.fields["username"].initial = user.username
         self.fields["email"].initial = user.email
 
-    def save(self, commit: bool = True) -> UserProfile:
-        """Persist account fields together with the profile."""
-        profile = super().save(commit=False)
-        self.user.first_name = self.cleaned_data["first_name"]
-        self.user.last_name = self.cleaned_data["last_name"]
+    def clean_username(self) -> str:
+        """Prevent collisions when a user changes their nickname."""
+        username = self.cleaned_data["username"].strip()
+        user_model = get_user_model()
+        exists = (
+            user_model.objects.exclude(pk=self.user.pk)
+            .filter(username__iexact=username)
+            .exists()
+        )
+        if exists:
+            raise forms.ValidationError(_("Цей нікнейм уже використовується."))
+        return username
+
+    def save(self) -> Any:
+        """Persist account identity fields."""
+        self.user.username = self.cleaned_data["username"]
         self.user.email = self.cleaned_data["email"]
-        if commit:
-            self.user.save(update_fields=("first_name", "last_name", "email"))
-            profile.save()
-        return profile
+        self.user.save(update_fields=("username", "email"))
+        return self.user

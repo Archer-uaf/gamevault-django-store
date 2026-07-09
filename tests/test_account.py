@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.urls import reverse
 
 from orders.models import Order
-from users.models import UserProfile
 
 
 class AccountFlowTests(TestCase):
@@ -106,34 +105,37 @@ class AccountFlowTests(TestCase):
         response = self.client.post(
             reverse("account:profile"),
             {
-                "first_name": "Олена",
-                "last_name": "Коваль",
-                "email": "olena@example.com",
-                "phone": "+380501234567",
-                "city": "Київ",
-                "address": "вул. Хрещатик, 1",
+                "username": "digital-player",
+                "email": "digital-player@example.com",
             },
         )
 
         self.assertRedirects(response, reverse("account:profile"))
         self.user.refresh_from_db()
-        profile = UserProfile.objects.get(user=self.user)
-        self.assertEqual(self.user.first_name, "Олена")
-        self.assertEqual(self.user.last_name, "Коваль")
-        self.assertEqual(self.user.email, "olena@example.com")
-        self.assertEqual(profile.phone, "+380501234567")
-        self.assertEqual(profile.city, "Київ")
-        self.assertEqual(profile.address, "вул. Хрещатик, 1")
+        self.assertEqual(self.user.username, "digital-player")
+        self.assertEqual(self.user.email, "digital-player@example.com")
 
-    def test_profile_page_displays_updated_data(self) -> None:
+    def test_profile_page_hides_physical_delivery_fields(self) -> None:
         self.client.force_login(self.user)
-        profile = UserProfile.objects.get(user=self.user)
-        profile.city = "Львів"
-        profile.save(update_fields=("city",))
 
         response = self.client.get(reverse("account:profile"))
 
-        self.assertContains(response, "Львів")
+        self.assertContains(response, "Нікнейм")
+        self.assertContains(response, "Електронна пошта")
+        for field_name in ("phone", "city", "address", "first_name", "last_name"):
+            self.assertNotContains(response, f'name="{field_name}"')
+        self.assertNotContains(response, "адресу для майбутніх замовлень")
+
+    def test_profile_page_displays_updated_data(self) -> None:
+        self.client.force_login(self.user)
+        self.user.username = "updated-player"
+        self.user.email = "updated-player@example.com"
+        self.user.save(update_fields=("username", "email"))
+
+        response = self.client.get(reverse("account:profile"))
+
+        self.assertContains(response, "updated-player")
+        self.assertContains(response, "updated-player@example.com")
 
     def test_profile_page_can_be_rendered_in_english(self) -> None:
         self.client.force_login(self.user)

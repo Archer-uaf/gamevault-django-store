@@ -92,7 +92,7 @@ class OrderCreateSerializer(serializers.Serializer):
         full_name = " ".join(value.split())
         if len(full_name.split(maxsplit=1)) < 2:
             raise serializers.ValidationError(
-                _("Вкажіть ім’я та прізвище.")
+                _("Вкажіть ім'я та прізвище.")
             )
         return full_name
 

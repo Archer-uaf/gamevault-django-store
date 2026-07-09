@@ -194,7 +194,7 @@ class CheckoutFlowTests(TestCase):
 
         self.assertContains(response, '<html lang="uk">')
         self.assertContains(response, "Оформлення замовлення")
-        self.assertContains(response, "Повне ім’я")
+        self.assertContains(response, "Повне ім&#x27;я")
         self.assertContains(response, "Підтвердити замовлення")
 
     def test_checkout_can_be_rendered_in_english(self) -> None:

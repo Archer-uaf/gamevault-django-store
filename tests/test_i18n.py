@@ -2,6 +2,8 @@ import pytest
 from django.test import Client
 from django.urls import reverse
 
+pytestmark = pytest.mark.django_db
+
 
 def test_home_page_uses_ukrainian_by_default(client: Client) -> None:
     response = client.get("/")
@@ -30,7 +32,6 @@ def test_home_page_can_be_rendered_in_english(client: Client) -> None:
     assert "Footer navigation" in content
 
 
-@pytest.mark.django_db
 def test_catalog_page_can_be_rendered_in_english(client: Client) -> None:
     response = client.get(
         reverse("products:product_list"),

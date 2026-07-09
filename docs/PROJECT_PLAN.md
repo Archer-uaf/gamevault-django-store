@@ -1,38 +1,37 @@
-# План проекта GameVault
+# GameVault project plan
 
-Проект развивается небольшими этапами. Каждый этап реализуется и проверяется отдельно.
+The project is developed in small stages. Each stage is implemented and verified separately.
 
-## Этап 1. Каркас проекта
+## Stage 1. Project foundation
 
 - Django project `config`.
-- Приложения `products`, `orders`, `users`, `reviews`.
-- PostgreSQL, Docker Compose и переменные окружения.
-- Базовая конфигурация DRF, JWT, django-filter и drf-spectacular.
-- Инструменты pytest, flake8 и mypy.
-- Эксплуатационная документация.
+- Applications `products`, `orders`, `users`, and `reviews`.
+- PostgreSQL, Docker Compose, and environment variables.
+- Base DRF, JWT, django-filter, and drf-spectacular configuration.
+- pytest, flake8, and mypy tooling.
+- Operational documentation.
 
-Результат этапа: проект запускается, системная проверка и стандартные миграции проходят.
-Модели предметной области и бизнес-логика не входят в этап.
+Stage result: the project starts, system checks pass, and standard migrations apply. Domain models and business logic are outside this stage.
 
-## Последующие этапы
+## Later stages
 
-1. Модели каталога и миграции.
-2. Настройка Django admin.
-3. Каталог: список, поиск, фильтрация, сортировка и пагинация.
-4. Страница видеоигры.
-5. Корзина на Django sessions.
-6. Checkout, заказ и уменьшение остатков в транзакции.
-7. Регистрация, профиль и история заказов.
-8. Отзывы и рейтинг.
-9. REST API и permissions.
-10. JWT и OpenAPI-документация API.
-11. Расширение тестов, линтинг и типизация.
-12. Финализация README и проверка сборки.
+1. Catalog models and migrations.
+2. Django admin setup.
+3. Catalog list, search, filtering, sorting, and pagination.
+4. Video game detail page.
+5. Django session cart.
+6. Checkout, order creation, and transactional stock decrease.
+7. Registration, profile, and order history.
+8. Reviews and ratings.
+9. REST API and permissions.
+10. JWT and OpenAPI documentation.
+11. Broader tests, linting, and typing.
+12. README finalization and build verification.
 
-## Принципы планирования
+## Planning principles
 
-- Один этап не должен скрыто реализовывать следующий.
-- Изменения моделей всегда сопровождаются миграциями.
-- Бизнес-логика сопровождается минимальным набором тестов.
-- Изменения запуска, структуры и публичного API отражаются в документации.
-- После завершённого логического этапа допускается один локальный commit.
+- One stage should not silently implement the next stage.
+- Model changes always include migrations.
+- Business logic includes a minimal set of tests.
+- Startup, structure, and public API changes are reflected in documentation.
+- One local commit is acceptable after a completed logical stage.

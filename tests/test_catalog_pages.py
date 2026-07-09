@@ -30,6 +30,9 @@ class CatalogPagesTests(TestCase):
             category=cls.action,
             platform=Product.Platform.PC,
             price=Decimal("50.00"),
+            description="Український опис Alpha Quest.",
+            description_en="English description for Alpha Quest.",
+            cover_url="https://example.com/alpha.jpg",
         )
         cls.second_product = cls.create_product(
             name="Beta Kingdom",
@@ -81,14 +84,19 @@ class CatalogPagesTests(TestCase):
         category: Category,
         platform: str,
         price: Decimal,
+        description: str | None = None,
+        description_en: str = "",
+        cover_url: str = "",
         is_active: bool = True,
     ) -> Product:
         return Product.objects.create(
             name=name,
             slug=slug,
-            description=f"Description for {name}",
+            description=description or f"Description for {name}",
+            description_en=description_en,
             price=price,
             category=category,
+            cover_url=cover_url,
             platform=platform,
             developer="Test Studio",
             publisher="Test Publisher",
@@ -209,10 +217,98 @@ class CatalogPagesTests(TestCase):
         self.assertContains(response, "Add to cart")
         self.assertContains(response, "Reviews: 1")
 
+    def test_product_detail_uses_localized_description(self) -> None:
+        ukrainian_response = self.client.get(self.active_product.get_absolute_url())
+        english_response = self.client.get(
+            self.active_product.get_absolute_url(),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+
+        self.assertContains(ukrainian_response, "Український опис Alpha Quest.")
+        self.assertContains(english_response, "English description for Alpha Quest.")
+        self.assertNotContains(english_response, "Український опис Alpha Quest.")
+
+    def test_product_list_renders_cover_url_when_image_missing(self) -> None:
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Alpha"},
+        )
+
+        self.assertContains(response, self.active_product.name)
+        self.assertContains(response, self.active_product.cover_url)
+
+    def test_product_detail_renders_cover_url_when_image_missing(self) -> None:
+        response = self.client.get(self.active_product.get_absolute_url())
+
+        self.assertContains(response, self.active_product.cover_url)
+
 
 class SeedDemoGamesCommandTests(TestCase):
-    def test_command_is_idempotent(self) -> None:
-        call_command("seed_demo_games", verbosity=0)
+    def test_reset_creates_real_games_and_removes_fake_titles(self) -> None:
+        Category.objects.create(name="Action", slug="action")
+        Product.objects.create(
+            name="Circuit Legends",
+            slug="circuit-legends",
+            description="Legacy fake title.",
+            price=Decimal("100.00"),
+            category=Category.objects.get(slug="action"),
+            platform=Product.Platform.PC,
+            stock=1,
+        )
+
+        call_command("seed_demo_games", "--reset", verbosity=0)
+
+        product_names = set(Product.objects.values_list("name", flat=True))
+        self.assertIn("Cyberpunk 2077", product_names)
+        self.assertIn("The Witcher 3: Wild Hunt", product_names)
+        self.assertIn("Elden Ring", product_names)
+        self.assertNotIn("Circuit Legends", product_names)
+        self.assertNotIn("Night Signal", product_names)
+        self.assertNotIn("Tactical Horizon", product_names)
+
+    def test_real_demo_games_have_covers_and_english_descriptions(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+
+        products = Product.objects.all()
+        self.assertEqual(products.filter(cover_url="").count(), 0)
+        self.assertEqual(products.filter(description_en="").count(), 0)
+        self.assertTrue(
+            products.filter(
+                slug="cyberpunk-2077",
+                cover_url__contains="1091500",
+            ).exists()
+        )
+
+    def test_product_pages_render_seeded_real_covers(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+        product = Product.objects.get(slug="elden-ring")
+
+        list_response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Elden"},
+        )
+        detail_response = self.client.get(product.get_absolute_url())
+
+        self.assertContains(list_response, "Elden Ring")
+        self.assertContains(list_response, product.cover_url)
+        self.assertContains(detail_response, product.cover_url)
+
+    def test_seeded_product_description_is_localized(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+        product = Product.objects.get(slug="cyberpunk-2077")
+
+        ukrainian_response = self.client.get(product.get_absolute_url())
+        english_response = self.client.get(
+            product.get_absolute_url(),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+
+        self.assertContains(ukrainian_response, "Відкрита RPG про найманця")
+        self.assertContains(english_response, "An open-world RPG about a mercenary")
+        self.assertNotContains(english_response, "Відкрита RPG про найманця")
+
+    def test_command_is_idempotent_after_reset(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
         category_count = Category.objects.count()
         product_count = Product.objects.count()
 
@@ -220,4 +316,4 @@ class SeedDemoGamesCommandTests(TestCase):
 
         self.assertEqual(Category.objects.count(), category_count)
         self.assertEqual(Product.objects.count(), product_count)
-        self.assertGreaterEqual(product_count, 12)
+        self.assertEqual(product_count, 20)

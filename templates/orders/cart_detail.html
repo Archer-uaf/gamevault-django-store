@@ -25,6 +25,11 @@
                                         src="{{ item.product.image.url }}"
                                         alt="{% blocktrans with name=item.product.name %}Обкладинка {{ name }}{% endblocktrans %}"
                                     >
+                                {% elif item.product.cover_url %}
+                                    <img
+                                        src="{{ item.product.cover_url }}"
+                                        alt="{% blocktrans with name=item.product.name %}Обкладинка {{ name }}{% endblocktrans %}"
+                                    >
                                 {% else %}
                                     <div class="game-placeholder" aria-hidden="true">
                                         <span>{{ item.product.get_platform_display }}</span>
@@ -109,7 +114,7 @@
             <div class="empty-state cart-empty">
                 <span aria-hidden="true">◇</span>
                 <h2>{% trans "Ваш кошик порожній" %}</h2>
-                <p>{% trans "Додайте ігри з каталогу, щоб вони з’явилися тут." %}</p>
+                <p>{% trans "Додайте ігри з каталогу, щоб вони з'явилися тут." %}</p>
                 <a href="{% url 'products:product_list' %}" class="button button--primary">
                     {% trans "Перейти до каталогу" %}
                 </a>

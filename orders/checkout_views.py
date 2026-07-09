@@ -83,7 +83,10 @@ class CheckoutView(FormView):
         self.request.session[LAST_ORDER_SESSION_KEY] = order.pk
         messages.success(
             self.request,
-            _("Замовлення №%(number)s успішно створено.")
+            _(
+                "Замовлення №%(number)s успішно створено. "
+                "Ключ буде надіслано на email після обробки."
+            )
             % {"number": order.pk},
         )
         return redirect("checkout:success", order_id=order.pk)

@@ -8,7 +8,7 @@
     <div class="container">
         <p class="eyebrow">{% trans "Останній крок" %}</p>
         <h1>{% trans "Оформлення замовлення" %}</h1>
-        <p>{% trans "Вкажіть контактні дані та оберіть тестовий спосіб оплати." %}</p>
+        <p>{% trans "Вкажіть email для отримання ключа та оберіть тестовий спосіб оплати." %}</p>
     </div>
 </section>
 
@@ -17,8 +17,8 @@
         <form method="post" class="checkout-form" novalidate>
             {% csrf_token %}
             <div class="section-heading">
-                <p class="eyebrow">{% trans "Контактні дані" %}</p>
-                <h2>{% trans "Дані отримувача" %}</h2>
+                <p class="eyebrow">{% trans "Цифрова доставка" %}</p>
+                <h2>{% trans "Дані для цифрової доставки" %}</h2>
             </div>
 
             {% if form.non_field_errors %}
@@ -32,6 +32,9 @@
                     <div class="checkout-field {% if field.errors %}checkout-field--error{% endif %}">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
+                        {% if field.help_text %}
+                            <small class="field-help">{{ field.help_text }}</small>
+                        {% endif %}
                         {% for error in field.errors %}
                             <span class="field-error">{{ error }}</span>
                         {% endfor %}
@@ -40,8 +43,8 @@
             </div>
 
             <div class="checkout-notice">
-                <strong>{% trans "Тестова оплата" %}</strong>
-                <p>{% trans "Платіжні дані не запитуються та реальні кошти не списуються." %}</p>
+                <strong>{% trans "Без фізичної доставки" %}</strong>
+                <p>{% trans "Ключ буде надіслано після обробки замовлення. Платіжні дані не запитуються та реальні кошти не списуються." %}</p>
             </div>
 
             <button type="submit" class="button button--primary checkout-submit">

@@ -23,7 +23,7 @@
                                 <p class="eyebrow">{% blocktrans with number=order.pk %}Замовлення №{{ number }}{% endblocktrans %}</p>
                                 <time datetime="{{ order.created_at|date:'c' }}">{{ order.created_at|date:"SHORT_DATETIME_FORMAT" }}</time>
                             </div>
-                            <span class="order-status">{{ order.get_status_display }}</span>
+                            <span class="order-status">{{ order.digital_status_display }}</span>
                         </header>
                         <ul>
                             {% for item in order.items.all %}

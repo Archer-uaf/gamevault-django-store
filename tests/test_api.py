@@ -256,6 +256,17 @@ class OrderAPITests(TestCase):
         self.assertIn(own_order.pk, order_ids)
         self.assertNotIn(other_order.pk, order_ids)
 
+    def test_order_api_uses_digital_status_labels(self) -> None:
+        order = self.create_order(user=self.user)
+        order.status = Order.Status.SHIPPED
+        order.save(update_fields=("status",))
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.get(reverse("api:order-detail", args=[order.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status_display"], "Ключ надіслано")
+
     def test_order_detail_is_owner_only(self) -> None:
         other_order = self.create_order(user=self.other_user)
         self.client.force_authenticate(user=self.user)

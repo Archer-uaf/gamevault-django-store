@@ -17,11 +17,12 @@ def send_order_confirmation_email(order: Order) -> int:
         "Номер замовлення: %(number)s\n"
         "Сума: ₴%(total)s\n"
         "Статус: %(status)s\n\n"
-        "Ми повідомимо вас, коли статус замовлення зміниться."
+        "Ключ буде надіслано на цей email після обробки замовлення.\n"
+        "Фізична доставка не потрібна."
     ) % {
         "number": order.pk,
         "total": order.total_price,
-        "status": order.get_status_display(),
+        "status": order.digital_status_display,
     }
 
     return send_mail(
@@ -52,7 +53,7 @@ def send_admin_order_notification_email(order: Order) -> int:
         "customer": f"{order.first_name} {order.last_name}".strip(),
         "email": order.email,
         "total": order.total_price,
-        "payment_method": order.get_payment_method_display(),
+        "payment_method": order.digital_payment_method_display,
     }
 
     return send_mail(

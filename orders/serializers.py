@@ -33,6 +33,14 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "total_price",
         )
         read_only_fields = fields
+        extra_kwargs = {
+            "first_name": {"label": _("Ім'я отримувача")},
+            "last_name": {"label": _("Прізвище отримувача")},
+            "email": {"label": _("Email для отримання ключа")},
+            "phone": {"label": _("Телефон для зв'язку щодо замовлення")},
+            "city": {"label": _("Регіон акаунта")},
+            "shipping_address": {"label": _("Дані для цифрової доставки")},
+        }
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -40,12 +48,14 @@ class OrderSerializer(serializers.ModelSerializer):
 
     items = OrderItemSerializer(many=True, read_only=True)
     status_display = serializers.CharField(
-        source="get_status_display",
+        source="digital_status_display",
         read_only=True,
+        label=_("Статус цифрового замовлення"),
     )
     payment_method_display = serializers.CharField(
-        source="get_payment_method_display",
+        source="digital_payment_method_display",
         read_only=True,
+        label=_("Спосіб оплати"),
     )
 
     class Meta:
@@ -80,19 +90,43 @@ class OrderCreateSerializer(serializers.Serializer):
     """Validate and atomically create an authenticated user's order."""
 
     items = OrderCreateItemSerializer(many=True, allow_empty=False)
-    full_name = serializers.CharField(max_length=241)
-    email = serializers.EmailField()
-    phone = serializers.CharField(max_length=30)
-    city = serializers.CharField(max_length=120)
-    address = serializers.CharField()
-    payment_method = serializers.ChoiceField(choices=Order.PaymentMethod.choices)
+    full_name = serializers.CharField(
+        max_length=241,
+        label=_("Ім'я отримувача цифрового замовлення"),
+    )
+    email = serializers.EmailField(
+        label=_("Email для отримання ключа"),
+        help_text=_("Ключ буде надіслано після обробки замовлення."),
+    )
+    phone = serializers.CharField(
+        max_length=30,
+        label=_("Телефон для зв'язку щодо замовлення"),
+    )
+    city = serializers.CharField(
+        max_length=120,
+        label=_("Регіон акаунта"),
+    )
+    address = serializers.CharField(
+        label=_("Дані для цифрової доставки"),
+        help_text=_("Без фізичної доставки. Вкажіть платформу або примітку."),
+    )
+    payment_method = serializers.ChoiceField(
+        choices=(
+            (Order.PaymentMethod.CARD, _("Картка (тестова оплата)")),
+            (
+                Order.PaymentMethod.CASH_ON_DELIVERY,
+                _("Оплата після обробки замовлення"),
+            ),
+            (Order.PaymentMethod.BALANCE_MOCK, _("Тестовий баланс")),
+        )
+    )
 
     def validate_full_name(self, value: str) -> str:
         """Require both a first and last name for the order snapshot."""
         full_name = " ".join(value.split())
         if len(full_name.split(maxsplit=1)) < 2:
             raise serializers.ValidationError(
-                _("Вкажіть ім'я та прізвище.")
+                _("Вкажіть ім'я та прізвище отримувача.")
             )
         return full_name
 

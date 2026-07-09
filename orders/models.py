@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Order(models.Model):
-    """A snapshot of customer and shipping data for a purchase."""
+    """A snapshot of customer and digital delivery data for a purchase."""
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Очікує обробки")
@@ -65,6 +65,30 @@ class Order(models.Model):
     @property
     def can_be_cancelled(self) -> bool:
         return self.status in {self.Status.PENDING, self.Status.PAID}
+
+    @property
+    def digital_status_display(self) -> str:
+        labels = {
+            self.Status.PENDING.value: _("Очікує обробки"),
+            self.Status.PAID.value: _("Оплачено"),
+            self.Status.SHIPPED.value: _("Ключ надіслано"),
+            self.Status.DELIVERED.value: _("Виконано"),
+            self.Status.CANCELLED.value: _("Скасовано"),
+        }
+        return str(labels.get(self.status, self.get_status_display()))
+
+    @property
+    def digital_payment_method_display(self) -> str:
+        labels = {
+            self.PaymentMethod.CARD.value: _("Картка (тестова оплата)"),
+            self.PaymentMethod.CASH_ON_DELIVERY.value: _(
+                "Оплата після обробки замовлення"
+            ),
+            self.PaymentMethod.BALANCE_MOCK.value: _("Тестовий баланс"),
+        }
+        return str(
+            labels.get(self.payment_method, self.get_payment_method_display())
+        )
 
 
 class OrderItem(models.Model):

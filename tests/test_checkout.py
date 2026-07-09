@@ -57,6 +57,8 @@ class CheckoutFlowTests(TestCase):
         self.assertIn(str(order.pk), email.subject)
         self.assertEqual(email.to, [order.email])
         self.assertIn(str(order.total_price), email.body)
+        self.assertIn("Ключ буде надіслано", email.body)
+        self.assertIn("Фізична доставка не потрібна", email.body)
 
     @override_settings(ADMIN_EMAIL="admin@example.com")
     def test_valid_checkout_sends_admin_notification(self) -> None:
@@ -91,6 +93,9 @@ class CheckoutFlowTests(TestCase):
         self.assertTemplateUsed(response, "orders/checkout.html")
         self.assertContains(response, self.product.name)
         self.assertContains(response, "₴180")
+        self.assertContains(response, "Email для отримання ключа")
+        self.assertContains(response, "Дані для цифрової доставки")
+        self.assertContains(response, "Без фізичної доставки")
 
     def test_valid_checkout_creates_order_and_order_item(self) -> None:
         self.add_to_cart()
@@ -174,6 +179,7 @@ class CheckoutFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "orders/checkout_success.html")
         self.assertContains(response, f"Замовлення №{order.pk}")
+        self.assertContains(response, "Ключ буде надіслано на email")
         self.assertContains(response, "₴180")
 
     def test_success_page_is_limited_to_checkout_session(self) -> None:
@@ -194,7 +200,7 @@ class CheckoutFlowTests(TestCase):
 
         self.assertContains(response, '<html lang="uk">')
         self.assertContains(response, "Оформлення замовлення")
-        self.assertContains(response, "Повне ім&#x27;я")
+        self.assertContains(response, "Ім&#x27;я отримувача цифрового замовлення")
         self.assertContains(response, "Підтвердити замовлення")
 
     def test_checkout_can_be_rendered_in_english(self) -> None:
@@ -207,5 +213,7 @@ class CheckoutFlowTests(TestCase):
 
         self.assertContains(response, '<html lang="en">')
         self.assertContains(response, "Checkout")
-        self.assertContains(response, "Full name")
+        self.assertContains(response, "Email for digital key delivery")
+        self.assertContains(response, "Digital delivery details")
+        self.assertContains(response, "No physical shipping")
         self.assertContains(response, "Confirm order")

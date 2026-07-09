@@ -42,34 +42,45 @@ class CartQuantityForm(forms.Form):
 
 
 class CheckoutForm(forms.Form):
-    """Validate customer and delivery data for a session checkout."""
+    """Validate customer and digital delivery data for a session checkout."""
+
+    PAYMENT_METHOD_CHOICES = (
+        (Order.PaymentMethod.CARD, _("Картка (тестова оплата)")),
+        (
+            Order.PaymentMethod.CASH_ON_DELIVERY,
+            _("Оплата після обробки замовлення"),
+        ),
+        (Order.PaymentMethod.BALANCE_MOCK, _("Тестовий баланс")),
+    )
 
     full_name = forms.CharField(
-        label=_("Повне ім'я"),
+        label=_("Ім'я отримувача цифрового замовлення"),
         max_length=241,
         widget=forms.TextInput(attrs={"autocomplete": "name"}),
     )
     email = forms.EmailField(
-        label=_("Електронна пошта"),
+        label=_("Email для отримання ключа"),
+        help_text=_("Ключ буде надіслано після обробки замовлення."),
         widget=forms.EmailInput(attrs={"autocomplete": "email"}),
     )
     phone = forms.CharField(
-        label=_("Телефон"),
+        label=_("Телефон для зв'язку щодо замовлення"),
         max_length=30,
         widget=forms.TextInput(attrs={"autocomplete": "tel"}),
     )
     city = forms.CharField(
-        label=_("Місто"),
+        label=_("Регіон акаунта"),
         max_length=120,
-        widget=forms.TextInput(attrs={"autocomplete": "address-level2"}),
+        widget=forms.TextInput(attrs={"autocomplete": "country-name"}),
     )
     address = forms.CharField(
-        label=_("Адреса доставки"),
-        widget=forms.Textarea(attrs={"autocomplete": "street-address", "rows": 3}),
+        label=_("Дані для цифрової доставки"),
+        help_text=_("Без фізичної доставки. Вкажіть платформу або примітку."),
+        widget=forms.Textarea(attrs={"autocomplete": "off", "rows": 3}),
     )
     payment_method = forms.ChoiceField(
         label=_("Спосіб оплати"),
-        choices=Order.PaymentMethod.choices,
+        choices=PAYMENT_METHOD_CHOICES,
     )
 
     def clean_full_name(self) -> str:
@@ -77,7 +88,7 @@ class CheckoutForm(forms.Form):
         full_name = " ".join(self.cleaned_data["full_name"].split())
         if len(full_name.split(maxsplit=1)) < 2:
             raise forms.ValidationError(
-                _("Вкажіть ім'я та прізвище."),
+                _("Вкажіть ім'я та прізвище отримувача."),
                 code="incomplete_name",
             )
         return full_name

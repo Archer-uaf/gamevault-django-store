@@ -170,6 +170,17 @@ class AccountFlowTests(TestCase):
         self.assertContains(response, f"Замовлення №{own_order.pk}")
         self.assertNotContains(response, f"Замовлення №{other_order.pk}")
 
+    def test_order_history_uses_digital_status_labels(self) -> None:
+        order = self.create_order(user=self.user, email="player@example.com")
+        order.status = Order.Status.SHIPPED
+        order.save(update_fields=("status",))
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("account:orders"))
+
+        self.assertContains(response, "Ключ надіслано")
+        self.assertNotContains(response, "Відправлено")
+
     def test_password_change_page_requires_login(self) -> None:
         response = self.client.get(reverse("account:password"))
 

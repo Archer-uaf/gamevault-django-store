@@ -124,7 +124,7 @@ class OrderAdmin(admin.ModelAdmin):
         )
         self._report_updated(request, updated)
 
-    @admin.action(description=_("Позначити вибрані замовлення як відправлені"))
+    @admin.action(description=_("Позначити вибрані замовлення як ключ надіслано"))
     def mark_as_shipped(
         self,
         request: HttpRequest,
@@ -135,7 +135,7 @@ class OrderAdmin(admin.ModelAdmin):
         )
         self._report_updated(request, updated)
 
-    @admin.action(description=_("Позначити вибрані замовлення як доставлені"))
+    @admin.action(description=_("Позначити вибрані замовлення як виконані"))
     def mark_as_delivered(
         self,
         request: HttpRequest,

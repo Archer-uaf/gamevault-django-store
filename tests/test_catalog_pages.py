@@ -87,6 +87,7 @@ class CatalogPagesTests(TestCase):
         description: str | None = None,
         description_en: str = "",
         cover_url: str = "",
+        stock: int = 10,
         is_active: bool = True,
     ) -> Product:
         return Product.objects.create(
@@ -100,7 +101,7 @@ class CatalogPagesTests(TestCase):
             platform=platform,
             developer="Test Studio",
             publisher="Test Publisher",
-            stock=10,
+            stock=stock,
             is_active=is_active,
         )
 
@@ -237,6 +238,49 @@ class CatalogPagesTests(TestCase):
         self.assertContains(response, self.active_product.name)
         self.assertContains(response, self.active_product.cover_url)
 
+    def test_product_list_shows_stock_status_without_exact_number(self) -> None:
+        Product.objects.filter(pk=self.active_product.pk).update(stock=30)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Alpha"},
+        )
+
+        self.assertContains(response, "В наявності")
+        self.assertNotContains(response, "В наявності: 30")
+
+    def test_product_list_shows_low_stock_status(self) -> None:
+        Product.objects.filter(pk=self.active_product.pk).update(stock=10)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Alpha"},
+        )
+
+        self.assertContains(response, "Закінчується")
+        self.assertNotContains(response, "В наявності: 10")
+
+    def test_product_list_shows_out_of_stock_status(self) -> None:
+        Product.objects.filter(pk=self.active_product.pk).update(stock=0)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Alpha"},
+        )
+
+        self.assertContains(response, "Немає в наявності")
+
+    def test_product_detail_stock_status_can_be_rendered_in_english(self) -> None:
+        Product.objects.filter(pk=self.active_product.pk).update(stock=10)
+
+        response = self.client.get(
+            self.active_product.get_absolute_url(),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+
+        self.assertContains(response, "Low stock")
+        self.assertNotContains(response, "In stock: 10")
+
     def test_product_detail_renders_cover_url_when_image_missing(self) -> None:
         response = self.client.get(self.active_product.get_absolute_url())
 
@@ -262,9 +306,11 @@ class SeedDemoGamesCommandTests(TestCase):
         self.assertIn("Cyberpunk 2077", product_names)
         self.assertIn("The Witcher 3: Wild Hunt", product_names)
         self.assertIn("Elden Ring", product_names)
+        self.assertIn("Hearts of Iron IV", product_names)
         self.assertNotIn("Circuit Legends", product_names)
         self.assertNotIn("Night Signal", product_names)
         self.assertNotIn("Tactical Horizon", product_names)
+        self.assertNotIn("Mortal Kombat 11", product_names)
 
     def test_real_demo_games_have_covers_and_english_descriptions(self) -> None:
         call_command("seed_demo_games", "--reset", verbosity=0)
@@ -278,6 +324,18 @@ class SeedDemoGamesCommandTests(TestCase):
                 cover_url__contains="1091500",
             ).exists()
         )
+
+    def test_real_demo_games_use_static_steam_price_snapshot(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+
+        cyberpunk = Product.objects.get(slug="cyberpunk-2077")
+        hearts = Product.objects.get(slug="hearts-of-iron-iv")
+
+        self.assertGreater(cyberpunk.price, Decimal("0.00"))
+        self.assertEqual(cyberpunk.discount_percent, 70)
+        self.assertEqual(hearts.price, Decimal("1349.00"))
+        self.assertEqual(hearts.discount_percent, 80)
+        self.assertIn("394360", hearts.cover_url)
 
     def test_product_pages_render_seeded_real_covers(self) -> None:
         call_command("seed_demo_games", "--reset", verbosity=0)

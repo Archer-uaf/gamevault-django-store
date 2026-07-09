@@ -7,6 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import get_language
+from django.utils.translation import gettext as _
 
 
 class Category(models.Model):
@@ -118,3 +119,23 @@ class Product(models.Model):
     @property
     def is_in_stock(self) -> bool:
         return self.stock > 0
+
+    @property
+    def is_low_stock(self) -> bool:
+        return 0 < self.stock <= 25
+
+    @property
+    def stock_status(self) -> str:
+        if self.stock == 0:
+            return "empty"
+        if self.is_low_stock:
+            return "low"
+        return "available"
+
+    @property
+    def stock_status_label(self) -> str:
+        if self.stock == 0:
+            return _("Немає в наявності")
+        if self.is_low_stock:
+            return _("Закінчується")
+        return _("В наявності")

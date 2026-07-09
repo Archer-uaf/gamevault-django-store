@@ -6,6 +6,7 @@
 - [x] Product and category catalog with search, filtering, sorting, and pagination.
 - [x] Real-game demo catalog seeded by `seed_demo_games --reset`.
 - [x] Demo product covers via external cover URLs; official cover files are not bundled.
+- [x] Static Steam UA price snapshot for demo products; no runtime Steam sync.
 - [x] Localized product descriptions with Ukrainian source text and English demo text.
 - [x] Product detail pages with stock, discounts, and review display.
 - [x] Ukrainian and English i18n with Ukrainian as the default language.

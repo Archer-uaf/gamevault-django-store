@@ -91,7 +91,32 @@ HOME_RECOMMENDED_SLUGS = (
     "cyberpunk-2077",
     "the-witcher-3-wild-hunt",
     "elden-ring",
-    "baldurs-gate-3",
+)
+HOME_PLATFORM_CARDS = (
+    {
+        "value": Product.Platform.PC,
+        "label": "PC",
+        "icon": "images/platforms/pc.svg",
+        "class": "pc",
+    },
+    {
+        "value": Product.Platform.PLAYSTATION,
+        "label": "PlayStation",
+        "icon": "images/platforms/playstation.svg",
+        "class": "playstation",
+    },
+    {
+        "value": Product.Platform.XBOX,
+        "label": "Xbox",
+        "icon": "images/platforms/xbox.svg",
+        "class": "xbox",
+    },
+    {
+        "value": Product.Platform.NINTENDO_SWITCH,
+        "label": "Nintendo Switch",
+        "icon": "images/platforms/nintendo-switch.svg",
+        "class": "switch",
+    },
 )
 
 
@@ -112,6 +137,7 @@ def home(request: HttpRequest) -> HttpResponse:
     """Render the GameVault landing page using real catalog records."""
     context = {
         "genre_cards": HOME_GENRE_CARDS,
+        "platform_cards": HOME_PLATFORM_CARDS,
         "hero_products": _products_by_slugs(HOME_HERO_SLUGS),
         "recommended_products": _products_by_slugs(HOME_RECOMMENDED_SLUGS),
     }

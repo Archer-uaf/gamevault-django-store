@@ -152,12 +152,8 @@
                                         <span>{% trans "Немає оцінок" %}</span>
                                     {% endif %}
                                 </div>
-                                <div class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
-                                    {% if product.is_in_stock %}
-                                        {% blocktrans with stock=product.stock %}В наявності: {{ stock }}{% endblocktrans %}
-                                    {% else %}
-                                        {% trans "Немає в наявності" %}
-                                    {% endif %}
+                                <div class="stock-state stock-state--{{ product.stock_status }}">
+                                    {{ product.stock_status_label }}
                                 </div>
                                 <div class="card-footer-row">
                                     <div class="price-block">

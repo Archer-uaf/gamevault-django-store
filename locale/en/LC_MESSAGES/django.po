@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-09 07:15+0000\n"
+"POT-Creation-Date: 2026-07-09 07:50+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -116,8 +116,8 @@ msgstr ""
 "Payment method: %(payment_method)s"
 
 #: orders/forms.py:15 templates/orders/cart_detail.html:64
-#: templates/products/product_detail.html:86
-#: templates/products/product_detail.html:93
+#: templates/products/product_detail.html:82
+#: templates/products/product_detail.html:89
 msgid "Кількість"
 msgstr "Quantity"
 
@@ -260,6 +260,18 @@ msgstr "Mark selected products as inactive"
 msgid "Скинути знижку для вибраних товарів"
 msgstr "Reset discount for selected products"
 
+#: products/models.py:138 templates/products/product_detail.html:98
+msgid "Немає в наявності"
+msgstr "Out of stock"
+
+#: products/models.py:140
+msgid "Закінчується"
+msgstr "Low stock"
+
+#: products/models.py:141
+msgid "В наявності"
+msgstr "In stock"
+
 #: products/views.py:25
 msgid "Екшн"
 msgstr "Action"
@@ -296,32 +308,32 @@ msgstr "Open world"
 msgid "Шутери"
 msgstr "Shooters"
 
-#: products/views.py:143
+#: products/views.py:169
 msgid "Спочатку нові"
 msgstr "Newest first"
 
-#: products/views.py:144
+#: products/views.py:170
 msgid "Ціна: за зростанням"
 msgstr "Price: low to high"
 
-#: products/views.py:145
+#: products/views.py:171
 msgid "Ціна: за спаданням"
 msgstr "Price: high to low"
 
-#: products/views.py:146
+#: products/views.py:172
 msgid "Популярні"
 msgstr "Most popular"
 
-#: products/views.py:306 products/views.py:334 reviews/serializers.py:56
+#: products/views.py:332 products/views.py:360 reviews/serializers.py:56
 #: reviews/serializers.py:67
 msgid "Ви вже опублікували відгук про цю гру."
 msgstr "You have already published a review for this game."
 
-#: products/views.py:316 reviews/serializers.py:52
+#: products/views.py:342 reviews/serializers.py:52
 msgid "Залишити відгук можна лише після покупки цієї гри."
 msgstr "You can review this game only after purchasing it."
 
-#: products/views.py:337
+#: products/views.py:363
 msgid "Дякуємо! Ваш відгук опубліковано."
 msgstr "Thank you! Your review has been published."
 
@@ -429,7 +441,7 @@ msgstr "Account"
 msgid "Вийти"
 msgstr "Log out"
 
-#: templates/includes/header.html:45 templates/products/product_detail.html:129
+#: templates/includes/header.html:45 templates/products/product_detail.html:125
 #: templates/users/login.html:29 templates/users/register.html:34
 msgid "Увійти"
 msgstr "Log in"
@@ -456,11 +468,11 @@ msgstr "Review the selected games and their quantities."
 
 #: templates/orders/cart_detail.html:26 templates/orders/cart_detail.html:31
 #: templates/pages/home.html:45 templates/pages/home.html:47
-#: templates/pages/home.html:132 templates/pages/home.html:134
+#: templates/pages/home.html:151 templates/pages/home.html:153
 #: templates/products/product_detail.html:20
 #: templates/products/product_detail.html:22
-#: templates/products/product_detail.html:217
-#: templates/products/product_detail.html:219
+#: templates/products/product_detail.html:213
+#: templates/products/product_detail.html:215
 #: templates/products/product_list.html:126
 #: templates/products/product_list.html:128
 #, python-format
@@ -472,17 +484,9 @@ msgstr "%(name)s cover"
 msgid "Ціна за одиницю: ₴%(price)s"
 msgstr "Unit price: ₴%(price)s"
 
-#: templates/orders/cart_detail.html:50
-#: templates/products/product_detail.html:76
-#: templates/products/product_list.html:157
-#, python-format
-msgid "В наявності: %(stock)s"
-msgstr "In stock: %(stock)s"
-
 #: templates/orders/cart_detail.html:53
-#, python-format
-msgid "Доступний залишок: %(stock)s. Оновіть кількість."
-msgstr "Available stock: %(stock)s. Update the quantity."
+msgid "Кількість перевищує доступний залишок. Оновіть кількість."
+msgstr "The quantity exceeds the available stock. Update the quantity."
 
 #: templates/orders/cart_detail.html:79
 msgid "Оновити"
@@ -522,8 +526,8 @@ msgstr "Your cart is empty"
 msgid "Додайте ігри з каталогу, щоб вони з'явилися тут."
 msgstr "Add games from the catalog to see them here."
 
-#: templates/orders/cart_detail.html:119 templates/pages/home.html:161
-#: templates/pages/home.html:176 templates/users/order_history.html:48
+#: templates/orders/cart_detail.html:119 templates/pages/home.html:180
+#: templates/pages/home.html:195 templates/users/order_history.html:48
 msgid "Перейти до каталогу"
 msgstr "Go to catalog"
 
@@ -640,92 +644,104 @@ msgstr "digital store access"
 msgid "Вибрані ігри"
 msgstr "Selected games"
 
-#: templates/pages/home.html:62 templates/pages/home.html:158
+#: templates/pages/home.html:61 templates/pages/home.html:177
 msgid "Каталог ще порожній"
 msgstr "The catalog is still empty"
 
-#: templates/pages/home.html:63
+#: templates/pages/home.html:62
 msgid "Запустіть seed_demo_games, щоб побачити обкладинки ігор."
 msgstr "Run seed_demo_games to see game covers."
 
-#: templates/pages/home.html:73
+#: templates/pages/home.html:72
 msgid "Чому GameVault"
 msgstr "Why GameVault"
 
-#: templates/pages/home.html:74
+#: templates/pages/home.html:73
 msgid "Усе необхідне для гарного вибору!"
 msgstr "Everything you need to make a great choice!"
 
-#: templates/pages/home.html:79
+#: templates/pages/home.html:78
 msgid "Ігри для різних платформ"
 msgstr "Games for different platforms"
 
-#: templates/pages/home.html:80
+#: templates/pages/home.html:79
 msgid "PC, PlayStation, Xbox і Nintendo Switch в одному каталозі."
 msgstr "PC, PlayStation, Xbox, and Nintendo Switch in one catalog."
 
-#: templates/pages/home.html:84
+#: templates/pages/home.html:83
 msgid "Вигідні пропозиції"
 msgstr "Great deals"
 
-#: templates/pages/home.html:85
+#: templates/pages/home.html:84
 msgid "У нас шалені знижки та гарячі бандли!"
 msgstr "Discover huge discounts and hot bundles!"
 
-#: templates/pages/home.html:89 templates/products/product_detail.html:116
+#: templates/pages/home.html:88 templates/products/product_detail.html:112
 msgid "Відгуки"
 msgstr "Reviews"
 
-#: templates/pages/home.html:90
+#: templates/pages/home.html:89
 msgid "Рейтинги та думки спільноти спростять вибір наступної пригоди."
 msgstr ""
 "Community ratings and opinions make choosing your next adventure easier."
 
-#: templates/pages/home.html:100
+#: templates/pages/home.html:99
 msgid "Обирай за настроєм"
 msgstr "Choose by mood"
 
-#: templates/pages/home.html:101
+#: templates/pages/home.html:100
 msgid "Популярні жанри"
 msgstr "Popular genres"
 
-#: templates/pages/home.html:103
+#: templates/pages/home.html:102
 msgid "Усі жанри"
 msgstr "All genres"
 
+#: templates/pages/home.html:120
+msgid "Обирай пристрій"
+msgstr "Choose your device"
+
 #: templates/pages/home.html:121
+msgid "Платформи"
+msgstr "Platforms"
+
+#: templates/pages/home.html:123 templates/products/product_list.html:52
+msgid "Усі платформи"
+msgstr "All platforms"
+
+#: templates/pages/home.html:140
 msgid "Вибір редакції"
 msgstr "Editor's choice"
 
-#: templates/pages/home.html:122
+#: templates/pages/home.html:141
 msgid "Рекомендовані ігри"
 msgstr "Featured games"
 
-#: templates/pages/home.html:124
+#: templates/pages/home.html:143
 msgid "Добірка ігор від редакції GameVault."
 msgstr "A selection of games from the GameVault team."
 
-#: templates/pages/home.html:144 templates/products/product_detail.html:39
+#: templates/pages/home.html:163 templates/products/product_detail.html:39
 msgid "Рекомендовано"
 msgstr "Featured"
 
-#: templates/pages/home.html:151 templates/products/product_list.html:172
+#: templates/pages/home.html:170 templates/products/product_list.html:168
 msgid "Детальніше"
 msgstr "View details"
 
-#: templates/pages/home.html:159
+#: templates/pages/home.html:178
 msgid "Запустіть seed_demo_games або перейдіть до каталогу."
 msgstr "Run seed_demo_games or go to the catalog."
 
-#: templates/pages/home.html:172
+#: templates/pages/home.html:191
 msgid "Готовий до наступного рівня?"
 msgstr "Ready for the next level?"
 
-#: templates/pages/home.html:173
+#: templates/pages/home.html:192
 msgid "Знайди гру, яку не захочеться вимикати"
 msgstr "Find a game you won't want to turn off"
 
-#: templates/pages/home.html:174
+#: templates/pages/home.html:193
 msgid "Шукай ігри за жанром, платформою, ціною або назвою."
 msgstr "Search for games by genre, platform, price, or title."
 
@@ -772,82 +788,76 @@ msgstr "Platform"
 msgid "Ціна"
 msgstr "Price"
 
-#: templates/products/product_detail.html:78
-#: templates/products/product_detail.html:102
-#: templates/products/product_list.html:159
-msgid "Немає в наявності"
-msgstr "Out of stock"
-
-#: templates/products/product_detail.html:97
+#: templates/products/product_detail.html:93
 msgid "Додати до кошика"
 msgstr "Add to cart"
 
-#: templates/products/product_detail.html:115
+#: templates/products/product_detail.html:111
 msgid "Думка гравців"
 msgstr "Players' opinions"
 
-#: templates/products/product_detail.html:119
+#: templates/products/product_detail.html:115
 #, python-format
 msgid "Усього відгуків: %(count)s"
 msgstr "Total reviews: %(count)s"
 
-#: templates/products/product_detail.html:126
+#: templates/products/product_detail.html:122
 msgid "Хочете поділитися враженнями?"
 msgstr "Want to share your experience?"
 
-#: templates/products/product_detail.html:127
+#: templates/products/product_detail.html:123
 msgid "Увійдіть, щоб залишити відгук після покупки гри."
 msgstr "Log in to review the game after purchasing it."
 
-#: templates/products/product_detail.html:134
+#: templates/products/product_detail.html:130
 msgid "Ваш відгук уже опубліковано"
 msgstr "Your review is already published"
 
-#: templates/products/product_detail.html:135
+#: templates/products/product_detail.html:131
 msgid "Дякуємо, що поділилися думкою про цю гру."
 msgstr "Thank you for sharing your thoughts about this game."
 
-#: templates/products/product_detail.html:142
+#: templates/products/product_detail.html:138
 msgid "Підтверджена покупка"
 msgstr "Verified purchase"
 
-#: templates/products/product_detail.html:143
+#: templates/products/product_detail.html:139
 msgid "Залишити відгук"
 msgstr "Leave a review"
 
-#: templates/products/product_detail.html:145
+#: templates/products/product_detail.html:141
 msgid "Оцініть гру від 1 до 5 та напишіть коментар."
 msgstr "Rate the game from 1 to 5 and write a comment."
 
-#: templates/products/product_detail.html:163
+#: templates/products/product_detail.html:159
 msgid "Опублікувати відгук"
 msgstr "Publish review"
 
-#: templates/products/product_detail.html:168
+#: templates/products/product_detail.html:164
 msgid "Відгук доступний після покупки"
 msgstr "Reviews are available after purchase"
 
-#: templates/products/product_detail.html:169
+#: templates/products/product_detail.html:165
 msgid "Придбайте цю гру у своєму обліковому записі, щоб поділитися враженнями."
 msgstr "Purchase this game through your account to share your experience."
 
-#: templates/products/product_detail.html:194
+#: templates/products/product_detail.html:190
 msgid "Відгуків поки немає"
 msgstr "No reviews yet"
 
-#: templates/products/product_detail.html:195
+#: templates/products/product_detail.html:191
 msgid "Ця гра ще чекає на перші оцінки спільноти."
 msgstr "This game is still waiting for its first community ratings."
 
-#: templates/products/product_detail.html:206
+#: templates/products/product_detail.html:202
 msgid "Вам також може сподобатися"
 msgstr "You may also like"
 
-#: templates/products/product_detail.html:207
+#: templates/products/product_detail.html:203
 msgid "Схожі ігри"
 msgstr "Similar games"
 
-#: templates/products/product_detail.html:209
+#: templates/products/product_detail.html:205
 msgid "Усе в категорії"
 msgstr "View category"
 
@@ -872,7 +882,7 @@ msgid "Фільтри"
 msgstr "Filters"
 
 #: templates/products/product_list.html:20
-#: templates/products/product_list.html:217
+#: templates/products/product_list.html:213
 msgid "Скинути фільтри"
 msgstr "Reset filters"
 
@@ -891,10 +901,6 @@ msgstr "Category"
 #: templates/products/product_list.html:37
 msgid "Усі категорії"
 msgstr "All categories"
-
-#: templates/products/product_list.html:52
-msgid "Усі платформи"
-msgstr "All platforms"
 
 #: templates/products/product_list.html:66
 msgid "Ціна від"
@@ -930,25 +936,25 @@ msgstr "Page %(current)s of %(total)s"
 msgid "Немає оцінок"
 msgstr "No ratings"
 
-#: templates/products/product_list.html:181
+#: templates/products/product_list.html:177
 msgid "Пагінація каталогу"
 msgstr "Catalog pagination"
 
-#: templates/products/product_list.html:184
-#: templates/products/product_list.html:187
+#: templates/products/product_list.html:180
+#: templates/products/product_list.html:183
 msgid "Назад"
 msgstr "Previous"
 
-#: templates/products/product_list.html:204
-#: templates/products/product_list.html:207
+#: templates/products/product_list.html:200
+#: templates/products/product_list.html:203
 msgid "Уперед"
 msgstr "Next"
 
-#: templates/products/product_list.html:214
+#: templates/products/product_list.html:210
 msgid "Ігри не знайдено"
 msgstr "No games found"
 
-#: templates/products/product_list.html:215
+#: templates/products/product_list.html:211
 msgid "Спробуйте змінити параметри пошуку або скинути фільтри."
 msgstr "Try changing your search options or resetting the filters."
 

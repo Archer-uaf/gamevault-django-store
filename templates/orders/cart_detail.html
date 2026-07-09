@@ -47,10 +47,10 @@
                                 </h2>
                                 <span>{% blocktrans with price=item.unit_price %}Ціна за одиницю: ₴{{ price }}{% endblocktrans %}</span>
                                 {% if item.is_available %}
-                                    <small>{% blocktrans with stock=item.product.stock %}В наявності: {{ stock }}{% endblocktrans %}</small>
+                                    <small>{{ item.product.stock_status_label }}</small>
                                 {% else %}
                                     <small class="stock-warning">
-                                        {% blocktrans with stock=item.product.stock %}Доступний залишок: {{ stock }}. Оновіть кількість.{% endblocktrans %}
+                                        {% trans "Кількість перевищує доступний залишок. Оновіть кількість." %}
                                     </small>
                                 {% endif %}
                             </div>

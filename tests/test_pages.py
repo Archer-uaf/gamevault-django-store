@@ -46,10 +46,12 @@ class HomePageTests(TestCase):
         product = Product.objects.get(slug="cyberpunk-2077")
 
         response = self.client.get("/")
+        content = response.content.decode()
 
         self.assertContains(response, product.name)
         self.assertContains(response, product.get_absolute_url())
         self.assertContains(response, product.cover_url)
+        self.assertEqual(content.count('class="game-card game-card--interactive"'), 3)
         self.assertNotContains(response, "Каталог ще порожній")
         self.assertNotContains(response, "Рекомендовані ігри з'являться")
 
@@ -68,3 +70,18 @@ class HomePageTests(TestCase):
         for product in hero_products:
             self.assertContains(response, product.get_absolute_url())
             self.assertContains(response, product.cover_url)
+
+    def test_home_platform_links_point_to_catalog_filters(self) -> None:
+        response = self.client.get("/")
+
+        self.assertContains(response, "Платформи")
+        for platform in (
+            Product.Platform.PC,
+            Product.Platform.PLAYSTATION,
+            Product.Platform.XBOX,
+            Product.Platform.NINTENDO_SWITCH,
+        ):
+            self.assertContains(
+                response,
+                f'{reverse("products:product_list")}?platform={platform}',
+            )

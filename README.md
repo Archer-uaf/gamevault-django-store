@@ -15,7 +15,7 @@ GameVault is an educational video game store built with Django and Django REST F
 ## Features
 
 - Product catalog with search, filters, sorting, pagination, and product details
-- Realistic demo game catalog with external demo cover URLs and localized descriptions
+- Realistic demo game catalog with external demo cover URLs, localized descriptions, and a static Steam UA price snapshot
 - Ukrainian and English storefront, with Ukrainian as the default language
 - Session-based cart with stock validation and discounted totals
 - Guest checkout with mock payment methods and order confirmation
@@ -56,7 +56,7 @@ Requirements: Docker with Docker Compose support.
 
 5. Open <http://localhost:8000/>.
 
-The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates. With `--reset`, it replaces previous demo titles with a real-game demo catalog. Official cover files are not bundled in the repository; seeded demo products use external Steam cover URLs for display, while user-provided local product images can still be uploaded through the existing image field.
+The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates. With `--reset`, it replaces previous demo titles with a real-game demo catalog. Official cover files are not bundled in the repository; seeded demo products use external Steam cover URLs for display, while user-provided local product images can still be uploaded through the existing image field. Demo prices are a Steam UA price snapshot collected on July 9, 2026 and are not live-synced.
 
 ## Environment variables
 

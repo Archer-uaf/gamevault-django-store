@@ -176,6 +176,12 @@ class CatalogPagesTests(TestCase):
         self.assertTemplateUsed(response, "products/product_detail.html")
         self.assertContains(response, self.active_product.name)
 
+    def test_product_detail_uses_fallback_when_cover_is_missing(self) -> None:
+        response = self.client.get(self.active_product.get_absolute_url())
+
+        self.assertContains(response, "detail-placeholder")
+        self.assertContains(response, self.active_product.name)
+
     def test_inactive_product_detail_returns_404(self) -> None:
         response = self.client.get(self.inactive_product.get_absolute_url())
 
@@ -211,8 +217,63 @@ class CatalogPagesTests(TestCase):
 
 
 class SeedDemoGamesCommandTests(TestCase):
+    def test_reset_removes_fake_games_and_creates_real_catalog(self) -> None:
+        category = Category.objects.create(name="Old Action", slug="old-action")
+        Product.objects.create(
+            name="Circuit Legends",
+            slug="circuit-legends",
+            description="Old fake demo product.",
+            price=Decimal("10.00"),
+            category=category,
+            platform=Product.Platform.PC,
+            stock=5,
+            is_active=True,
+        )
+
+        call_command("seed_demo_games", "--reset", verbosity=0)
+
+        product_names = set(Product.objects.values_list("name", flat=True))
+        self.assertIn("Cyberpunk 2077", product_names)
+        self.assertIn("The Witcher 3: Wild Hunt", product_names)
+        self.assertIn("Elden Ring", product_names)
+        self.assertIn("Baldur's Gate 3", product_names)
+        self.assertNotIn("Circuit Legends", product_names)
+        self.assertNotIn("Night Signal", product_names)
+        self.assertNotIn("Tactical Horizon", product_names)
+        self.assertEqual(Product.objects.count(), 20)
+
+    def test_seeded_real_games_have_cover_urls(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+
+        for slug in ("cyberpunk-2077", "the-witcher-3-wild-hunt", "elden-ring"):
+            product = Product.objects.get(slug=slug)
+            self.assertTrue(product.image or product.cover_url)
+            self.assertIn("/steam/apps/", product.cover_url)
+
+    def test_product_list_shows_seeded_real_game_cover(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+        product = Product.objects.get(slug="cyberpunk-2077")
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"q": "Cyberpunk"},
+        )
+
+        self.assertContains(response, "Cyberpunk 2077")
+        self.assertContains(response, product.cover_url)
+        self.assertNotContains(response, "Neon Drift")
+
+    def test_product_detail_shows_seeded_real_game_cover(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+        product = Product.objects.get(slug="elden-ring")
+
+        response = self.client.get(product.get_absolute_url())
+
+        self.assertContains(response, "Elden Ring")
+        self.assertContains(response, product.cover_url)
+
     def test_command_is_idempotent(self) -> None:
-        call_command("seed_demo_games", verbosity=0)
+        call_command("seed_demo_games", "--reset", verbosity=0)
         category_count = Category.objects.count()
         product_count = Product.objects.count()
 
@@ -220,4 +281,4 @@ class SeedDemoGamesCommandTests(TestCase):
 
         self.assertEqual(Category.objects.count(), category_count)
         self.assertEqual(Product.objects.count(), product_count)
-        self.assertGreaterEqual(product_count, 12)
+        self.assertEqual(product_count, 20)

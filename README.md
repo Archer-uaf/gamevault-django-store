@@ -15,11 +15,12 @@ GameVault is an educational video game store built with Django and Django REST F
 ## Features
 
 - Product catalog with search, filters, sorting, pagination, and product details
+- Realistic demo catalog seed with recognizable game titles and external demo cover URLs
 - Ukrainian and English storefront, with Ukrainian as the default language
 - Session-based cart with stock validation and discounted totals
 - Guest checkout with mock payment methods and order confirmation
 - Development-safe customer confirmations and optional administrator notifications
-- Registration, login, logout, profile editing, dashboard, order history, and password changes
+- Registration, login, logout, digital profile editing, dashboard, order history, and password changes
 - Reviews restricted to verified purchases
 - REST API for authentication, catalog data, cart operations, orders, and reviews
 - JWT authentication and interactive Swagger/OpenAPI documentation
@@ -55,7 +56,13 @@ Requirements: Docker with Docker Compose support.
 
 5. Open <http://localhost:8000/>.
 
-The demo seed command is idempotent: repeated runs update records by slug instead of creating duplicates.
+The demo seed command creates a realistic video game catalog with 20 recognizable games and 10 genres. It is idempotent: repeated runs update records by slug instead of creating duplicates. To recreate the known demo catalog and remove older seeded fake demo products, run:
+
+```bash
+docker compose exec web python manage.py seed_demo_games --reset
+```
+
+Seeded demo products use external Steam header image URLs for storefront covers. No official poster files are bundled in the repository and no images are downloaded into the project. If a product has neither a local `image` nor a `cover_url`, the storefront falls back to a simple CSS cover.
 
 ## Environment variables
 

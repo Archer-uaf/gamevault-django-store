@@ -175,7 +175,7 @@ class VerifiedPurchaseReviewTests(TestCase):
             user=self.user,
             product=self.product,
             rating=5,
-            comment="П’ять зірок.",
+            comment="П'ять зірок.",
         )
         Review.objects.create(
             user=second_user,

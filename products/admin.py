@@ -50,7 +50,19 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     actions = ("mark_active", "mark_inactive", "reset_discount")
     fieldsets = (
-        (None, {"fields": ("name", "slug", "description", "category", "image")}),
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "slug",
+                    "description",
+                    "category",
+                    "image",
+                    "cover_url",
+                )
+            },
+        ),
         (
             _("Продажі"),
             {

@@ -37,6 +37,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "final_price",
             "category",
             "image",
+            "cover_url",
             "platform",
             "developer",
             "publisher",

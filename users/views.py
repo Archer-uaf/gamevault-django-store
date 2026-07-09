@@ -21,7 +21,6 @@ from users.forms import (
     ProfileUpdateForm,
     RegistrationForm,
 )
-from users.models import UserProfile
 
 
 class RegisterView(FormView):
@@ -84,7 +83,7 @@ class AccountDashboardView(LoginRequiredMixin, TemplateView):
 
 
 class AccountProfileView(LoginRequiredMixin, FormView):
-    """Edit the current user's account and delivery details."""
+    """Edit the current user's digital account details."""
 
     template_name = "users/profile.html"
     form_class = ProfileUpdateForm
@@ -92,8 +91,7 @@ class AccountProfileView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
-        kwargs.update({"user": self.request.user, "instance": profile})
+        kwargs.update({"user": self.request.user})
         return kwargs
 
     def form_valid(self, form: ProfileUpdateForm) -> HttpResponse:

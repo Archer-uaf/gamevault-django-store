@@ -18,6 +18,8 @@
             <div class="detail-cover">
                 {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
+                {% elif product.cover_url %}
+                    <img src="{{ product.cover_url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                 {% else %}
                     <div class="detail-placeholder" aria-hidden="true">
                         <span>{{ product.get_platform_display }}</span>
@@ -213,6 +215,8 @@
                     <a href="{{ related_product.get_absolute_url }}" class="related-card__visual">
                         {% if related_product.image %}
                             <img src="{{ related_product.image.url }}" alt="{% blocktrans with name=related_product.name %}Обкладинка {{ name }}{% endblocktrans %}">
+                        {% elif related_product.cover_url %}
+                            <img src="{{ related_product.cover_url }}" alt="{% blocktrans with name=related_product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                         {% else %}
                             <div class="game-placeholder" aria-hidden="true">
                                 <span>{{ related_product.get_platform_display }}</span>

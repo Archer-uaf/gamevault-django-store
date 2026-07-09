@@ -483,7 +483,7 @@ dd {
 
 .genre-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 14px;
 }
 
@@ -517,9 +517,22 @@ dd {
 }
 
 .genre-card span {
+    position: relative;
+    z-index: 1;
     font-size: 0.7rem;
     font-weight: 850;
-    opacity: 0.7;
+    opacity: 0.9;
+}
+
+.genre-card__icon {
+    position: absolute;
+    right: 15px;
+    bottom: 14px;
+    z-index: 1;
+    width: 70px;
+    height: 70px;
+    opacity: 0.86;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.2));
 }
 
 .genre-card strong {
@@ -530,14 +543,18 @@ dd {
 
 .genre-card--action { background: #eb4d6d; }
 .genre-card--rpg { background: #6c48e8; }
+.genre-card--adventure { background: #2e7bcf; }
+.genre-card--horror { background: #303240; }
 .genre-card--strategy { background: #1f8d82; }
 .genre-card--racing { background: #e07b2d; }
 .genre-card--indie { background: #2d71ca; }
-.genre-card--sport { background: #303240; }
+.genre-card--simulation { background: #59636f; }
+.genre-card--open-world { background: #2f7c57; }
+.genre-card--shooter { background: #b84040; }
 
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
 }
 
@@ -545,6 +562,7 @@ dd {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    display: block;
     background: var(--surface);
     box-shadow: 0 12px 35px rgba(25, 21, 53, 0.07);
     transition: transform 180ms ease, box-shadow 180ms ease;
@@ -627,6 +645,21 @@ dd {
 .game-meta strong {
     color: var(--ink);
     font-size: 1rem;
+}
+
+.game-card__action {
+    width: 100%;
+    margin-top: 18px;
+    pointer-events: none;
+}
+
+.game-grid .empty-state {
+    grid-column: 1 / -1;
+}
+
+.recommended-empty {
+    min-height: 0;
+    padding: 28px;
 }
 
 .catalog-cta {
@@ -762,6 +795,10 @@ dd {
 
     .genre-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .game-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 

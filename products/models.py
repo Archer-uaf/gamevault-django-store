@@ -61,6 +61,7 @@ class Product(models.Model):
         on_delete=models.PROTECT,
     )
     image = models.ImageField(upload_to="products/", blank=True)
+    cover_url = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     stock = models.PositiveIntegerField(default=0)
     platform = models.CharField(max_length=20, choices=Platform.choices)

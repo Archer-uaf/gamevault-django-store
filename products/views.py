@@ -18,10 +18,79 @@ from reviews.forms import ReviewForm
 from reviews.models import Review
 from reviews.services import user_has_purchased_product
 
+HOME_GENRE_SLUGS = (
+    "action",
+    "rpg",
+    "adventure",
+    "horror",
+    "strategy",
+    "racing",
+    "indie",
+    "simulation",
+    "open-world",
+    "shooter",
+)
+HOME_RECOMMENDED_SLUGS = (
+    "cyberpunk-2077",
+    "the-witcher-3-wild-hunt",
+    "elden-ring",
+    "baldurs-gate-3",
+)
+HOME_GENRE_LABELS = {
+    "action": "Action",
+    "rpg": "RPG",
+    "adventure": "Adventure",
+    "horror": "Horror",
+    "strategy": "Strategy",
+    "racing": "Racing",
+    "indie": "Indie",
+    "simulation": "Simulation",
+    "open-world": "Open World",
+    "shooter": "Shooter",
+}
+
 
 def home(request: HttpRequest) -> HttpResponse:
-    """Render the static GameVault landing page."""
-    return render(request, "pages/home.html")
+    """Render the storefront landing page with real catalog records."""
+    categories_by_slug = {
+        category.slug: category
+        for category in Category.objects.filter(slug__in=HOME_GENRE_SLUGS)
+    }
+    genre_cards = [
+        {
+            "category": categories_by_slug.get(slug),
+            "slug": slug,
+            "label": (
+                categories_by_slug[slug].name
+                if slug in categories_by_slug
+                else HOME_GENRE_LABELS[slug]
+            ),
+            "icon": f"images/categories/{slug}.svg",
+        }
+        for slug in HOME_GENRE_SLUGS
+    ]
+
+    products_by_slug = {
+        product.slug: product
+        for product in Product.objects.filter(
+            slug__in=HOME_RECOMMENDED_SLUGS,
+            is_active=True,
+        ).select_related("category")
+    }
+    recommended_products = [
+        products_by_slug[slug]
+        for slug in HOME_RECOMMENDED_SLUGS
+        if slug in products_by_slug
+    ]
+
+    return render(
+        request,
+        "pages/home.html",
+        {
+            "genre_cards": genre_cards,
+            "recommended_products": recommended_products,
+        },
+    )
 
 
 def _parse_price(value: str) -> Decimal | None:

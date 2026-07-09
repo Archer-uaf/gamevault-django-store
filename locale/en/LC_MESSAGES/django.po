@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-09 08:31+0000\n"
+"POT-Creation-Date: 2026-07-09 18:08+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -386,12 +386,12 @@ msgstr "Games that stay with you. One store for all your favorite platforms."
 msgid "Навігація в нижньому колонтитулі"
 msgstr "Footer navigation"
 
-#: templates/includes/footer.html:12 templates/includes/header.html:24
+#: templates/includes/footer.html:12 templates/includes/header.html:26
 #: templates/products/product_detail.html:10
 msgid "Головна"
 msgstr "Home"
 
-#: templates/includes/footer.html:13 templates/includes/header.html:25
+#: templates/includes/footer.html:13 templates/includes/header.html:31
 #: templates/products/product_detail.html:12
 msgid "Ігри"
 msgstr "Games"
@@ -424,33 +424,33 @@ msgstr "Open menu"
 msgid "Основна навігація"
 msgstr "Main navigation"
 
-#: templates/includes/header.html:29 templates/orders/cart_detail.html:10
+#: templates/includes/header.html:36 templates/orders/cart_detail.html:10
 msgid "Кошик"
 msgstr "Cart"
 
-#: templates/includes/header.html:31
+#: templates/includes/header.html:38
 #, python-format
 msgid "Товарів у кошику: %(count)s"
 msgstr "Items in cart: %(count)s"
 
-#: templates/includes/header.html:39 templates/users/dashboard.html:10
+#: templates/includes/header.html:46 templates/users/dashboard.html:10
 msgid "Особистий кабінет"
 msgstr "Account"
 
-#: templates/includes/header.html:43 templates/users/logout.html:15
+#: templates/includes/header.html:50 templates/users/logout.html:15
 msgid "Вийти"
 msgstr "Log out"
 
-#: templates/includes/header.html:45 templates/products/product_detail.html:125
+#: templates/includes/header.html:52 templates/products/product_detail.html:125
 #: templates/users/login.html:29 templates/users/register.html:34
 msgid "Увійти"
 msgstr "Log in"
 
-#: templates/includes/header.html:58
+#: templates/includes/header.html:65
 msgid "Перемкнути мову на українську"
 msgstr "Switch language to Ukrainian"
 
-#: templates/includes/header.html:68
+#: templates/includes/header.html:75
 msgid "Switch language to English"
 msgstr "Switch language to English"
 
@@ -467,8 +467,8 @@ msgid "Перевірте вибрані ігри та їхню кількіст
 msgstr "Review the selected games and their quantities."
 
 #: templates/orders/cart_detail.html:26 templates/orders/cart_detail.html:31
-#: templates/pages/home.html:53 templates/pages/home.html:58
-#: templates/pages/home.html:189 templates/pages/home.html:191
+#: templates/pages/home.html:70 templates/pages/home.html:75
+#: templates/pages/home.html:261 templates/pages/home.html:266
 #: templates/products/product_detail.html:20
 #: templates/products/product_detail.html:22
 #: templates/products/product_detail.html:213
@@ -526,8 +526,8 @@ msgstr "Your cart is empty"
 msgid "Додайте ігри з каталогу, щоб вони з'явилися тут."
 msgstr "Add games from the catalog to see them here."
 
-#: templates/orders/cart_detail.html:119 templates/pages/home.html:218
-#: templates/pages/home.html:233 templates/users/order_history.html:48
+#: templates/orders/cart_detail.html:119 templates/pages/home.html:299
+#: templates/pages/home.html:315 templates/users/order_history.html:48
 msgid "Перейти до каталогу"
 msgstr "Go to catalog"
 
@@ -544,21 +544,15 @@ msgid "Оформлення замовлення"
 msgstr "Checkout"
 
 #: templates/orders/checkout.html:11
-#, fuzzy
-#| msgid "Вкажіть контактні дані та оберіть тестовий спосіб оплати."
-msgid "Вкажіть email для та оберіть спосіб оплати"
+msgid "Вкажіть контактні дані та оберіть тестовий спосіб оплати."
 msgstr "Enter your contact details and choose a test payment method."
 
 #: templates/orders/checkout.html:20
-#, fuzzy
-#| msgid "Ваше замовлення"
-msgid "Цифрове замовлення"
-msgstr "Your order"
+msgid "Контактні дані"
+msgstr "Contact details"
 
 #: templates/orders/checkout.html:21
-#, fuzzy
-#| msgid "Дані отримувача"
-msgid "Дані для отримання гри"
+msgid "Дані отримувача"
 msgstr "Recipient details"
 
 #: templates/orders/checkout.html:43
@@ -626,144 +620,172 @@ msgstr ""
 "Build a library of your favorite PC and console games! New releases, "
 "classics, and fair prices — all at GameVault!"
 
-#: templates/pages/home.html:19
+#: templates/pages/home.html:21 templates/pages/home.html:235
 msgid "Дивитися ігри"
 msgstr "Browse games"
 
-#: templates/pages/home.html:20
+#: templates/pages/home.html:24
 msgid "Обрати жанр"
 msgstr "Choose a genre"
 
-#: templates/pages/home.html:25
+#: templates/pages/home.html:31
 msgid "реальних ігор у demo catalog"
 msgstr "real games in the demo catalog"
 
-#: templates/pages/home.html:29
+#: templates/pages/home.html:35
 msgid "ігрові платформи"
 msgstr "gaming platforms"
 
-#: templates/pages/home.html:33
+#: templates/pages/home.html:39
 msgid "доступ до цифрового магазину"
 msgstr "digital store access"
 
-#: templates/pages/home.html:42
-msgid "Вибрані ігри"
-msgstr "Selected games"
+#: templates/pages/home.html:51
+msgid "Гарячі знижки"
+msgstr "Hot deals"
 
-#: templates/pages/home.html:47
-#, python-format
-msgid "Переглянути гру %(name)s"
+#: templates/pages/home.html:52
+msgid "Хапай поки гаряче!"
+msgstr "Grab them while they are hot!"
+
+#: templates/pages/home.html:55
+msgid "Добірка ігор зі знижками для швидкого старту."
+msgstr "A selection of discounted games for a quick start."
+
+#: templates/pages/home.html:87
+msgid "Акція"
+msgstr "Deal"
+
+#: templates/pages/home.html:101
+msgid ""
+"Футуристична Action-RPG у всесвіті Cyberpunk від розробників The Witcher 3 "
+"зі знижкою тижня! Забирай поки ціна гаряча!"
 msgstr ""
+"A futuristic action RPG set in the Cyberpunk universe from the makers of The "
+"Witcher 3, now with this week's discount. Grab it while the price is hot!"
 
-#: templates/pages/home.html:79 templates/pages/home.html:86
-#: templates/pages/home.html:215
-msgid "Каталог ще порожній"
-msgstr "The catalog is still empty"
+#: templates/pages/home.html:105
+msgid "Миттєвий доступ – отримай ключ одразу після купівлі!"
+msgstr "Instant access - get your key right after purchase!"
 
-#: templates/pages/home.html:80 templates/pages/home.html:87
-msgid "Запустіть seed_demo_games, щоб побачити обкладинки ігор."
-msgstr "Run seed_demo_games to see game covers."
-
-#: templates/pages/home.html:97
-msgid "Чому GameVault"
-msgstr "Why GameVault"
-
-#: templates/pages/home.html:98
-msgid "Усе необхідне для гарного вибору!"
-msgstr "Everything you need to make a great choice!"
-
-#: templates/pages/home.html:103
-msgid "Ігри для різних платформ"
-msgstr "Games for different platforms"
-
-#: templates/pages/home.html:104
-msgid "PC, PlayStation, Xbox і Nintendo Switch в одному каталозі."
-msgstr "PC, PlayStation, Xbox, and Nintendo Switch in one catalog."
-
-#: templates/pages/home.html:108
-msgid "Вигідні пропозиції"
-msgstr "Great deals"
+#: templates/pages/home.html:107
+msgid "Топ-пропозиція цього літа!"
+msgstr "Top deal this summer!"
 
 #: templates/pages/home.html:109
-msgid "У нас шалені знижки та гарячі бандли!"
-msgstr "Discover huge discounts and hot bundles!"
+msgid "PC-версія"
+msgstr "PC version"
 
-#: templates/pages/home.html:113 templates/products/product_detail.html:112
-msgid "Відгуки"
-msgstr "Reviews"
+#: templates/pages/home.html:117
+msgid "Ціна зі знижкою"
+msgstr "Discounted price"
 
-#: templates/pages/home.html:114
-msgid "Рейтинги та думки спільноти спростять вибір наступної пригоди."
-msgstr ""
-"Community ratings and opinions make choosing your next adventure easier."
+#: templates/pages/home.html:119
+msgid "Гаряча ціна"
+msgstr "Hot price"
 
-#: templates/pages/home.html:124
-msgid "Обирай за настроєм"
-msgstr "Choose by mood"
-
-#: templates/pages/home.html:125
-msgid "Популярні жанри"
-msgstr "Popular genres"
-
-#: templates/pages/home.html:127
-msgid "Усі жанри"
-msgstr "All genres"
-
-#: templates/pages/home.html:134
-#, python-format
-msgid "Переглянути жанр %(genre)s"
-msgstr ""
-
-#: templates/pages/home.html:153
-msgid "Обирай пристрій"
-msgstr "Choose your device"
-
-#: templates/pages/home.html:154
-msgid "Платформи"
-msgstr "Platforms"
-
-#: templates/pages/home.html:156 templates/products/product_list.html:52
-msgid "Усі платформи"
-msgstr "All platforms"
-
-#: templates/pages/home.html:162
-#, python-format
-msgid "Переглянути ігри для %(platform)s"
-msgstr ""
-
-#: templates/pages/home.html:178
-msgid "Вибір редакції"
-msgstr "Editor's choice"
-
-#: templates/pages/home.html:179
-msgid "Рекомендовані ігри"
-msgstr "Featured games"
-
-#: templates/pages/home.html:181
-msgid "Добірка ігор від редакції GameVault."
-msgstr "A selection of games from the GameVault team."
-
-#: templates/pages/home.html:201 templates/products/product_detail.html:39
-msgid "Рекомендовано"
-msgstr "Featured"
-
-#: templates/pages/home.html:208 templates/products/product_list.html:168
+#: templates/pages/home.html:129 templates/pages/home.html:289
+#: templates/products/product_list.html:168
 msgid "Детальніше"
 msgstr "View details"
 
-#: templates/pages/home.html:216
+#: templates/pages/home.html:138 templates/pages/home.html:296
+msgid "Каталог ще порожній"
+msgstr "The catalog is still empty"
+
+#: templates/pages/home.html:139
+msgid "Запустіть seed_demo_games, щоб побачити обкладинки ігор."
+msgstr "Run seed_demo_games to see game covers."
+
+#: templates/pages/home.html:149
+msgid "Чому GameVault"
+msgstr "Why GameVault"
+
+#: templates/pages/home.html:150
+msgid "Маркетплейс для швидкого вибору гри"
+msgstr "A marketplace for quickly choosing a game"
+
+#: templates/pages/home.html:156
+msgid "Ігри для різних платформ"
+msgstr "Games for different platforms"
+
+#: templates/pages/home.html:157
+msgid "PC, PlayStation, Xbox і Nintendo Switch в одному каталозі."
+msgstr "PC, PlayStation, Xbox, and Nintendo Switch in one catalog."
+
+#: templates/pages/home.html:162
+msgid "Вигідні пропозиції"
+msgstr "Great deals"
+
+#: templates/pages/home.html:163
+msgid "Знижки, добірки та зрозумілі ціни без зайвого шуму."
+msgstr "Discounts, curated picks, and clear prices without extra noise."
+
+#: templates/pages/home.html:168
+msgid "Відгуки після покупки"
+msgstr "Reviews after purchase"
+
+#: templates/pages/home.html:169
+msgid "Оцінки доступні тільки для користувачів, які справді придбали гру."
+msgstr "Ratings are available only to users who actually bought the game."
+
+#: templates/pages/home.html:179
+msgid "Обирай за настроєм"
+msgstr "Choose by mood"
+
+#: templates/pages/home.html:180
+msgid "Популярні жанри"
+msgstr "Popular genres"
+
+#: templates/pages/home.html:183
+msgid "Усі жанри"
+msgstr "All genres"
+
+#: templates/pages/home.html:202
+msgid "Перейти до добірки"
+msgstr "Go to collection"
+
+#: templates/pages/home.html:214
+msgid "Обирай пристрій"
+msgstr "Choose your device"
+
+#: templates/pages/home.html:215
+msgid "Платформи"
+msgstr "Platforms"
+
+#: templates/pages/home.html:218 templates/products/product_list.html:52
+msgid "Усі платформи"
+msgstr "All platforms"
+
+#: templates/pages/home.html:247
+msgid "Вибір редакції"
+msgstr "Editor's choice"
+
+#: templates/pages/home.html:248
+msgid "Рекомендовані ігри"
+msgstr "Featured games"
+
+#: templates/pages/home.html:250
+msgid "Три гри, з яких легко почати знайомство з GameVault."
+msgstr "Three games that make it easy to get started with GameVault."
+
+#: templates/pages/home.html:278 templates/products/product_detail.html:39
+msgid "Рекомендовано"
+msgstr "Featured"
+
+#: templates/pages/home.html:297
 msgid "Запустіть seed_demo_games або перейдіть до каталогу."
 msgstr "Run seed_demo_games or go to the catalog."
 
-#: templates/pages/home.html:229
+#: templates/pages/home.html:310
 msgid "Готовий до наступного рівня?"
 msgstr "Ready for the next level?"
 
-#: templates/pages/home.html:230
+#: templates/pages/home.html:311
 msgid "Знайди гру, яку не захочеться вимикати"
 msgstr "Find a game you won't want to turn off"
 
-#: templates/pages/home.html:231
+#: templates/pages/home.html:312
 msgid "Шукай ігри за жанром, платформою, ціною або назвою."
 msgstr "Search for games by genre, platform, price, or title."
 
@@ -817,6 +839,10 @@ msgstr "Add to cart"
 #: templates/products/product_detail.html:111
 msgid "Думка гравців"
 msgstr "Players' opinions"
+
+#: templates/products/product_detail.html:112
+msgid "Відгуки"
+msgstr "Reviews"
 
 #: templates/products/product_detail.html:115
 #, python-format
@@ -1074,7 +1100,7 @@ msgid "Ви зможете знову увійти будь-коли."
 msgstr "You can log back in at any time."
 
 #: templates/users/logout.html:16 templates/users/password_change.html:30
-#: templates/users/profile.html:36
+#: templates/users/profile.html:29
 msgid "Скасувати"
 msgstr "Cancel"
 
@@ -1136,7 +1162,7 @@ msgstr "Edit profile — GameVault"
 msgid "Оновіть нікнейм та email для цифрових замовлень."
 msgstr "Update your nickname and email for digital orders."
 
-#: templates/users/profile.html:35
+#: templates/users/profile.html:28
 msgid "Зберегти зміни"
 msgstr "Save changes"
 
@@ -1208,8 +1234,22 @@ msgstr "Your profile was updated successfully."
 msgid "Пароль успішно змінено."
 msgstr "Your password was changed successfully."
 
-#~ msgid "Контактні дані"
-#~ msgstr "Contact details"
+#~| msgid "Ваше замовлення"
+#~ msgid "Цифрове замовлення"
+#~ msgstr "Your order"
+
+#~ msgid "Вибрані ігри"
+#~ msgstr "Selected games"
+
+#~ msgid "У нас шалені знижки та гарячі бандли!"
+#~ msgstr "Discover huge discounts and hot bundles!"
+
+#~ msgid "Рейтинги та думки спільноти спростять вибір наступної пригоди."
+#~ msgstr ""
+#~ "Community ratings and opinions make choosing your next adventure easier."
+
+#~ msgid "Добірка ігор від редакції GameVault."
+#~ msgstr "A selection of games from the GameVault team."
 
 #~ msgid "ігор у каталозі"
 #~ msgstr "games in the catalog"

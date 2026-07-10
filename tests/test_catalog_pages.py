@@ -3,7 +3,9 @@ from typing import Any
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
+from django.db import connection
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from products.models import Category, Product
@@ -238,6 +240,18 @@ class CatalogPagesTests(TestCase):
         self.assertEqual(response.context["page_obj"].number, 2)
         self.assertEqual(len(response.context["products"]), 3)
 
+    def test_product_list_query_count_smoke_guard(self) -> None:
+        # Smoke guard against N+1 regressions. The limit is intentionally loose
+        # and includes pagination, filter context, annotations, and rendering.
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(
+                reverse("products:product_list"),
+                {"sort": "popular"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertLessEqual(len(queries), 8)
+
     def test_product_detail_returns_200(self) -> None:
         response = self.client.get(self.active_product.get_absolute_url())
 
@@ -345,6 +359,34 @@ class CatalogPagesTests(TestCase):
         response = self.client.get(self.active_product.get_absolute_url())
 
         self.assertContains(response, self.active_product.cover_url)
+
+    def test_product_detail_query_count_smoke_guard_with_reviews(self) -> None:
+        user_model = get_user_model()
+        for number in range(5):
+            user = user_model.objects.create_user(username=f"detail-user-{number}")
+            Review.objects.create(
+                product=self.active_product,
+                user=user,
+                rating=5,
+                comment=f"Detail review {number}.",
+            )
+
+        # Smoke guard against N+1 regressions. The limit is intentionally loose
+        # and covers product, prefetched review users, and related products.
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(self.active_product.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertLessEqual(len(queries), 10)
+
+    def test_home_query_count_smoke_guard(self) -> None:
+        # Smoke guard against N+1 regressions in hero/recommended product blocks.
+        # Static genre and platform cards should not add database queries.
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(reverse("home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertLessEqual(len(queries), 6)
 
 
 class SeedDemoGamesCommandTests(TestCase):

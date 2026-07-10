@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from products.models import Category, Product
+from products.querysets import EFFECTIVE_PRICE_ANNOTATION, with_effective_price
 from reviews.forms import ReviewForm
 from reviews.models import Review
 from reviews.services import user_has_purchased_product
@@ -173,13 +174,13 @@ class ProductListView(ListView):
     )
     SORT_FIELDS = {
         "newest": ("-created_at",),
-        "price_asc": ("price",),
-        "price_desc": ("-price",),
+        "price_asc": (EFFECTIVE_PRICE_ANNOTATION,),
+        "price_desc": (f"-{EFFECTIVE_PRICE_ANNOTATION}",),
         "popular": ("-reviews_count", "-created_at"),
     }
 
     def get_queryset(self) -> QuerySet[Product]:
-        queryset = (
+        queryset = with_effective_price(
             Product.objects.filter(is_active=True)
             .select_related("category")
             .annotate(

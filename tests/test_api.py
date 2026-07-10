@@ -119,6 +119,68 @@ class CatalogAPITests(TestCase):
             self.first_product.pk,
         )
 
+    def test_product_price_ordering_uses_discounted_final_price(self) -> None:
+        price_sort_category = Category.objects.create(
+            name="API Price Sorting",
+            slug="api-price-sorting",
+        )
+        discounted_product = self.create_product(
+            name="Discounted API Expensive Game",
+            slug="discounted-api-expensive-game",
+            category=price_sort_category,
+            price=Decimal("1000.00"),
+            discount_percent=50,
+        )
+        regular_product = self.create_product(
+            name="Regular API Cheaper Game",
+            slug="regular-api-cheaper-game",
+            category=price_sort_category,
+            price=Decimal("700.00"),
+        )
+
+        response = self.client.get(
+            reverse("api:product-list"),
+            {"category": price_sort_category.slug, "ordering": "price"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [product["id"] for product in response.json()["results"]],
+            [discounted_product.pk, regular_product.pk],
+        )
+
+    def test_product_price_desc_ordering_uses_discounted_final_price(
+        self,
+    ) -> None:
+        price_sort_category = Category.objects.create(
+            name="API Price Sorting Desc",
+            slug="api-price-sorting-desc",
+        )
+        discounted_product = self.create_product(
+            name="Discounted API Expensive Game Desc",
+            slug="discounted-api-expensive-game-desc",
+            category=price_sort_category,
+            price=Decimal("1000.00"),
+            discount_percent=50,
+        )
+        regular_product = self.create_product(
+            name="Regular API Cheaper Game Desc",
+            slug="regular-api-cheaper-game-desc",
+            category=price_sort_category,
+            price=Decimal("700.00"),
+        )
+
+        response = self.client.get(
+            reverse("api:product-list"),
+            {"category": price_sort_category.slug, "ordering": "-price"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [product["id"] for product in response.json()["results"]],
+            [regular_product.pk, discounted_product.pk],
+        )
+
     def test_product_list_filters_by_platform(self) -> None:
         pc_response = self.client.get(
             reverse("api:product-list"),
@@ -196,6 +258,7 @@ class CatalogAPITests(TestCase):
         description: str = "API product description.",
         is_active: bool = True,
         platform: str = Product.Platform.PC,
+        discount_percent: int = 0,
     ) -> Product:
         return Product.objects.create(
             name=name,
@@ -206,6 +269,7 @@ class CatalogAPITests(TestCase):
             platform=platform,
             stock=10,
             is_active=is_active,
+            discount_percent=discount_percent,
         )
 
 

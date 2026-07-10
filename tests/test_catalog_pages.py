@@ -89,6 +89,7 @@ class CatalogPagesTests(TestCase):
         cover_url: str = "",
         stock: int = 10,
         is_active: bool = True,
+        discount_percent: int = 0,
     ) -> Product:
         return Product.objects.create(
             name=name,
@@ -103,6 +104,7 @@ class CatalogPagesTests(TestCase):
             publisher="Test Publisher",
             stock=stock,
             is_active=is_active,
+            discount_percent=discount_percent,
         )
 
     def test_product_list_uses_public_catalog_url(self) -> None:
@@ -167,6 +169,64 @@ class CatalogPagesTests(TestCase):
 
         self.assertEqual(products[0], self.active_product)
         self.assertEqual(products[1], self.second_product)
+
+    def test_sort_by_price_ascending_uses_discounted_final_price(self) -> None:
+        price_sort_category = Category.objects.create(
+            name="Price Sorting",
+            slug="price-sorting",
+        )
+        discounted_product = self.create_product(
+            name="Discounted Expensive Game",
+            slug="discounted-expensive-game",
+            category=price_sort_category,
+            platform=Product.Platform.PC,
+            price=Decimal("1000.00"),
+            discount_percent=50,
+        )
+        regular_product = self.create_product(
+            name="Regular Cheaper Game",
+            slug="regular-cheaper-game",
+            category=price_sort_category,
+            platform=Product.Platform.PC,
+            price=Decimal("700.00"),
+        )
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"category": price_sort_category.slug, "sort": "price_asc"},
+        )
+        products = list(response.context["products"])
+
+        self.assertEqual(products, [discounted_product, regular_product])
+
+    def test_sort_by_price_descending_uses_discounted_final_price(self) -> None:
+        price_sort_category = Category.objects.create(
+            name="Price Sorting Desc",
+            slug="price-sorting-desc",
+        )
+        discounted_product = self.create_product(
+            name="Discounted Expensive Game Desc",
+            slug="discounted-expensive-game-desc",
+            category=price_sort_category,
+            platform=Product.Platform.PC,
+            price=Decimal("1000.00"),
+            discount_percent=50,
+        )
+        regular_product = self.create_product(
+            name="Regular Cheaper Game Desc",
+            slug="regular-cheaper-game-desc",
+            category=price_sort_category,
+            platform=Product.Platform.PC,
+            price=Decimal("700.00"),
+        )
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"category": price_sort_category.slug, "sort": "price_desc"},
+        )
+        products = list(response.context["products"])
+
+        self.assertEqual(products, [regular_product, discounted_product])
 
     def test_product_list_is_paginated(self) -> None:
         response = self.client.get(

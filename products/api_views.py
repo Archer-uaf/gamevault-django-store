@@ -7,6 +7,8 @@ from rest_framework import filters, permissions, viewsets
 
 from products.filters import ProductFilter
 from products.models import Category, Product
+from products.ordering import EffectivePriceOrderingFilter
+from products.querysets import with_effective_price
 from products.serializers import CategorySerializer, ProductSerializer
 
 
@@ -22,7 +24,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (
         DjangoFilterBackend,
         filters.SearchFilter,
-        filters.OrderingFilter,
+        EffectivePriceOrderingFilter,
     )
     filterset_class = ProductFilter
     search_fields = ("name", "description", "description_en")
@@ -30,7 +32,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ("-created_at",)
 
     def get_queryset(self) -> QuerySet[Product]:
-        return (
+        return with_effective_price(
             Product.objects.filter(is_active=True)
             .select_related("category", "category__parent")
             .annotate(

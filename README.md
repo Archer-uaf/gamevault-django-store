@@ -21,14 +21,19 @@ The project is designed as a portfolio-ready learning project, not as a producti
 
 ## Screenshots and demo
 
-Screenshots are not committed yet. Recommended portfolio captures:
+Screenshots are not committed yet. Add portfolio captures under the following paths:
 
-- Home page hot deals hero.
-- Product catalog with category and platform filters.
-- Product detail page with reviews.
-- Cart and checkout flow.
-- Account order history.
-- Swagger UI at `/api/docs/`.
+```text
+docs/assets/screenshots/
+  home.png
+  catalog.png
+  product-detail.png
+  cart.png
+  checkout.png
+  api-schema.png
+```
+
+Recommended captures are the home hot deals hero, the filtered catalog, a product detail page with reviews, the cart and checkout flow, and Swagger UI at `/api/docs/`. Add the image links here only after the files are committed so the public README does not contain broken previews.
 
 ## Technology stack
 
@@ -212,8 +217,10 @@ templates/    Shared and application-specific Django templates
 static/       Storefront styles, scripts, and images
 locale/       English gettext translations for Ukrainian source strings
 tests/        Web, API, admin, email, i18n, and business-logic tests
-docs/         Project plan, workflow notes, and final feature checklist
+docs/         Project plan, contributor workflow, and final feature checklist
 ```
+
+Development and verification conventions are documented in [Contributing](docs/CONTRIBUTING.md).
 
 ## Educational scope and security note
 

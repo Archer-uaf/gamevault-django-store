@@ -96,11 +96,13 @@
 
                                     <strong class="hero-hot-card__title">{{ product.name }}</strong>
 
-                                    {% if forloop.first %}
-                                        <p class="hero-hot-card__description">
-                                            {{ product.localized_description|default:product.description|striptags|truncatewords:24 }}
-                                        </p>
-                                    {% endif %}
+                                    {% with description=product.localized_description|default:product.description %}
+                                        {% if description %}
+                                            <p class="hero-hot-card__description">
+                                                {{ description|striptags|truncatewords:20 }}
+                                            </p>
+                                        {% endif %}
+                                    {% endwith %}
 
                                     <div class="hero-hot-card__purchase">
                                         <div class="hero-hot-card__prices">
@@ -192,7 +194,6 @@
                     <span class="genre-card__content">
                         <strong class="genre-card__title">{{ card.label }}</strong>
                     </span>
-                    <span class="genre-card__arrow" aria-hidden="true">↗</span>
                 </a>
             {% endfor %}
         </div>
@@ -225,7 +226,6 @@
                     <span class="platform-card__content">
                         <strong>{{ card.label }}</strong>
                     </span>
-                    <span class="platform-card__arrow" aria-hidden="true">↗</span>
                 </a>
             {% endfor %}
         </div>

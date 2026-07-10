@@ -35,10 +35,8 @@ class HomePageTests(TestCase):
 
         self.assertNotIn('href="#"', genre_section)
         self.assertNotIn("Перейти до добірки", genre_section)
-        self.assertIn(
-            'class="genre-card__arrow" aria-hidden="true"',
-            genre_section,
-        )
+        self.assertNotIn("genre-card__arrow", genre_section)
+        self.assertNotIn("↗", genre_section)
         for slug in (
             "action",
             "rpg",
@@ -99,14 +97,19 @@ class HomePageTests(TestCase):
         )
         self.assertEqual(hero_section.count("Детальніше"), 3)
 
-    def test_home_hero_uses_dynamic_featured_product_description(self) -> None:
+    def test_home_hero_uses_dynamic_descriptions_for_all_products(self) -> None:
         call_command("seed_demo_games", "--reset", verbosity=0)
-        product = Product.objects.get(slug="cyberpunk-2077")
-        product.description = (
-            "<strong>Динамічний опис featured-гри</strong> показує актуальний "
-            "текст продукту без прив'язки до конкретної назви та без HTML-розмітки."
-        )
-        product.save(update_fields=["description"])
+        descriptions = {
+            "cyberpunk-2077": "<strong>Опис Cyberpunk</strong> для hero-картки.",
+            "the-witcher-3-wild-hunt": (
+                "<strong>Опис The Witcher 3</strong> для hero-картки."
+            ),
+            "hearts-of-iron-iv": (
+                "<strong>Опис Hearts of Iron IV</strong> для hero-картки."
+            ),
+        }
+        for slug, description in descriptions.items():
+            Product.objects.filter(slug=slug).update(description=description)
 
         response = self.client.get("/")
         content = response.content.decode()
@@ -115,9 +118,18 @@ class HomePageTests(TestCase):
             1,
         )[0]
 
-        self.assertIn("Динамічний опис featured-гри", hero_section)
-        self.assertNotIn("<strong>Динамічний опис featured-гри</strong>", hero_section)
-        self.assertNotIn("Футуристична Action-RPG", hero_section)
+        for expected_text in (
+            "Опис Cyberpunk",
+            "Опис The Witcher 3",
+            "Опис Hearts of Iron IV",
+        ):
+            self.assertIn(expected_text, hero_section)
+
+        self.assertEqual(
+            hero_section.count('class="hero-hot-card__description"'),
+            3,
+        )
+        self.assertNotIn("<strong>Опис Cyberpunk</strong>", hero_section)
 
     def test_home_recommended_prices_distinguish_discounted_products(self) -> None:
         call_command("seed_demo_games", "--reset", verbosity=0)
@@ -161,10 +173,8 @@ class HomePageTests(TestCase):
 
         self.assertContains(response, "Платформи")
         self.assertNotIn("Дивитися ігри", platform_section)
-        self.assertIn(
-            'class="platform-card__arrow" aria-hidden="true"',
-            platform_section,
-        )
+        self.assertNotIn("platform-card__arrow", platform_section)
+        self.assertNotIn("↗", platform_section)
         for platform in (
             Product.Platform.PC,
             Product.Platform.PLAYSTATION,

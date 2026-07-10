@@ -43,13 +43,11 @@ def test_home_hot_deals_hero_can_be_rendered_in_english(client: Client) -> None:
 
     assert "Hot deals" in content
     assert "Grab them while they are hot!" in content
-    assert "Instant access - get your key right after purchase!" in content
-    assert "Top deal this summer!" in content
-    assert "PC version" in content
+    assert "An open-world RPG about a mercenary in Night City" in content
     assert "Discounted price" in content
     assert "View details" in content
     assert "Хапай поки гаряче!" not in content
-    assert "Миттєвий доступ" not in content
+    assert "Відкрита RPG про найманця у Найт-Сіті" not in content
 
 
 def test_catalog_page_can_be_rendered_in_english(client: Client) -> None:

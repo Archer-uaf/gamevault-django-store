@@ -88,7 +88,7 @@
                                     {% endif %}
                                 </span>
 
-                                <span class="hero-hot-card__body">
+                                <div class="hero-hot-card__body">
                                     <span class="hero-hot-card__meta">
                                         <span>{{ product.category.name }}</span>
                                         <span>{{ product.get_platform_display }}</span>
@@ -97,21 +97,13 @@
                                     <strong class="hero-hot-card__title">{{ product.name }}</strong>
 
                                     {% if forloop.first %}
-                                       <span class="hero-hot-card__description">
-                                           {% trans "Футуристична Action-RPG у всесвіті Cyberpunk від розробників The Witcher 3 зі знижкою тижня! Забирай поки ціна гаряча!" %}
-                                       </span>
-
-                                       <span class="hero-hot-card__perks">
-                                           <span>{% trans "Миттєвий доступ – отримай ключ одразу після купівлі!" %}</span>
-
-                                           <span>{% trans "Топ-пропозиція цього літа!" %}</span>
-
-                                           <span>{% trans "PC-версія" %}</span>
-                                       </span>
+                                        <p class="hero-hot-card__description">
+                                            {{ product.localized_description|default:product.description|striptags|truncatewords:24 }}
+                                        </p>
                                     {% endif %}
 
-                                    <span class="hero-hot-card__pricing">
-                                        <span>
+                                    <div class="hero-hot-card__purchase">
+                                        <div class="hero-hot-card__prices">
                                             <span class="hero-hot-card__pricing-label">
                                                 {% if product.has_discount %}
                                                     {% trans "Ціна зі знижкою" %}
@@ -119,16 +111,16 @@
                                                     {% trans "Гаряча ціна" %}
                                                 {% endif %}
                                             </span>
-                                            <span class="hero-hot-card__price-wrap">
+                                            <div class="hero-hot-card__price-values">
                                                 {% if product.has_discount %}
-                                                    <span class="hero-hot-card__old-price">₴{{ product.price }}</span>
+                                                    <del class="hero-hot-card__old-price">₴{{ product.price }}</del>
                                                 {% endif %}
-                                                <b class="hero-hot-card__price">₴{{ product.final_price }}</b>
-                                            </span>
-                                        </span>
+                                                <strong class="hero-hot-card__price">₴{{ product.final_price }}</strong>
+                                            </div>
+                                        </div>
                                         <span class="hero-hot-card__cta">{% trans "Детальніше" %}</span>
-                                    </span>
-                                </span>
+                                    </div>
+                                </div>
                             </a>
                         {% endfor %}
                     </div>
@@ -199,8 +191,8 @@
 
                     <span class="genre-card__content">
                         <strong class="genre-card__title">{{ card.label }}</strong>
-                        <span>{% trans "Перейти до добірки" %}</span>
                     </span>
+                    <span class="genre-card__arrow" aria-hidden="true">↗</span>
                 </a>
             {% endfor %}
         </div>
@@ -232,8 +224,8 @@
 
                     <span class="platform-card__content">
                         <strong>{{ card.label }}</strong>
-                        <span>{% trans "Дивитися ігри" %}</span>
                     </span>
+                    <span class="platform-card__arrow" aria-hidden="true">↗</span>
                 </a>
             {% endfor %}
         </div>
@@ -284,7 +276,14 @@
                             <h3>{{ product.name }}</h3>
                             <div class="game-meta">
                                 <span>{{ product.category.name }}</span>
-                                <strong>₴{{ product.final_price }}</strong>
+                                <div class="price-block">
+                                    {% if product.has_discount %}
+                                        <del class="old-price">₴{{ product.price }}</del>
+                                        <strong>₴{{ product.final_price }}</strong>
+                                    {% else %}
+                                        <strong>₴{{ product.price }}</strong>
+                                    {% endif %}
+                                </div>
                             </div>
                             <span class="game-card__action">{% trans "Детальніше" %}</span>
                         </div>

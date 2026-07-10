@@ -1,6 +1,7 @@
 from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
+from django.utils.formats import localize
 
 from products.models import Product
 
@@ -24,6 +25,11 @@ class HomePageTests(TestCase):
         )[0]
 
         self.assertNotIn('href="#"', genre_section)
+        self.assertNotIn("Перейти до добірки", genre_section)
+        self.assertIn(
+            'class="genre-card__arrow" aria-hidden="true"',
+            genre_section,
+        )
         for slug in (
             "action",
             "rpg",
@@ -71,10 +77,72 @@ class HomePageTests(TestCase):
             self.assertContains(response, product.get_absolute_url())
             self.assertContains(response, product.cover_url)
 
+    def test_home_hero_uses_dynamic_featured_product_description(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+        product = Product.objects.get(slug="cyberpunk-2077")
+        product.description = (
+            "<strong>Динамічний опис featured-гри</strong> показує актуальний "
+            "текст продукту без прив'язки до конкретної назви та без HTML-розмітки."
+        )
+        product.save(update_fields=["description"])
+
+        response = self.client.get("/")
+        content = response.content.decode()
+        hero_section = content.split('class="hero-hot-deals"', 1)[1].split(
+            "</section>",
+            1,
+        )[0]
+
+        self.assertIn("Динамічний опис featured-гри", hero_section)
+        self.assertNotIn("<strong>Динамічний опис featured-гри</strong>", hero_section)
+        self.assertNotIn("Футуристична Action-RPG", hero_section)
+
+    def test_home_recommended_prices_distinguish_discounted_products(self) -> None:
+        call_command("seed_demo_games", "--reset", verbosity=0)
+        discounted_product = Product.objects.get(slug="cyberpunk-2077")
+        regular_product = Product.objects.get(slug="hearts-of-iron-iv")
+        regular_product.discount_percent = 0
+        regular_product.save(update_fields=["discount_percent"])
+
+        response = self.client.get("/")
+        content = response.content.decode()
+        featured_section = content.split('id="featured-games"', 1)[1].split(
+            "</section>",
+            1,
+        )[0]
+        discounted_card = featured_section.split(
+            f'href="{discounted_product.get_absolute_url()}"',
+            1,
+        )[1].split("</a>", 1)[0]
+        regular_card = featured_section.split(
+            f'href="{regular_product.get_absolute_url()}"',
+            1,
+        )[1].split("</a>", 1)[0]
+
+        self.assertIn('<del class="old-price">', discounted_card)
+        self.assertIn(f"₴{localize(discounted_product.price)}", discounted_card)
+        self.assertIn(
+            f"₴{localize(discounted_product.final_price)}",
+            discounted_card,
+        )
+        self.assertIn(f"-{discounted_product.discount_percent}%", discounted_card)
+        self.assertNotIn('<del class="old-price">', regular_card)
+        self.assertIn(f"₴{localize(regular_product.price)}", regular_card)
+
     def test_home_platform_links_point_to_catalog_filters(self) -> None:
         response = self.client.get("/")
+        content = response.content.decode()
+        platform_section = content.split('class="platform-grid"', 1)[1].split(
+            "</section>",
+            1,
+        )[0]
 
         self.assertContains(response, "Платформи")
+        self.assertNotIn("Дивитися ігри", platform_section)
+        self.assertIn(
+            'class="platform-card__arrow" aria-hidden="true"',
+            platform_section,
+        )
         for platform in (
             Product.Platform.PC,
             Product.Platform.PLAYSTATION,

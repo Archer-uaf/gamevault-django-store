@@ -600,9 +600,9 @@ ul {
 }
 
 .hero-hot-card__body {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 9px;
-    align-content: start;
     padding: 13px;
 }
 
@@ -641,34 +641,49 @@ ul {
     line-height: 1.06;
 }
 
-.hero-hot-card__description,
-.hero-hot-card__perks {
-    display: none;
+.hero-hot-card__description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: rgba(226, 232, 240, 0.76);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
-.hero-hot-card__pricing {
+.hero-hot-card__purchase {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 9px;
+    gap: 12px;
+    margin-top: auto;
     padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.hero-hot-card__prices {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+}
+
 .hero-hot-card__pricing-label {
+    display: block;
     color: rgba(226, 232, 240, 0.62);
     font-size: 0.62rem;
     font-weight: 800;
     letter-spacing: 0.08em;
+    line-height: 1.2;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
-.hero-hot-card__price-wrap {
+.hero-hot-card__price-values {
     display: flex;
     align-items: baseline;
-    flex-wrap: wrap;
-    justify-content: flex-end;
     gap: 6px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .hero-hot-card__old-price {
@@ -676,12 +691,14 @@ ul {
     font-size: 0.76rem;
     font-weight: 700;
     text-decoration: line-through;
+    white-space: nowrap;
 }
 
 .hero-hot-card__price {
     color: var(--white);
     font-size: 1.04rem;
     line-height: 1;
+    white-space: nowrap;
 }
 
 .hero-hot-card--1 .hero-hot-card__price {
@@ -763,14 +780,6 @@ ul {
         aspect-ratio: 16 / 8.4;
     }
 
-    .hero-hot-card__pricing {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .hero-hot-card__price-wrap {
-        justify-content: flex-start;
-    }
 }
 
 /* Advantages */
@@ -909,8 +918,10 @@ ul {
 .genre-card__number,
 .genre-card__icon-wrap,
 .genre-card__content,
+.genre-card__arrow,
 .platform-card__icon-wrap,
-.platform-card__content {
+.platform-card__content,
+.platform-card__arrow {
     position: relative;
     z-index: 1;
 }
@@ -961,8 +972,7 @@ ul {
 }
 
 .genre-card__content {
-    display: grid;
-    gap: 6px;
+    padding-right: 32px;
 }
 
 .genre-card__title,
@@ -973,11 +983,24 @@ ul {
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.34);
 }
 
-.genre-card__content span,
-.platform-card__content span {
-    color: var(--ink-soft);
-    font-size: 0.72rem;
-    font-weight: 700;
+.genre-card__arrow,
+.platform-card__arrow {
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    transition: color 180ms ease, transform 180ms ease;
+}
+
+.genre-card:hover .genre-card__arrow,
+.genre-card:focus-visible .genre-card__arrow,
+.platform-card:hover .platform-card__arrow,
+.platform-card:focus-visible .platform-card__arrow {
+    color: var(--white);
+    transform: translate(2px, -2px);
 }
 
 .genre-card--action { --card-accent: #e9446f; }
@@ -1021,9 +1044,8 @@ ul {
 }
 
 .platform-card__content {
-    display: grid;
-    gap: 8px;
-    justify-items: end;
+    align-self: flex-end;
+    padding-right: 28px;
     text-align: right;
 }
 
@@ -1228,12 +1250,14 @@ ul {
     align-items: baseline;
     flex-wrap: wrap;
     gap: 7px;
+    font-variant-numeric: tabular-nums;
 }
 
 .old-price {
     color: var(--ink-muted);
     font-size: 0.75rem;
     text-decoration: line-through;
+    white-space: nowrap;
 }
 
 .catalog-card .button {

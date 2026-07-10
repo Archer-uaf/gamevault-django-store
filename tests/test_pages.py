@@ -14,6 +14,15 @@ class HomePageTests(TestCase):
         self.assertTemplateUsed(response, "pages/home.html")
         self.assertContains(response, "GameVault")
 
+    def test_base_loads_google_fonts_once(self) -> None:
+        response = self.client.get("/")
+        content = response.content.decode()
+
+        self.assertEqual(content.count("fonts.googleapis.com/css2"), 1)
+        self.assertEqual(content.count("fonts.gstatic.com"), 1)
+        self.assertEqual(content.count("family=Exo+2"), 1)
+        self.assertEqual(content.count("family=Manrope"), 1)
+
     def test_popular_genre_links_point_to_catalog_filters(self) -> None:
         call_command("seed_demo_games", "--reset", verbosity=0)
 
@@ -72,10 +81,23 @@ class HomePageTests(TestCase):
         )
 
         response = self.client.get("/")
+        content = response.content.decode()
+        hero_section = content.split('class="hero-hot-deals"', 1)[1].split(
+            "</section>",
+            1,
+        )[0]
 
         for product in hero_products:
             self.assertContains(response, product.get_absolute_url())
             self.assertContains(response, product.cover_url)
+            self.assertIn(f"₴{localize(product.price)}", hero_section)
+            self.assertIn(f"₴{localize(product.final_price)}", hero_section)
+
+        self.assertEqual(
+            hero_section.count('class="hero-hot-card hero-hot-card--'),
+            3,
+        )
+        self.assertEqual(hero_section.count("Детальніше"), 3)
 
     def test_home_hero_uses_dynamic_featured_product_description(self) -> None:
         call_command("seed_demo_games", "--reset", verbosity=0)

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-09 18:36+0000\n"
+"POT-Creation-Date: 2026-07-10 11:44+0000\n"
 "PO-Revision-Date: 2026-07-03 11:20+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -71,12 +71,12 @@ msgstr ""
 "Order #%(number)s was created successfully. The key will be sent to your "
 "email after processing."
 
-#: orders/emails.py:12
+#: orders/emails.py:45
 #, python-format
 msgid "Підтвердження замовлення №%(number)s"
 msgstr "Order confirmation #%(number)s"
 
-#: orders/emails.py:16
+#: orders/emails.py:49
 #, python-format
 msgid ""
 "Дякуємо за замовлення в GameVault.\n"
@@ -97,12 +97,12 @@ msgstr ""
 "Your key will be sent to this email after the order is processed.\n"
 "No physical shipping is required."
 
-#: orders/emails.py:43
+#: orders/emails.py:76
 #, python-format
 msgid "Нове замовлення №%(number)s"
 msgstr "New order #%(number)s"
 
-#: orders/emails.py:45
+#: orders/emails.py:78
 #, python-format
 msgid ""
 "У GameVault створено нове замовлення.\n"
@@ -131,16 +131,16 @@ msgstr "Quantity"
 msgid "Обрана кількість перевищує доступний залишок."
 msgstr "The selected quantity exceeds the available stock."
 
-#: orders/forms.py:48 orders/models.py:22 orders/models.py:83
+#: orders/forms.py:48 orders/models.py:22 orders/models.py:89
 #: orders/serializers.py:119
 msgid "Картка (тестова оплата)"
 msgstr "Card (test payment)"
 
-#: orders/forms.py:51 orders/models.py:85 orders/serializers.py:122
+#: orders/forms.py:51 orders/models.py:91 orders/serializers.py:122
 msgid "Оплата після обробки замовлення"
 msgstr "Payment after order processing"
 
-#: orders/forms.py:53 orders/models.py:24 orders/models.py:87
+#: orders/forms.py:53 orders/models.py:24 orders/models.py:93
 #: orders/serializers.py:124
 msgid "Тестовий баланс"
 msgstr "Test balance"
@@ -182,11 +182,11 @@ msgstr "Payment method"
 msgid "Вкажіть ім'я та прізвище отримувача."
 msgstr "Enter the recipient's first and last name."
 
-#: orders/models.py:15 orders/models.py:72
+#: orders/models.py:15 orders/models.py:78
 msgid "Очікує обробки"
 msgstr "Pending"
 
-#: orders/models.py:16 orders/models.py:73
+#: orders/models.py:16 orders/models.py:79
 msgid "Оплачено"
 msgstr "Paid"
 
@@ -198,7 +198,7 @@ msgstr "Shipped"
 msgid "Доставлено"
 msgstr "Delivered"
 
-#: orders/models.py:19 orders/models.py:76
+#: orders/models.py:19 orders/models.py:82
 msgid "Скасовано"
 msgstr "Cancelled"
 
@@ -206,11 +206,11 @@ msgstr "Cancelled"
 msgid "Оплата при отриманні"
 msgstr "Cash on delivery"
 
-#: orders/models.py:74
+#: orders/models.py:80
 msgid "Ключ надіслано"
 msgstr "Key sent"
 
-#: orders/models.py:75
+#: orders/models.py:81
 msgid "Виконано"
 msgstr "Completed"
 
@@ -304,80 +304,80 @@ msgstr "Mark selected products as inactive"
 msgid "Скинути знижку для вибраних товарів"
 msgstr "Reset discount for selected products"
 
-#: products/models.py:138 templates/products/product_detail.html:98
+#: products/models.py:156 templates/products/product_detail.html:98
 msgid "Немає в наявності"
 msgstr "Out of stock"
 
-#: products/models.py:140
+#: products/models.py:158
 msgid "Закінчується"
 msgstr "Low stock"
 
-#: products/models.py:141
+#: products/models.py:159
 msgid "В наявності"
 msgstr "In stock"
 
-#: products/views.py:25
+#: products/views.py:26
 msgid "Екшн"
 msgstr "Action"
 
-#: products/views.py:37
+#: products/views.py:38
 msgid "Пригоди"
 msgstr "Adventure"
 
-#: products/views.py:43
+#: products/views.py:44
 msgid "Горор"
 msgstr "Horror"
 
-#: products/views.py:49
+#: products/views.py:50
 msgid "Стратегії"
 msgstr "Strategy"
 
-#: products/views.py:55
+#: products/views.py:56
 msgid "Гонки"
 msgstr "Racing"
 
-#: products/views.py:61
+#: products/views.py:62
 msgid "Інді"
 msgstr "Indie"
 
-#: products/views.py:67
+#: products/views.py:68
 msgid "Симулятори"
 msgstr "Simulation"
 
-#: products/views.py:73
+#: products/views.py:74
 msgid "Відкритий світ"
 msgstr "Open world"
 
-#: products/views.py:79
+#: products/views.py:80
 msgid "Шутери"
 msgstr "Shooters"
 
-#: products/views.py:169
+#: products/views.py:170
 msgid "Спочатку нові"
 msgstr "Newest first"
 
-#: products/views.py:170
+#: products/views.py:171
 msgid "Ціна: за зростанням"
 msgstr "Price: low to high"
 
-#: products/views.py:171
+#: products/views.py:172
 msgid "Ціна: за спаданням"
 msgstr "Price: high to low"
 
-#: products/views.py:172
+#: products/views.py:173
 msgid "Популярні"
 msgstr "Most popular"
 
-#: products/views.py:332 products/views.py:360 reviews/serializers.py:56
+#: products/views.py:333 products/views.py:361 reviews/serializers.py:56
 #: reviews/serializers.py:67
 msgid "Ви вже опублікували відгук про цю гру."
 msgstr "You have already published a review for this game."
 
-#: products/views.py:342 reviews/serializers.py:52
+#: products/views.py:343 reviews/serializers.py:52
 msgid "Залишити відгук можна лише після покупки цієї гри."
 msgstr "You can review this game only after purchasing it."
 
-#: products/views.py:363
+#: products/views.py:364
 msgid "Дякуємо! Ваш відгук опубліковано."
 msgstr "Thank you! Your review has been published."
 
@@ -1079,13 +1079,13 @@ msgstr "Manage your login details and review your purchases."
 msgid "Дані облікового запису"
 msgstr "Account details"
 
-#: templates/users/dashboard.html:21 users/forms.py:24 users/forms.py:36
-#: users/forms.py:57
+#: templates/users/dashboard.html:21 users/forms.py:24 users/forms.py:46
+#: users/forms.py:67
 msgid "Нікнейм"
 msgstr "Nickname"
 
 #: templates/users/dashboard.html:25 users/admin.py:25 users/forms.py:18
-#: users/forms.py:58
+#: users/forms.py:68
 msgid "Електронна пошта"
 msgstr "Email"
 
@@ -1248,7 +1248,7 @@ msgstr "Register to view your order history."
 msgid "Вже маєте обліковий запис?"
 msgstr "Already have an account?"
 
-#: users/forms.py:29 users/forms.py:38
+#: users/forms.py:29 users/forms.py:48
 msgid "Пароль"
 msgstr "Password"
 
@@ -1256,19 +1256,23 @@ msgstr "Password"
 msgid "Підтвердження пароля"
 msgstr "Password confirmation"
 
-#: users/forms.py:49
+#: users/forms.py:38 users/forms.py:105
+msgid "Ця електронна пошта вже використовується."
+msgstr "This email address is already in use."
+
+#: users/forms.py:59
 msgid "Поточний пароль"
 msgstr "Current password"
 
-#: users/forms.py:50
+#: users/forms.py:60
 msgid "Новий пароль"
 msgstr "New password"
 
-#: users/forms.py:51
+#: users/forms.py:61
 msgid "Підтвердження нового пароля"
 msgstr "New password confirmation"
 
-#: users/forms.py:81
+#: users/forms.py:91
 msgid "Цей нікнейм уже використовується."
 msgstr "This nickname is already in use."
 

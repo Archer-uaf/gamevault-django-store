@@ -42,6 +42,46 @@ class AccountFlowTests(TestCase):
         )
         self.assertIn("_auth_user_id", self.client.session)
 
+    def test_register_rejects_existing_email(self) -> None:
+        response = self.client.post(
+            reverse("account:register"),
+            {
+                "username": "new-player",
+                "email": "player@example.com",
+                "password1": "AnotherStrongPassword123!",
+                "password2": "AnotherStrongPassword123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Ця електронна пошта вже використовується.",
+        )
+        self.assertFalse(
+            get_user_model().objects.filter(username="new-player").exists()
+        )
+
+    def test_register_rejects_existing_email_case_insensitive(self) -> None:
+        response = self.client.post(
+            reverse("account:register"),
+            {
+                "username": "new-player",
+                "email": "PLAYER@EXAMPLE.COM",
+                "password1": "AnotherStrongPassword123!",
+                "password2": "AnotherStrongPassword123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Ця електронна пошта вже використовується.",
+        )
+        self.assertFalse(
+            get_user_model().objects.filter(username="new-player").exists()
+        )
+
     def test_login_page_opens(self) -> None:
         response = self.client.get(reverse("account:login"))
 
@@ -114,6 +154,45 @@ class AccountFlowTests(TestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, "digital-player")
         self.assertEqual(self.user.email, "digital-player@example.com")
+
+    def test_profile_update_allows_current_email(self) -> None:
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("account:profile"),
+            {
+                "username": "player",
+                "email": "player@example.com",
+            },
+        )
+
+        self.assertRedirects(response, reverse("account:profile"))
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "player@example.com")
+
+    def test_profile_update_rejects_email_used_by_another_user(self) -> None:
+        get_user_model().objects.create_user(
+            username="other-player",
+            email="other@example.com",
+            password="StrongPassword123!",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("account:profile"),
+            {
+                "username": "player",
+                "email": "OTHER@EXAMPLE.COM",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Ця електронна пошта вже використовується.",
+        )
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "player@example.com")
 
     def test_profile_page_hides_physical_delivery_fields(self) -> None:
         self.client.force_login(self.user)

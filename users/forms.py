@@ -29,6 +29,16 @@ class RegistrationForm(UserCreationForm):
         self.fields["password1"].label = _("Пароль")
         self.fields["password2"].label = _("Підтвердження пароля")
 
+    def clean_email(self) -> str:
+        """Require email uniqueness for new accounts."""
+        email = self.cleaned_data["email"].strip()
+        user_model = get_user_model()
+        if user_model.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError(
+                _("Ця електронна пошта вже використовується.")
+            )
+        return email
+
 
 class AccountAuthenticationForm(AuthenticationForm):
     """Use Ukrainian source labels on the site login form."""
@@ -80,6 +90,21 @@ class ProfileUpdateForm(forms.Form):
         if exists:
             raise forms.ValidationError(_("Цей нікнейм уже використовується."))
         return username
+
+    def clean_email(self) -> str:
+        """Prevent assigning an email already used by another account."""
+        email = self.cleaned_data["email"].strip()
+        user_model = get_user_model()
+        exists = (
+            user_model.objects.exclude(pk=self.user.pk)
+            .filter(email__iexact=email)
+            .exists()
+        )
+        if exists:
+            raise forms.ValidationError(
+                _("Ця електронна пошта вже використовується.")
+            )
+        return email
 
     def save(self) -> Any:
         """Persist account identity fields."""

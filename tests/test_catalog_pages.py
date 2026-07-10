@@ -109,6 +109,22 @@ class CatalogPagesTests(TestCase):
             discount_percent=discount_percent,
         )
 
+    @classmethod
+    def create_pagination_products(
+        cls,
+        *,
+        category: Category,
+        count: int = 180,
+    ) -> None:
+        for number in range(count):
+            cls.create_product(
+                name=f"Window Game {number:03}",
+                slug=f"window-game-{number:03}",
+                category=category,
+                platform=Product.Platform.PC,
+                price=Decimal("20.00") + number,
+            )
+
     def test_product_list_uses_public_catalog_url(self) -> None:
         self.assertEqual(reverse("products:product_list"), "/products/")
 
@@ -239,6 +255,86 @@ class CatalogPagesTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["page_obj"].number, 2)
         self.assertEqual(len(response.context["products"]), 3)
+
+    def test_pagination_preserves_query_params(self) -> None:
+        pagination_category = Category.objects.create(
+            name="Windowed",
+            slug="windowed",
+        )
+        self.create_pagination_products(category=pagination_category)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {
+                "category": pagination_category.slug,
+                "q": "Window",
+                "sort": "price_asc",
+            },
+        )
+
+        self.assertContains(
+            response,
+            "category=windowed&amp;q=Window&amp;sort=price_asc&amp;page=2",
+        )
+        self.assertNotContains(response, "page=1&amp;page=2")
+
+    def test_first_page_pagination_window_has_ellipsis_and_last_page(self) -> None:
+        pagination_category = Category.objects.create(
+            name="Windowed First",
+            slug="windowed-first",
+        )
+        self.create_pagination_products(category=pagination_category)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"category": pagination_category.slug},
+        )
+
+        self.assertEqual(response.context["page_window"], [1, 2, 3, "ellipsis", 20])
+        self.assertContains(response, 'aria-current="page">1</span>')
+        self.assertContains(response, "…")
+        self.assertContains(response, "?category=windowed-first&amp;page=20")
+
+    def test_middle_page_pagination_window_shows_current_neighborhood(
+        self,
+    ) -> None:
+        pagination_category = Category.objects.create(
+            name="Windowed Middle",
+            slug="windowed-middle",
+        )
+        self.create_pagination_products(category=pagination_category)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"category": pagination_category.slug, "page": "10"},
+        )
+
+        self.assertEqual(
+            response.context["page_window"],
+            [1, "ellipsis", 8, 9, 10, 11, 12, "ellipsis", 20],
+        )
+        self.assertContains(response, 'aria-current="page">10</span>')
+        self.assertContains(response, "?category=windowed-middle&amp;page=9")
+        self.assertContains(response, "?category=windowed-middle&amp;page=11")
+
+    def test_last_page_pagination_window_has_first_and_last_neighborhood(
+        self,
+    ) -> None:
+        pagination_category = Category.objects.create(
+            name="Windowed Last",
+            slug="windowed-last",
+        )
+        self.create_pagination_products(category=pagination_category)
+
+        response = self.client.get(
+            reverse("products:product_list"),
+            {"category": pagination_category.slug, "page": "20"},
+        )
+
+        self.assertEqual(response.context["page_window"], [1, "ellipsis", 18, 19, 20])
+        self.assertContains(response, 'aria-current="page">20</span>')
+        self.assertContains(response, "?category=windowed-last&amp;page=19")
+        self.assertContains(response, "?category=windowed-last&amp;page=1")
 
     def test_product_list_query_count_smoke_guard(self) -> None:
         # Smoke guard against N+1 regressions. The limit is intentionally loose

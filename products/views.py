@@ -158,6 +158,31 @@ def _parse_price(value: str) -> Decimal | None:
     return price
 
 
+def build_page_window(
+    *,
+    current_page: int,
+    total_pages: int,
+    siblings: int = 2,
+) -> list[int | str]:
+    """Return compact page numbers with ellipsis gaps for pagination."""
+    if total_pages <= 1:
+        return [1]
+
+    visible_pages = {1, total_pages}
+    start = max(1, current_page - siblings)
+    end = min(total_pages, current_page + siblings)
+    visible_pages.update(range(start, end + 1))
+
+    page_window: list[int | str] = []
+    previous_page = 0
+    for page_number in sorted(visible_pages):
+        if previous_page and page_number - previous_page > 1:
+            page_window.append("ellipsis")
+        page_window.append(page_number)
+        previous_page = page_number
+    return page_window
+
+
 class ProductListView(ListView):
     """Display active products with search, filters, sorting and pagination."""
 
@@ -241,6 +266,10 @@ class ProductListView(ListView):
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
         context["query_string"] = query_params.urlencode()
+        context["page_window"] = build_page_window(
+            current_page=context["page_obj"].number,
+            total_pages=context["page_obj"].paginator.num_pages,
+        )
         return context
 
 

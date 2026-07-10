@@ -1664,6 +1664,12 @@ ul {
     background: var(--accent);
 }
 
+.pagination__ellipsis {
+    min-width: 18px;
+    color: var(--ink-muted);
+    text-align: center;
+}
+
 .pagination__disabled {
     color: var(--ink-muted);
 }

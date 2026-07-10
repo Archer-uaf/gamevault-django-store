@@ -1,4 +1,5 @@
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.core import mail
 from django.contrib.auth import get_user_model
@@ -77,6 +78,37 @@ class CheckoutFlowTests(TestCase):
         order = Order.objects.get()
         self.assertIn(str(order.pk), admin_email.subject)
         self.assertIn(order.email, admin_email.body)
+
+    @override_settings(ADMIN_EMAIL="")
+    def test_checkout_succeeds_and_logs_when_email_delivery_fails(self) -> None:
+        self.add_to_cart()
+
+        with (
+            patch(
+                "orders.emails.send_mail",
+                side_effect=RuntimeError("SMTP unavailable"),
+            ) as send_mail_mock,
+            patch("orders.emails.logger.exception") as log_exception_mock,
+        ):
+            response = self.client.post(
+                reverse("checkout:form"),
+                self.checkout_data(),
+            )
+
+        order = Order.objects.get()
+        self.assertRedirects(
+            response,
+            reverse("checkout:success", args=[order.pk]),
+        )
+        self.assertEqual(OrderItem.objects.count(), 1)
+        send_mail_mock.assert_called_once()
+        log_exception_mock.assert_called_once_with(
+            "Order email delivery failed.",
+            extra={
+                "order_id": order.pk,
+                "notification_type": "customer_confirmation",
+            },
+        )
 
     def test_checkout_redirects_empty_cart(self) -> None:
         response = self.client.get(reverse("checkout:form"), follow=True)

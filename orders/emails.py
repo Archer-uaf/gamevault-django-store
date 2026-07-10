@@ -1,10 +1,43 @@
 """Email helpers for order notifications."""
 
+import logging
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.translation import gettext as _
 
 from orders.models import Order
+
+
+logger = logging.getLogger(__name__)
+
+
+def _send_order_email(
+    *,
+    order: Order,
+    notification_type: str,
+    subject: str,
+    message: str,
+    recipient_list: list[str],
+) -> int:
+    """Send an order email and log delivery failures without breaking checkout."""
+    try:
+        return send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=recipient_list,
+            fail_silently=False,
+        )
+    except Exception:
+        logger.exception(
+            "Order email delivery failed.",
+            extra={
+                "order_id": order.pk,
+                "notification_type": notification_type,
+            },
+        )
+        return 0
 
 
 def send_order_confirmation_email(order: Order) -> int:
@@ -25,12 +58,12 @@ def send_order_confirmation_email(order: Order) -> int:
         "status": order.digital_status_display,
     }
 
-    return send_mail(
+    return _send_order_email(
+        order=order,
+        notification_type="customer_confirmation",
         subject=subject,
         message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[order.email],
-        fail_silently=True,
     )
 
 
@@ -56,12 +89,12 @@ def send_admin_order_notification_email(order: Order) -> int:
         "payment_method": order.digital_payment_method_display,
     }
 
-    return send_mail(
+    return _send_order_email(
+        order=order,
+        notification_type="admin_notification",
         subject=subject,
         message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[admin_email],
-        fail_silently=True,
     )
 
 

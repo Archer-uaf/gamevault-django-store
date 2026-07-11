@@ -100,6 +100,9 @@ AUTH_PASSWORD_VALIDATORS = [
             "NumericPasswordValidator"
         )
     },
+    {
+        "NAME": "users.validators.ASCIIPrintablePasswordValidator",
+    },
 ]
 
 LANGUAGE_CODE = "uk"

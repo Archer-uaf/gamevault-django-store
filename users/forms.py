@@ -11,10 +11,27 @@ from django.contrib.auth.forms import (
 )
 from django.utils.translation import gettext_lazy as _
 
+from users.validators import (
+    USERNAME_HELP_TEXT,
+    username_validator,
+)
+
 
 class RegistrationForm(UserCreationForm):
     """Create a Django user with a required email address."""
 
+    username = forms.CharField(
+        label=_("Нікнейм"),
+        max_length=15,
+        help_text=USERNAME_HELP_TEXT,
+        validators=[username_validator],
+        widget=forms.TextInput(
+            attrs={
+                "autocomplete": "username",
+                "maxlength": "15",
+            }
+        ),
+    )
     email = forms.EmailField(label=_("Електронна пошта"), required=True)
 
     class Meta:
@@ -28,6 +45,14 @@ class RegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields["password1"].label = _("Пароль")
         self.fields["password2"].label = _("Підтвердження пароля")
+
+    def clean_username(self) -> str:
+        """Require a valid and case-insensitively unique nickname."""
+        username = self.cleaned_data["username"].strip()
+        user_model = get_user_model()
+        if user_model.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError(_("Цей нікнейм уже використовується."))
+        return username
 
     def clean_email(self) -> str:
         """Require email uniqueness for new accounts."""
@@ -64,7 +89,19 @@ class AccountPasswordChangeForm(PasswordChangeForm):
 class ProfileUpdateForm(forms.Form):
     """Update account identity fields for digital purchases."""
 
-    username = forms.CharField(label=_("Нікнейм"), max_length=15, required=True)
+    username = forms.CharField(
+        label=_("Нікнейм"),
+        max_length=15,
+        required=True,
+        help_text=USERNAME_HELP_TEXT,
+        validators=[username_validator],
+        widget=forms.TextInput(
+            attrs={
+                "autocomplete": "username",
+                "maxlength": "15",
+            }
+        ),
+    )
     email = forms.EmailField(label=_("Електронна пошта"), required=True)
 
     def __init__(

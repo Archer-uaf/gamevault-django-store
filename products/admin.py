@@ -39,6 +39,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "category",
+        "genres",
         "platform",
         "is_active",
         "created_at",
@@ -49,6 +50,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ("created_at", "updated_at")
     actions = ("mark_active", "mark_inactive", "reset_discount")
+    filter_horizontal = ("genres",)
     fieldsets = (
         (
             None,
@@ -59,6 +61,7 @@ class ProductAdmin(admin.ModelAdmin):
                     "description",
                     "description_en",
                     "category",
+                    "genres",
                     "image",
                     "cover_url",
                 )

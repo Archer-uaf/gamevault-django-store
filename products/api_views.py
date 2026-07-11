@@ -35,6 +35,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         return with_effective_price(
             Product.objects.filter(is_active=True)
             .select_related("category", "category__parent")
+            .prefetch_related("genres")
             .annotate(
                 popularity=Count("reviews", distinct=True),
                 average_rating=Avg("reviews__rating"),

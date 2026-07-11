@@ -675,7 +675,7 @@ ul {
 }
 
 .hero-hot-card--1 .hero-hot-card__description {
-    font-size: 0.88rem;
+    font-size: 0.96rem;
     -webkit-line-clamp: 4;
 }
 
@@ -1269,6 +1269,27 @@ ul {
 
 .card-kicker a {
     color: var(--accent);
+}
+
+.product-genres {
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px 8px;
+}
+
+.product-genres > a,
+.product-genres > span {
+    white-space: nowrap;
+}
+
+.card-kicker .product-genres {
+    flex: 1 1 auto;
+}
+
+.card-kicker__platform {
+    flex: 0 0 auto;
 }
 
 .game-meta,

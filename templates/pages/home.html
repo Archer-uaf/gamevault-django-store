@@ -90,7 +90,14 @@
 
                                 <div class="hero-hot-card__body">
                                     <span class="hero-hot-card__meta">
-                                        <span>{{ product.category.name }}</span>
+                                        <span class="product-genres">
+                                            {% for genre in product.genres.all %}
+                                                <span>{{ genre.name }}</span>
+                                            {% empty %}
+                                                <span>{{ product.category.name }}</span>
+                                            {% endfor %}
+                                        </span>
+
                                         <span>{{ product.get_platform_display }}</span>
                                     </span>
 
@@ -275,7 +282,14 @@
                             <p class="game-platform">{{ product.get_platform_display }}</p>
                             <h3>{{ product.name }}</h3>
                             <div class="game-meta">
-                                <span>{{ product.category.name }}</span>
+                                <span class="product-genres">
+                                    {% for genre in product.genres.all %}
+                                        <span>{{ genre.name }}</span>
+                                    {% empty %}
+                                        <span>{{ product.category.name }}</span>
+                                    {% endfor %}
+                                </span>
+
                                 <div class="price-block">
                                     {% if product.has_discount %}
                                         <del class="old-price">₴{{ product.price }}</del>

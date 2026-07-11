@@ -139,8 +139,19 @@
 
                             <div class="catalog-card__body">
                                 <div class="card-kicker">
-                                    <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
-                                    <span>{{ product.get_platform_display }}</span>
+                                    <span class="product-genres">
+                                        {% for genre in product.genres.all %}
+                                            <a href="{{ genre.get_absolute_url }}">{{ genre.name }}</a>
+                                        {% empty %}
+                                            <a href="{{ product.category.get_absolute_url }}">
+                                                {{ product.category.name }}
+                                            </a>
+                                        {% endfor %}
+                                    </span>
+
+                                    <span class="card-kicker__platform">
+                                        {{ product.get_platform_display }}
+                                    </span>
                                 </div>
                                 <h2><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
                                 <div class="rating-row">

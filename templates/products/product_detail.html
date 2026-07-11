@@ -34,7 +34,11 @@
 
             <div class="detail-summary">
                 <div class="detail-tags">
-                    <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+                    {% for genre in product.genres.all %}
+                        <a href="{{ genre.get_absolute_url }}">{{ genre.name }}</a>
+                    {% empty %}
+                        <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+                    {% endfor %}
                     <span>{{ product.get_platform_display }}</span>
                     {% if product.is_featured %}<span>{% trans "Рекомендовано" %}</span>{% endif %}
                 </div>

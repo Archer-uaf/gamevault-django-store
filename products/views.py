@@ -123,9 +123,15 @@ HOME_PLATFORM_CARDS = (
 
 def _products_by_slugs(slugs: tuple[str, ...]) -> list[Product]:
     """Return active products ordered by the supplied slug sequence."""
-    products = Product.objects.filter(is_active=True, slug__in=slugs).select_related(
-        "category",
+    products = (
+        Product.objects.filter(
+            is_active=True,
+            slug__in=slugs,
+        )
+        .select_related("category")
+        .prefetch_related("genres")
     )
+
     products_by_slug = {product.slug: product for product in products}
     return [
         product
@@ -208,6 +214,7 @@ class ProductListView(ListView):
         queryset = with_effective_price(
             Product.objects.filter(is_active=True)
             .select_related("category")
+            .prefetch_related("genres")
             .annotate(
                 reviews_count=Count("reviews", distinct=True),
                 average_rating=Avg("reviews__rating"),
@@ -229,7 +236,10 @@ class ProductListView(ListView):
                 | Q(publisher__icontains=query)
             )
         if category_slug:
-            queryset = queryset.filter(category__slug=category_slug)
+            queryset = queryset.filter(
+                Q(category__slug=category_slug)
+                | Q(genres__slug=category_slug)
+            ).distinct()
         if platform:
             queryset = queryset.filter(platform=platform)
         if min_price is not None:
@@ -285,7 +295,7 @@ class ProductDetailView(DetailView):
         return (
             Product.objects.filter(is_active=True)
             .select_related("category")
-            .prefetch_related("reviews__user")
+            .prefetch_related("genres", "reviews__user")
             .annotate(
                 reviews_count=Count("reviews", distinct=True),
                 average_rating=Avg("reviews__rating"),
@@ -323,12 +333,14 @@ class ProductDetailView(DetailView):
                 "has_purchased": has_purchased,
                 "can_review": can_review,
                 "related_products": (
-                    Product.objects.filter(
-                        is_active=True,
-                        category=product.category,
+                    Product.objects.filter(is_active=True)
+                    .filter(
+                        Q(category=product.category)
+                        | Q(genres__in=product.genres.all())
                     )
                     .exclude(pk=product.pk)
                     .select_related("category")
+                    .distinct()
                     .annotate(
                         reviews_count=Count("reviews", distinct=True),
                         average_rating=Avg("reviews__rating"),

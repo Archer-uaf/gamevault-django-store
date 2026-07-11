@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django_filters import rest_framework as filters
 
 from products.models import Product
@@ -29,5 +29,10 @@ class ProductFilter(filters.FilterSet):
         """Accept either a numeric category id or a category slug."""
         category = str(value).strip()
         if category.isdigit():
-            return queryset.filter(category_id=int(category))
-        return queryset.filter(category__slug=category)
+            category_id = int(category)
+            return queryset.filter(
+                Q(category_id=category_id) | Q(genres__id=category_id)
+            ).distinct()
+        return queryset.filter(
+            Q(category__slug=category) | Q(genres__slug=category)
+        ).distinct()

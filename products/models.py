@@ -63,6 +63,11 @@ class Product(models.Model):
         related_name="products",
         on_delete=models.PROTECT,
     )
+    genres = models.ManyToManyField(
+        Category,
+        related_name="products_by_genre",
+        blank=True,
+    )
     image = models.ImageField(upload_to="products/", blank=True)
     cover_url = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)

@@ -498,6 +498,29 @@ class Command(BaseCommand):
         },
     )
 
+    GAME_GENRES = {
+        'kingdom-come-deliverance': ('rpg', 'open-world'),
+        'cyberpunk-2077': ('rpg', 'action', 'open-world'),
+        'the-witcher-3-wild-hunt': ('rpg', 'action', 'open-world'),
+        'dying-light': ('horror', 'action', 'open-world'),
+        'forza-horizon-5': ('racing',),
+        'hearts-of-iron-iv': ('strategy',),
+        'no-mans-sky': ('adventure',),
+        'terraria': ('adventure',),
+        'disco-elysium': ('rpg',),
+        'frostpunk': ('strategy',),
+        'sid-meiers-civilization-vi': ('strategy',),
+        'stardew-valley': ('simulation',),
+        'hollow-knight': ('indie',),
+        'hades': ('indie',),
+        'doom-eternal': ('shooter',),
+        'resident-evil-village': ('horror', 'action'),
+        'baldurs-gate-3': ('rpg',),
+        'elden-ring': ('action', 'rpg'),
+        'grand-theft-auto-v-enhanced': ('action', 'open-world'),
+        'red-dead-redemption-2': ('action', 'open-world'),
+    }
+
     def add_arguments(self, parser: Any) -> None:
         parser.add_argument(
             "--reset",
@@ -519,9 +542,13 @@ class Command(BaseCommand):
             slug = data.pop("slug")
             data["category"] = categories[category_slug]
             data["is_active"] = True
-            _, created = Product.objects.update_or_create(
+            product, created = Product.objects.update_or_create(
                 slug=slug,
                 defaults=data,
+            )
+            genre_slugs = self.GAME_GENRES.get(slug, (category_slug,))
+            product.genres.set(
+                categories[genre_slug] for genre_slug in genre_slugs
             )
             if created:
                 created_count += 1
@@ -558,7 +585,11 @@ class Command(BaseCommand):
         products.delete()
 
         category_slugs = {slug for _, slug in self.CATEGORIES}
-        Category.objects.filter(slug__in=category_slugs, products__isnull=True).delete()
+        Category.objects.filter(
+            slug__in=category_slugs,
+            products__isnull=True,
+            products_by_genre__isnull=True,
+        ).delete()
 
         self.stdout.write(
             "Demo catalog reset: "

@@ -18,6 +18,7 @@ class ProductSerializer(serializers.ModelSerializer):
     """Expose an active catalog product with rating aggregates."""
 
     category = CategorySerializer(read_only=True)
+    genres = CategorySerializer(many=True, read_only=True)
     final_price = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -39,6 +40,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "final_price",
             "category",
+            "genres",
             "image",
             "cover_url",
             "platform",

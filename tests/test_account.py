@@ -247,6 +247,7 @@ class AccountFlowTests(TestCase):
         response = self.client.get(reverse("account:orders"))
 
         self.assertContains(response, f"Замовлення №{own_order.pk}")
+        self.assertContains(response, "XXXXX-XXXXX-XXXXX")
         self.assertNotContains(response, f"Замовлення №{other_order.pk}")
 
     def test_order_history_uses_digital_status_labels(self) -> None:

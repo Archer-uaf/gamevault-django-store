@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.translation import gettext as _
 
+from orders.constants import DEMO_ACTIVATION_KEY
 from orders.models import Order
 
 
@@ -41,22 +42,26 @@ def _send_order_email(
 
 
 def send_order_confirmation_email(order: Order) -> int:
-    """Send a simple order confirmation email to the customer."""
+    """Send the demo activation key to the customer."""
     subject = _("Підтвердження замовлення №%(number)s") % {
         "number": order.pk,
     }
-    message = _(
-        "Дякуємо за замовлення в GameVault.\n\n"
-        "Номер замовлення: %(number)s\n"
-        "Сума: ₴%(total)s\n"
-        "Статус: %(status)s\n\n"
-        "Ключ буде надіслано на цей email після обробки замовлення.\n"
-        "Фізична доставка не потрібна."
-    ) % {
-        "number": order.pk,
-        "total": order.total_price,
-        "status": order.digital_status_display,
-    }
+    message = "\n".join(
+        (
+            _("Дякуємо за замовлення в GameVault."),
+            "",
+            _("Номер замовлення: %(number)s") % {"number": order.pk},
+            _("Сума: ₴%(total)s") % {"total": order.total_price},
+            _("Статус: %(status)s")
+            % {"status": order.digital_status_display},
+            "",
+            f"{_('Ключ активації')}: {DEMO_ACTIVATION_KEY}",
+            _(
+                "Ключ також доступний в історії замовлень. "
+                "Фізична доставка не потрібна."
+            ),
+        )
+    )
 
     return _send_order_email(
         order=order,

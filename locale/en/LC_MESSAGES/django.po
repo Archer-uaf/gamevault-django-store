@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-11 00:10+0000\n"
+"POT-Creation-Date: 2026-07-11 00:37+0000\n"
 "PO-Revision-Date: 2026-07-11 02:30+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -52,17 +52,17 @@ msgstr "Orders updated: %(count)d."
 msgid "Недостатньо товару на складі."
 msgstr "Insufficient stock."
 
-#: orders/checkout_views.py:42 orders/checkout_views.py:78
+#: orders/checkout_views.py:43 orders/checkout_views.py:80
 msgid "Ваш кошик порожній. Додайте ігри перед оформленням."
 msgstr "Your cart is empty. Add games before checking out."
 
-#: orders/checkout_views.py:85
+#: orders/checkout_views.py:87
 msgid ""
 "Залишки товарів змінилися. Перевірте кількість у кошику та спробуйте ще раз."
 msgstr ""
 "Product stock has changed. Check the quantities in your cart and try again."
 
-#: orders/checkout_views.py:96
+#: orders/checkout_views.py:98
 #, python-format
 msgid ""
 "Замовлення №%(number)s успішно створено. Ключ буде надіслано на вказаний "
@@ -71,38 +71,47 @@ msgstr ""
 "Order #%(number)s was created successfully. The key will be sent to the "
 "specified email address."
 
-#: orders/emails.py:45
+#: orders/emails.py:46
 #, python-format
 msgid "Підтвердження замовлення №%(number)s"
 msgstr "Order confirmation #%(number)s"
 
-#: orders/emails.py:49
-#, python-format
-msgid ""
-"Дякуємо за замовлення в GameVault.\n"
-"\n"
-"Номер замовлення: %(number)s\n"
-"Сума: ₴%(total)s\n"
-"Статус: %(status)s\n"
-"\n"
-"Ключ буде надіслано на цей email після обробки замовлення.\n"
-"Фізична доставка не потрібна."
-msgstr ""
-"Thank you for your order at GameVault.\n"
-"\n"
-"Order number: %(number)s\n"
-"Total: ₴%(total)s\n"
-"Status: %(status)s\n"
-"\n"
-"Your key will be sent to this email after the order is processed.\n"
-"No physical shipping is required."
+#: orders/emails.py:51
+msgid "Дякуємо за замовлення в GameVault."
+msgstr "Thank you for your order at GameVault."
 
-#: orders/emails.py:76
+#: orders/emails.py:53
+#, python-format
+msgid "Номер замовлення: %(number)s"
+msgstr "Order number: %(number)s"
+
+#: orders/emails.py:54
+#, python-format
+msgid "Сума: ₴%(total)s"
+msgstr "Total: ₴%(total)s"
+
+#: orders/emails.py:55
+#, python-format
+msgid "Статус: %(status)s"
+msgstr "Status: %(status)s"
+
+#: orders/emails.py:58 orders/serializers.py:58
+#: templates/users/order_history.html:37
+msgid "Ключ активації"
+msgstr "Activation key"
+
+#: orders/emails.py:60
+msgid "Ключ також доступний в історії замовлень. Фізична доставка не потрібна."
+msgstr ""
+"The key is also available in your order history. No physical shipping is "
+"required."
+
+#: orders/emails.py:81
 #, python-format
 msgid "Нове замовлення №%(number)s"
 msgstr "New order #%(number)s"
 
-#: orders/emails.py:78
+#: orders/emails.py:83
 #, python-format
 msgid ""
 "У GameVault створено нове замовлення.\n"
@@ -131,11 +140,11 @@ msgstr "Quantity"
 msgid "Обрана кількість перевищує доступний залишок."
 msgstr "The selected quantity exceeds the available stock."
 
-#: orders/forms.py:48 orders/serializers.py:89
+#: orders/forms.py:48 orders/serializers.py:98
 msgid "Email для отримання ключа"
 msgstr "Email for digital key delivery"
 
-#: orders/forms.py:57 orders/serializers.py:54 orders/serializers.py:92
+#: orders/forms.py:57 orders/serializers.py:55 orders/serializers.py:101
 msgid "Спосіб оплати"
 msgstr "Payment method"
 
@@ -183,23 +192,23 @@ msgstr "Completed"
 msgid "Банківська картка (старий тестовий запис)"
 msgstr "Bank card (legacy test record)"
 
-#: orders/serializers.py:49
+#: orders/serializers.py:50
 msgid "Статус цифрового замовлення"
 msgstr "Digital order status"
 
-#: orders/serializers.py:101
+#: orders/serializers.py:110
 msgid "Кожен товар можна вказати в замовленні лише один раз."
 msgstr "Each product can appear only once in an order."
 
-#: orders/serializers.py:136
+#: orders/serializers.py:145
 msgid "Список товарів не може бути порожнім."
 msgstr "The product list cannot be empty."
 
-#: orders/serializers.py:140
+#: orders/serializers.py:149
 msgid "Один або кілька товарів недоступні."
 msgstr "One or more products are unavailable."
 
-#: orders/serializers.py:146
+#: orders/serializers.py:155
 #, python-format
 msgid "Недостатньо товару «%(product)s» на складі."
 msgstr "There is not enough stock for “%(product)s”."
@@ -510,8 +519,8 @@ msgid "Разом"
 msgstr "Summary"
 
 #: templates/orders/cart_detail.html:100 templates/orders/checkout.html:95
-#: templates/orders/checkout_success.html:20
-#: templates/users/order_history.html:37
+#: templates/orders/checkout_success.html:24
+#: templates/users/order_history.html:41
 msgid "Загальна сума"
 msgstr "Total amount"
 
@@ -532,7 +541,7 @@ msgid "Додайте ігри з каталогу, щоб вони з'явил�
 msgstr "Add games from the catalog to see them here."
 
 #: templates/orders/cart_detail.html:119 templates/pages/home.html:298
-#: templates/pages/home.html:314 templates/users/order_history.html:48
+#: templates/pages/home.html:314 templates/users/order_history.html:52
 msgid "Перейти до каталогу"
 msgstr "Go to catalog"
 
@@ -574,9 +583,8 @@ msgid ""
 "оформлення замовлення він також з’явиться в розділі «Історія замовлень» "
 "вашого особистого кабінету."
 msgstr ""
-"The game activation key will be sent to the email address you provide. "
-"After checkout, it will also appear in the “Order history” section of your "
-"account."
+"The game activation key will be sent to the email address you provide. After "
+"checkout, it will also appear in the “Order history” section of your account."
 
 #: templates/orders/checkout.html:68
 msgid "Це тестове оформлення: реальні кошти не списуються."
@@ -621,14 +629,14 @@ msgid "Замовлення №%(number)s успішно створено."
 msgstr "Order #%(number)s was created successfully."
 
 #: templates/orders/checkout_success.html:18
-msgid ""
-"Ключ буде надіслано на email після обробки замовлення. Фізична доставка не "
-"потрібна."
-msgstr ""
-"The key will be sent to your email after the order is processed. No physical "
-"shipping is required."
+msgid "Ваш тестовий ключ активації:"
+msgstr "Your test activation key:"
 
-#: templates/orders/checkout_success.html:24
+#: templates/orders/checkout_success.html:21
+msgid "Це демонстраційний ключ для тестового замовлення."
+msgstr "This is a demo key for a test order."
+
+#: templates/orders/checkout_success.html:28
 msgid "Повернутися до каталогу"
 msgstr "Back to catalog"
 
@@ -1139,15 +1147,15 @@ msgstr "Order #%(number)s"
 msgid "%(name)s × %(quantity)s"
 msgstr "%(name)s × %(quantity)s"
 
-#: templates/users/order_history.html:46
+#: templates/users/order_history.html:50
 msgid "Замовлень поки немає"
 msgstr "No orders yet"
 
-#: templates/users/order_history.html:47
+#: templates/users/order_history.html:51
 msgid "Після покупки замовлення з'явиться в цьому розділі."
 msgstr "After a purchase, the order will appear in this section."
 
-#: templates/users/order_history.html:51
+#: templates/users/order_history.html:55
 msgid "Повернутися до кабінету"
 msgstr "Back to account"
 
@@ -1231,25 +1239,52 @@ msgstr "This nickname is already in use."
 msgid "Паролі не збігаються."
 msgstr "The passwords do not match."
 
-#: users/views.py:46
+#: users/views.py:47
 msgid "Обліковий запис успішно створено."
 msgstr "Your account was created successfully."
 
-#: users/views.py:59
+#: users/views.py:60
 msgid "Ви успішно увійшли."
 msgstr "You have logged in successfully."
 
-#: users/views.py:75
+#: users/views.py:76
 msgid "Ви успішно вийшли."
 msgstr "You have logged out successfully."
 
-#: users/views.py:99
+#: users/views.py:100
 msgid "Профіль успішно оновлено."
 msgstr "Your profile was updated successfully."
 
-#: users/views.py:130
+#: users/views.py:137
 msgid "Пароль успішно змінено."
 msgstr "Your password was changed successfully."
+
+#, python-format
+#~ msgid ""
+#~ "Дякуємо за замовлення в GameVault.\n"
+#~ "\n"
+#~ "Номер замовлення: %(number)s\n"
+#~ "Сума: ₴%(total)s\n"
+#~ "Статус: %(status)s\n"
+#~ "\n"
+#~ "Ключ буде надіслано на цей email після обробки замовлення.\n"
+#~ "Фізична доставка не потрібна."
+#~ msgstr ""
+#~ "Thank you for your order at GameVault.\n"
+#~ "\n"
+#~ "Order number: %(number)s\n"
+#~ "Total: ₴%(total)s\n"
+#~ "Status: %(status)s\n"
+#~ "\n"
+#~ "Your key will be sent to this email after the order is processed.\n"
+#~ "No physical shipping is required."
+
+#~ msgid ""
+#~ "Ключ буде надіслано на email після обробки замовлення. Фізична доставка "
+#~ "не потрібна."
+#~ msgstr ""
+#~ "The key will be sent to your email after the order is processed. No "
+#~ "physical shipping is required."
 
 #~ msgid "Картка (тестова оплата)"
 #~ msgstr "Card (test payment)"

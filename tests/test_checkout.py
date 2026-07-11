@@ -78,7 +78,8 @@ class CheckoutFlowTests(TestCase):
         self.assertIn(str(order.pk), email.subject)
         self.assertEqual(email.to, [order.email])
         self.assertIn(str(order.total_price), email.body)
-        self.assertIn("Ключ буде надіслано", email.body)
+        self.assertIn("Ключ активації", email.body)
+        self.assertIn("XXXXX-XXXXX-XXXXX", email.body)
         self.assertIn("Фізична доставка не потрібна", email.body)
 
     @override_settings(ADMIN_EMAIL="admin@example.com")
@@ -284,7 +285,8 @@ class CheckoutFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "orders/checkout_success.html")
         self.assertContains(response, f"Замовлення №{order.pk}")
-        self.assertContains(response, "Ключ буде надіслано на email")
+        self.assertContains(response, "Ваш тестовий ключ активації")
+        self.assertContains(response, "XXXXX-XXXXX-XXXXX")
         self.assertContains(response, "₴180")
 
     def test_success_page_is_owner_only(self) -> None:

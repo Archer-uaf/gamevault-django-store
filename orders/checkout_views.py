@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import FormView, TemplateView
 
 from orders.cart import Cart, CartItem
+from orders.constants import DEMO_ACTIVATION_KEY
 from orders.checkout import (
     CheckoutStockError,
     EmptyCartError,
@@ -122,4 +123,5 @@ class CheckoutSuccessView(LoginRequiredMixin, TemplateView):
             pk=order_id,
             user=self.request.user,
         )
+        context["demo_activation_key"] = DEMO_ACTIVATION_KEY
         return context

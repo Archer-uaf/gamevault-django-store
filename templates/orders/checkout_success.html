@@ -15,7 +15,11 @@
                     Замовлення №{{ number }} успішно створено.
                 {% endblocktrans %}
             </p>
-            <p>{% trans "Ключ буде надіслано на email після обробки замовлення. Фізична доставка не потрібна." %}</p>
+            <p>{% trans "Ваш тестовий ключ активації:" %}</p>
+            <div class="activation-key-panel">
+                <code class="activation-key-code">{{ demo_activation_key }}</code>
+                <small>{% trans "Це демонстраційний ключ для тестового замовлення." %}</small>
+            </div>
             <div class="checkout-success-total">
                 <span>{% trans "Загальна сума" %}</span>
                 <strong>₴{{ order.total_price }}</strong>

@@ -33,6 +33,10 @@
                                 </li>
                             {% endfor %}
                         </ul>
+                        <div class="order-activation-key">
+                            <span>{% trans "Ключ активації" %}</span>
+                            <code>{{ demo_activation_key }}</code>
+                        </div>
                         <footer>
                             <span>{% trans "Загальна сума" %}</span>
                             <strong>₴{{ order.total_price }}</strong>

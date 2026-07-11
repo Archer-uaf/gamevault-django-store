@@ -127,7 +127,7 @@ def test_create_order_and_order_item(user: Any, product: Product) -> None:
         phone="+380000000000",
         city="Kyiv",
         shipping_address="Test street, 1",
-        payment_method=Order.PaymentMethod.CARD,
+        payment_method=Order.PaymentMethod.BANK_CARD_TEST,
     )
     item = OrderItem.objects.create(
         order=order,
@@ -150,7 +150,7 @@ def test_order_item_total_price(user: Any, product: Product) -> None:
         phone="+380000000000",
         city="Kyiv",
         shipping_address="Test street, 1",
-        payment_method=Order.PaymentMethod.CASH_ON_DELIVERY,
+        payment_method=Order.PaymentMethod.BANK_CARD_TEST,
     )
     item = OrderItem.objects.create(
         order=order,
@@ -174,7 +174,7 @@ def test_order_total_price_db_constraint(user: Any) -> None:
                 phone="+380000000000",
                 city="Kyiv",
                 shipping_address="Test street, 1",
-                payment_method=Order.PaymentMethod.CARD,
+                payment_method=Order.PaymentMethod.BANK_CARD_TEST,
             )
 
 
@@ -190,7 +190,7 @@ def test_order_item_price_and_quantity_db_constraints(
         phone="+380000000000",
         city="Kyiv",
         shipping_address="Test street, 1",
-        payment_method=Order.PaymentMethod.CARD,
+        payment_method=Order.PaymentMethod.BANK_CARD_TEST,
     )
 
     invalid_items = (

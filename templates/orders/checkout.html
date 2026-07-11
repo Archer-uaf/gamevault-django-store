@@ -17,8 +17,8 @@
         <form method="post" class="checkout-form" novalidate>
             {% csrf_token %}
             <div class="section-heading">
-                <p class="eyebrow">{% trans "Цифрова доставка" %}</p>
-                <h2>{% trans "Дані для цифрової доставки" %}</h2>
+                <p class="eyebrow">{% trans "Цифровий товар" %}</p>
+                <h2>{% trans "Email і спосіб оплати" %}</h2>
             </div>
 
             {% if form.non_field_errors %}
@@ -27,24 +27,45 @@
                 </div>
             {% endif %}
 
-            <div class="checkout-fields">
-                {% for field in form %}
-                    <div class="checkout-field {% if field.errors %}checkout-field--error{% endif %}">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.help_text %}
-                            <small class="field-help">{{ field.help_text }}</small>
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <span class="field-error">{{ error }}</span>
+            <div class="checkout-fields checkout-fields--digital">
+                <div class="checkout-field {% if form.email.errors %}checkout-field--error{% endif %}">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% for error in form.email.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <fieldset class="checkout-field checkout-field--payment {% if form.payment_method.errors %}checkout-field--error{% endif %}">
+                    <legend>{{ form.payment_method.label }}</legend>
+                    <div class="payment-method-grid">
+                        {% for choice in form.payment_method %}
+                            <label class="payment-method-card" for="{{ choice.id_for_label }}">
+                                {{ choice.tag }}
+                                <span class="payment-method-card__marker" aria-hidden="true"></span>
+                                <span class="payment-method-card__content">
+                                    <strong>{{ choice.choice_label }}</strong>
+                                    <small>{% trans "Тестовий спосіб оплати" %}</small>
+                                </span>
+                            </label>
                         {% endfor %}
                     </div>
-                {% endfor %}
+                    {% for error in form.payment_method.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                </fieldset>
             </div>
 
             <div class="checkout-notice">
-                <strong>{% trans "Без фізичної доставки" %}</strong>
-                <p>{% trans "Ключ буде надіслано після обробки замовлення. Платіжні дані не запитуються та реальні кошти не списуються." %}</p>
+                <strong>{% trans "Цифрова доставка" %}</strong>
+                <p>
+                    {% blocktrans trimmed %}
+                        Ключ активації гри буде надіслано на вказану вами електронну адресу.
+                        Після оформлення замовлення він також з’явиться в розділі
+                        «Історія замовлень» вашого особистого кабінету.
+                    {% endblocktrans %}
+                </p>
+                <small>{% trans "Це тестове оформлення: реальні кошти не списуються." %}</small>
             </div>
 
             <button type="submit" class="button button--primary checkout-submit">

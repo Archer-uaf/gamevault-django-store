@@ -64,7 +64,7 @@ class AccountPasswordChangeForm(PasswordChangeForm):
 class ProfileUpdateForm(forms.Form):
     """Update account identity fields for digital purchases."""
 
-    username = forms.CharField(label=_("Нікнейм"), max_length=150, required=True)
+    username = forms.CharField(label=_("Нікнейм"), max_length=15, required=True)
     email = forms.EmailField(label=_("Електронна пошта"), required=True)
 
     def __init__(

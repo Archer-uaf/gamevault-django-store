@@ -257,7 +257,7 @@ class VerifiedPurchaseReviewTests(TestCase):
             phone="+380000000000",
             city="Kyiv",
             shipping_address="Test street, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )
         OrderItem.objects.create(
             order=order,

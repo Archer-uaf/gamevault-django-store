@@ -409,12 +409,61 @@ class OrderAPITests(TestCase):
         order = Order.objects.get()
         item = OrderItem.objects.get()
         self.assertEqual(order.user, self.user)
+        self.assertEqual(order.email, "olena@example.com")
+        self.assertEqual(order.first_name, "")
+        self.assertEqual(order.last_name, "")
+        self.assertEqual(order.phone, "")
+        self.assertEqual(order.city, "")
+        self.assertEqual(order.shipping_address, "")
+        self.assertEqual(
+            order.payment_method,
+            Order.PaymentMethod.BANK_CARD_TEST,
+        )
         self.assertEqual(order.total_price, Decimal("180.00"))
         self.assertEqual(item.product, self.product)
         self.assertEqual(item.quantity, 2)
         self.assertEqual(item.price, Decimal("90.00"))
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock, 3)
+
+    def test_api_accepts_all_test_payment_methods(self) -> None:
+        self.client.force_authenticate(user=self.user)
+
+        for payment_method in (
+            Order.PaymentMethod.BANK_CARD_TEST,
+            Order.PaymentMethod.CRYPTO_TRC20_TEST,
+            Order.PaymentMethod.GOOGLE_PAY_TEST,
+        ):
+            with self.subTest(payment_method=payment_method):
+                payload = self.order_payload(quantity=1)
+                payload["payment_method"] = payment_method
+
+                response = self.client.post(
+                    reverse("api:order-list"),
+                    payload,
+                    format="json",
+                )
+
+                self.assertEqual(response.status_code, 201)
+                self.assertEqual(
+                    Order.objects.latest("pk").payment_method,
+                    payment_method,
+                )
+
+    def test_api_rejects_legacy_payment_method(self) -> None:
+        self.client.force_authenticate(user=self.user)
+        payload = self.order_payload(quantity=1)
+        payload["payment_method"] = "card"
+
+        response = self.client.post(
+            reverse("api:order-list"),
+            payload,
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("payment_method", response.json())
+        self.assertFalse(Order.objects.exists())
 
     def test_valid_api_order_decreases_stock(self) -> None:
         self.client.force_authenticate(user=self.user)
@@ -489,12 +538,8 @@ class OrderAPITests(TestCase):
     ) -> dict[str, Any]:
         return {
             "items": [{"product_id": product_id, "quantity": quantity}],
-            "full_name": "Олена Коваль",
             "email": "olena@example.com",
-            "phone": "+380501234567",
-            "city": "Київ",
-            "address": "вул. Хрещатик, 1",
-            "payment_method": Order.PaymentMethod.CARD,
+            "payment_method": Order.PaymentMethod.BANK_CARD_TEST,
         }
 
     @staticmethod
@@ -508,7 +553,7 @@ class OrderAPITests(TestCase):
             phone="+380000000000",
             city="Kyiv",
             shipping_address="Test street, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )
 
 
@@ -637,7 +682,7 @@ class ReviewAPITests(TestCase):
             phone="+380000000000",
             city="Kyiv",
             shipping_address="Test street, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )
         OrderItem.objects.create(
             order=order,
@@ -658,6 +703,14 @@ class OpenAPIEndpointTests(TestCase):
         response = self.client.get(reverse("schema"))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_schema_documents_digital_payment_methods(self) -> None:
+        response = self.client.get(reverse("schema"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "bank_card_test")
+        self.assertContains(response, "crypto_trc20_test")
+        self.assertContains(response, "google_pay_test")
 
     def test_schema_documents_product_platform_filter(self) -> None:
         response = self.client.get(reverse("schema"))

@@ -105,12 +105,12 @@ def create_order_from_items(
         order = Order.objects.create(
             user=user,
             total_price=total_price,
-            first_name=customer_data["first_name"],
-            last_name=customer_data["last_name"],
+            first_name=customer_data.get("first_name", ""),
+            last_name=customer_data.get("last_name", ""),
             email=customer_data["email"],
-            phone=customer_data["phone"],
-            city=customer_data["city"],
-            shipping_address=customer_data["shipping_address"],
+            phone=customer_data.get("phone", ""),
+            city=customer_data.get("city", ""),
+            shipping_address=customer_data.get("shipping_address", ""),
             payment_method=customer_data["payment_method"],
         )
         for order_item in order_items:

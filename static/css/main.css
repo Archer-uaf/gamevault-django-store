@@ -675,7 +675,7 @@ ul {
 }
 
 .hero-hot-card--1 .hero-hot-card__description {
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     -webkit-line-clamp: 4;
 }
 
@@ -722,7 +722,7 @@ ul {
 
 .hero-hot-card__old-price {
     color: rgba(203, 213, 225, 0.64);
-    font-size: 0.76rem;
+    font-size: 0.73rem;
     font-weight: 700;
     text-decoration: line-through;
     white-space: nowrap;
@@ -730,13 +730,13 @@ ul {
 
 .hero-hot-card__price {
     color: var(--white);
-    font-size: 1.04rem;
+    font-size: 1.18rem;
     line-height: 1;
     white-space: nowrap;
 }
 
 .hero-hot-card--1 .hero-hot-card__price {
-    font-size: 0.88rem;
+    font-size: 0.96rem;
 }
 
 .hero-hot-card__cta {
@@ -2103,6 +2103,132 @@ ul {
     gap: 18px;
 }
 
+.checkout-fields--digital {
+    grid-template-columns: 1fr;
+}
+
+.checkout-field--payment {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+}
+
+.checkout-field--payment legend {
+    margin-bottom: 9px;
+    color: var(--ink-soft);
+    font-size: 0.76rem;
+    font-weight: 750;
+}
+
+.payment-method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.payment-method-card {
+    position: relative;
+    min-width: 0;
+    min-height: 116px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.035);
+    cursor: pointer;
+    transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.payment-method-card:hover {
+    border-color: rgba(41, 224, 207, 0.30);
+    background: rgba(255, 255, 255, 0.055);
+    transform: translateY(-2px);
+}
+
+.payment-method-card:focus-within {
+    border-color: rgba(41, 224, 207, 0.56);
+    box-shadow: 0 0 0 3px rgba(41, 224, 207, 0.10);
+}
+
+.payment-method-card:has(input:checked) {
+    border-color: rgba(41, 224, 207, 0.58);
+    background:
+        linear-gradient(145deg, rgba(41, 224, 207, 0.11), rgba(124, 92, 255, 0.10)),
+        rgba(255, 255, 255, 0.04);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+.payment-method-card input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.payment-method-card__marker {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: border-color 160ms ease, background 160ms ease;
+}
+
+.payment-method-card__marker::after {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    content: "";
+    background: var(--accent);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.payment-method-card:has(input:checked) .payment-method-card__marker {
+    border-color: var(--accent);
+    background: rgba(41, 224, 207, 0.10);
+}
+
+.payment-method-card:has(input:checked) .payment-method-card__marker::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.payment-method-card__content {
+    min-width: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.payment-method-card__content strong {
+    color: var(--white);
+    font-size: 0.92rem;
+    line-height: 1.3;
+}
+
+.payment-method-card__content small {
+    width: fit-content;
+    padding: 4px 7px;
+    border-radius: 999px;
+    color: #c7bfff;
+    background: rgba(124, 92, 255, 0.14);
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
 .form-errors {
     margin-bottom: 18px;
     padding: 12px 14px;
@@ -2124,11 +2250,27 @@ ul {
 
 .checkout-notice {
     margin-top: 22px;
-    padding: 16px;
+    padding: 18px;
     border: 1px solid rgba(124, 92, 255, 0.22);
     border-radius: 12px;
     color: var(--ink-soft);
     background: rgba(124, 92, 255, 0.10);
+}
+
+.checkout-notice strong {
+    display: block;
+    color: var(--white);
+}
+
+.checkout-notice p {
+    margin-top: 7px;
+}
+
+.checkout-notice small {
+    display: block;
+    margin-top: 10px;
+    color: #c7bfff;
+    font-weight: 750;
 }
 
 .checkout-submit {
@@ -2686,6 +2828,16 @@ ul {
     .detail-cover {
         width: min(100%, 520px);
         margin-inline: auto;
+    }
+}
+
+@media (max-width: 720px) {
+    .payment-method-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-method-card {
+        min-height: 0;
     }
 }
 

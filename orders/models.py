@@ -19,9 +19,12 @@ class Order(models.Model):
         CANCELLED = "cancelled", _("Скасовано")
 
     class PaymentMethod(models.TextChoices):
-        CARD = "card", _("Картка (тестова оплата)")
-        CASH_ON_DELIVERY = "cash_on_delivery", _("Оплата при отриманні")
-        BALANCE_MOCK = "balance_mock", _("Тестовий баланс")
+        BANK_CARD_TEST = "bank_card_test", _("Банківська картка (тест)")
+        CRYPTO_TRC20_TEST = (
+            "crypto_trc20_test",
+            _("Криптовалюта TRC20 (тест)"),
+        )
+        GOOGLE_PAY_TEST = "google_pay_test", _("Google Pay (тест)")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -86,11 +89,19 @@ class Order(models.Model):
     @property
     def digital_payment_method_display(self) -> str:
         labels = {
-            self.PaymentMethod.CARD.value: _("Картка (тестова оплата)"),
-            self.PaymentMethod.CASH_ON_DELIVERY.value: _(
-                "Оплата після обробки замовлення"
+            self.PaymentMethod.BANK_CARD_TEST.value: _(
+                "Банківська картка (тест)"
             ),
-            self.PaymentMethod.BALANCE_MOCK.value: _("Тестовий баланс"),
+            self.PaymentMethod.CRYPTO_TRC20_TEST.value: _(
+                "Криптовалюта TRC20 (тест)"
+            ),
+            self.PaymentMethod.GOOGLE_PAY_TEST.value: _("Google Pay (тест)"),
+            # Temporary compatibility for orders created before migration 0004.
+            "card": _("Банківська картка (старий тестовий запис)"),
+            "cash_on_delivery": _(
+                "Банківська картка (старий тестовий запис)"
+            ),
+            "balance_mock": _("Банківська картка (старий тестовий запис)"),
         }
         return str(
             labels.get(self.payment_method, self.get_payment_method_display())

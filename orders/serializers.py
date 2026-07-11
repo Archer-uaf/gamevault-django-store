@@ -37,14 +37,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "total_price",
         )
         read_only_fields = fields
-        extra_kwargs = {
-            "first_name": {"label": _("Ім'я отримувача")},
-            "last_name": {"label": _("Прізвище отримувача")},
-            "email": {"label": _("Email для отримання ключа")},
-            "phone": {"label": _("Телефон для зв'язку щодо замовлення")},
-            "city": {"label": _("Регіон акаунта")},
-            "shipping_address": {"label": _("Дані для цифрової доставки")},
-        }
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -91,48 +83,14 @@ class OrderCreateItemSerializer(serializers.Serializer):
 
 
 class OrderCreateSerializer(serializers.Serializer):
-    """Validate and atomically create an authenticated user's order."""
+    """Validate and atomically create an authenticated digital order."""
 
     items = OrderCreateItemSerializer(many=True, allow_empty=False)
-    full_name = serializers.CharField(
-        max_length=241,
-        label=_("Ім'я отримувача цифрового замовлення"),
-    )
-    email = serializers.EmailField(
-        label=_("Email для отримання ключа"),
-        help_text=_("Ключ буде надіслано після обробки замовлення."),
-    )
-    phone = serializers.CharField(
-        max_length=30,
-        label=_("Телефон для зв'язку щодо замовлення"),
-    )
-    city = serializers.CharField(
-        max_length=120,
-        label=_("Регіон акаунта"),
-    )
-    address = serializers.CharField(
-        label=_("Дані для цифрової доставки"),
-        help_text=_("Без фізичної доставки. Вкажіть платформу або примітку."),
-    )
+    email = serializers.EmailField(label=_("Email для отримання ключа"))
     payment_method = serializers.ChoiceField(
-        choices=(
-            (Order.PaymentMethod.CARD, _("Картка (тестова оплата)")),
-            (
-                Order.PaymentMethod.CASH_ON_DELIVERY,
-                _("Оплата після обробки замовлення"),
-            ),
-            (Order.PaymentMethod.BALANCE_MOCK, _("Тестовий баланс")),
-        )
+        choices=Order.PaymentMethod.choices,
+        label=_("Спосіб оплати"),
     )
-
-    def validate_full_name(self, value: str) -> str:
-        """Require both a first and last name for the order snapshot."""
-        full_name = " ".join(value.split())
-        if len(full_name.split(maxsplit=1)) < 2:
-            raise serializers.ValidationError(
-                _("Вкажіть ім'я та прізвище отримувача.")
-            )
-        return full_name
 
     def validate_items(self, value: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Reject duplicate product ids in one order payload."""
@@ -149,18 +107,14 @@ class OrderCreateSerializer(serializers.Serializer):
     def create(self, validated_data: dict[str, Any]) -> Order:
         """Create an order through the shared checkout service."""
         request = self.context["request"]
-        user = request.user
         item_data = validated_data.pop("items")
-        first_name, last_name = validated_data.pop("full_name").split(maxsplit=1)
-        address = validated_data.pop("address")
-
         customer_data = {
-            "first_name": first_name,
-            "last_name": last_name,
+            "first_name": "",
+            "last_name": "",
             "email": str(validated_data["email"]),
-            "phone": str(validated_data["phone"]),
-            "city": str(validated_data["city"]),
-            "shipping_address": str(address),
+            "phone": "",
+            "city": "",
+            "shipping_address": "",
             "payment_method": str(validated_data["payment_method"]),
         }
         items = [
@@ -175,7 +129,7 @@ class OrderCreateSerializer(serializers.Serializer):
             return create_order_from_items(
                 items=items,
                 customer_data=customer_data,
-                user=user,
+                user=request.user,
             )
         except EmptyCartError as error:
             raise serializers.ValidationError(

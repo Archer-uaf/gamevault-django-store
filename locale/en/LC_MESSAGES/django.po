@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GameVault\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 21:45+0000\n"
-"PO-Revision-Date: 2026-07-03 11:20+0300\n"
+"POT-Creation-Date: 2026-07-11 00:10+0000\n"
+"PO-Revision-Date: 2026-07-11 02:30+0300\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -52,24 +52,24 @@ msgstr "Orders updated: %(count)d."
 msgid "Недостатньо товару на складі."
 msgstr "Insufficient stock."
 
-#: orders/checkout_views.py:39 orders/checkout_views.py:68
+#: orders/checkout_views.py:42 orders/checkout_views.py:78
 msgid "Ваш кошик порожній. Додайте ігри перед оформленням."
 msgstr "Your cart is empty. Add games before checking out."
 
-#: orders/checkout_views.py:75
+#: orders/checkout_views.py:85
 msgid ""
 "Залишки товарів змінилися. Перевірте кількість у кошику та спробуйте ще раз."
 msgstr ""
 "Product stock has changed. Check the quantities in your cart and try again."
 
-#: orders/checkout_views.py:86
+#: orders/checkout_views.py:96
 #, python-format
 msgid ""
-"Замовлення №%(number)s успішно створено. Ключ буде надіслано на email після "
-"обробки."
+"Замовлення №%(number)s успішно створено. Ключ буде надіслано на вказаний "
+"email."
 msgstr ""
-"Order #%(number)s was created successfully. The key will be sent to your "
-"email after processing."
+"Order #%(number)s was created successfully. The key will be sent to the "
+"specified email address."
 
 #: orders/emails.py:45
 #, python-format
@@ -131,62 +131,19 @@ msgstr "Quantity"
 msgid "Обрана кількість перевищує доступний залишок."
 msgstr "The selected quantity exceeds the available stock."
 
-#: orders/forms.py:48 orders/models.py:22 orders/models.py:89
-#: orders/serializers.py:119
-msgid "Картка (тестова оплата)"
-msgstr "Card (test payment)"
-
-#: orders/forms.py:51 orders/models.py:91 orders/serializers.py:122
-msgid "Оплата після обробки замовлення"
-msgstr "Payment after order processing"
-
-#: orders/forms.py:53 orders/models.py:24 orders/models.py:93
-#: orders/serializers.py:124
-msgid "Тестовий баланс"
-msgstr "Test balance"
-
-#: orders/forms.py:57 orders/serializers.py:99
-msgid "Ім'я отримувача цифрового замовлення"
-msgstr "Digital order recipient name"
-
-#: orders/forms.py:62 orders/serializers.py:43 orders/serializers.py:102
+#: orders/forms.py:48 orders/serializers.py:89
 msgid "Email для отримання ключа"
 msgstr "Email for digital key delivery"
 
-#: orders/forms.py:63 orders/serializers.py:103
-msgid "Ключ буде надіслано після обробки замовлення."
-msgstr "Your key will be sent after the order is processed."
-
-#: orders/forms.py:67 orders/serializers.py:44 orders/serializers.py:107
-msgid "Телефон для зв'язку щодо замовлення"
-msgstr "Phone for order contact"
-
-#: orders/forms.py:72 orders/serializers.py:45 orders/serializers.py:111
-msgid "Регіон акаунта"
-msgstr "Account region"
-
-#: orders/forms.py:77 orders/serializers.py:46 orders/serializers.py:114
-#: templates/orders/checkout.html:21
-msgid "Дані для цифрової доставки"
-msgstr "Digital delivery details"
-
-#: orders/forms.py:78 orders/serializers.py:115
-msgid "Без фізичної доставки. Вкажіть платформу або примітку."
-msgstr "No physical shipping. Enter a platform or note if needed."
-
-#: orders/forms.py:82 orders/serializers.py:62
+#: orders/forms.py:57 orders/serializers.py:54 orders/serializers.py:92
 msgid "Спосіб оплати"
 msgstr "Payment method"
 
-#: orders/forms.py:91 orders/serializers.py:133
-msgid "Вкажіть ім'я та прізвище отримувача."
-msgstr "Enter the recipient's first and last name."
-
-#: orders/models.py:15 orders/models.py:78
+#: orders/models.py:15 orders/models.py:81
 msgid "Очікує обробки"
 msgstr "Pending"
 
-#: orders/models.py:16 orders/models.py:79
+#: orders/models.py:16 orders/models.py:82
 msgid "Оплачено"
 msgstr "Paid"
 
@@ -198,47 +155,51 @@ msgstr "Shipped"
 msgid "Доставлено"
 msgstr "Delivered"
 
-#: orders/models.py:19 orders/models.py:82
+#: orders/models.py:19 orders/models.py:85
 msgid "Скасовано"
 msgstr "Cancelled"
 
-#: orders/models.py:23
-msgid "Оплата при отриманні"
-msgstr "Cash on delivery"
+#: orders/models.py:22 orders/models.py:93
+msgid "Банківська картка (тест)"
+msgstr "Bank card (test)"
 
-#: orders/models.py:80
+#: orders/models.py:25 orders/models.py:96
+msgid "Криптовалюта TRC20 (тест)"
+msgstr "TRC20 cryptocurrency (test)"
+
+#: orders/models.py:27 orders/models.py:98
+msgid "Google Pay (тест)"
+msgstr "Google Pay (test)"
+
+#: orders/models.py:83
 msgid "Ключ надіслано"
 msgstr "Key sent"
 
-#: orders/models.py:81
+#: orders/models.py:84
 msgid "Виконано"
 msgstr "Completed"
 
-#: orders/serializers.py:41
-msgid "Ім'я отримувача"
-msgstr "Recipient first name"
+#: orders/models.py:100 orders/models.py:102 orders/models.py:104
+msgid "Банківська картка (старий тестовий запис)"
+msgstr "Bank card (legacy test record)"
 
-#: orders/serializers.py:42
-msgid "Прізвище отримувача"
-msgstr "Recipient last name"
-
-#: orders/serializers.py:57
+#: orders/serializers.py:49
 msgid "Статус цифрового замовлення"
 msgstr "Digital order status"
 
-#: orders/serializers.py:143
+#: orders/serializers.py:101
 msgid "Кожен товар можна вказати в замовленні лише один раз."
 msgstr "Each product can appear only once in an order."
 
-#: orders/serializers.py:182
+#: orders/serializers.py:136
 msgid "Список товарів не може бути порожнім."
 msgstr "The product list cannot be empty."
 
-#: orders/serializers.py:186
+#: orders/serializers.py:140
 msgid "Один або кілька товарів недоступні."
 msgstr "One or more products are unavailable."
 
-#: orders/serializers.py:192
+#: orders/serializers.py:146
 #, python-format
 msgid "Недостатньо товару «%(product)s» на складі."
 msgstr "There is not enough stock for “%(product)s”."
@@ -548,7 +509,7 @@ msgstr "Remove"
 msgid "Разом"
 msgstr "Summary"
 
-#: templates/orders/cart_detail.html:100 templates/orders/checkout.html:74
+#: templates/orders/cart_detail.html:100 templates/orders/checkout.html:95
 #: templates/orders/checkout_success.html:20
 #: templates/users/order_history.html:37
 msgid "Загальна сума"
@@ -592,39 +553,53 @@ msgid "Вкажіть email для отримання ключа та обері
 msgstr "Enter the email for your key and choose a test payment method."
 
 #: templates/orders/checkout.html:20
+msgid "Цифровий товар"
+msgstr "Digital product"
+
+#: templates/orders/checkout.html:21
+msgid "Email і спосіб оплати"
+msgstr "Email and payment method"
+
+#: templates/orders/checkout.html:48
+msgid "Тестовий спосіб оплати"
+msgstr "Test payment method"
+
+#: templates/orders/checkout.html:60
 msgid "Цифрова доставка"
 msgstr "Digital delivery"
 
-#: templates/orders/checkout.html:46
-msgid "Без фізичної доставки"
-msgstr "No physical shipping"
-
-#: templates/orders/checkout.html:47
+#: templates/orders/checkout.html:62
 msgid ""
-"Ключ буде надіслано після обробки замовлення. Платіжні дані не запитуються "
-"та реальні кошти не списуються."
+"Ключ активації гри буде надіслано на вказану вами електронну адресу. Після "
+"оформлення замовлення він також з’явиться в розділі «Історія замовлень» "
+"вашого особистого кабінету."
 msgstr ""
-"Your key will be sent after the order is processed. No payment details are "
-"requested and no real funds are charged."
+"The game activation key will be sent to the email address you provide. "
+"After checkout, it will also appear in the “Order history” section of your "
+"account."
 
-#: templates/orders/checkout.html:51
+#: templates/orders/checkout.html:68
+msgid "Це тестове оформлення: реальні кошти не списуються."
+msgstr "This is a test checkout: no real funds are charged."
+
+#: templates/orders/checkout.html:72
 msgid "Підтвердити замовлення"
 msgstr "Confirm order"
 
-#: templates/orders/checkout.html:57
+#: templates/orders/checkout.html:78
 msgid "Ваш кошик"
 msgstr "Your cart"
 
-#: templates/orders/checkout.html:58
+#: templates/orders/checkout.html:79
 msgid "Склад замовлення"
 msgstr "Order summary"
 
-#: templates/orders/checkout.html:66
+#: templates/orders/checkout.html:87
 #, python-format
 msgid "Кількість: %(quantity)s"
 msgstr "Quantity: %(quantity)s"
 
-#: templates/orders/checkout.html:77
+#: templates/orders/checkout.html:98
 msgid "Повернутися до кошика"
 msgstr "Back to cart"
 
@@ -713,80 +688,80 @@ msgstr "A selection of discounted games for a quick start."
 msgid "Акція"
 msgstr "Deal"
 
-#: templates/pages/home.html:109
+#: templates/pages/home.html:111
 msgid "Ціна зі знижкою"
 msgstr "Discounted price"
 
-#: templates/pages/home.html:111
+#: templates/pages/home.html:113
 msgid "Гаряча ціна"
 msgstr "Hot price"
 
-#: templates/pages/home.html:121 templates/pages/home.html:288
+#: templates/pages/home.html:123 templates/pages/home.html:288
 #: templates/products/product_list.html:168
 msgid "Детальніше"
 msgstr "View details"
 
-#: templates/pages/home.html:130 templates/pages/home.html:295
+#: templates/pages/home.html:132 templates/pages/home.html:295
 msgid "Каталог ще порожній"
 msgstr "The catalog is still empty"
 
-#: templates/pages/home.html:131
+#: templates/pages/home.html:133
 msgid "Запустіть seed_demo_games, щоб побачити обкладинки ігор."
 msgstr "Run seed_demo_games to see game covers."
 
-#: templates/pages/home.html:141
+#: templates/pages/home.html:143
 msgid "Чому GameVault"
 msgstr "Why GameVault"
 
-#: templates/pages/home.html:142
+#: templates/pages/home.html:144
 msgid "Маркетплейс для швидкого вибору гри"
 msgstr "A marketplace for quickly choosing a game"
 
-#: templates/pages/home.html:148
+#: templates/pages/home.html:150
 msgid "Ігри для різних платформ"
 msgstr "Games for different platforms"
 
-#: templates/pages/home.html:149
+#: templates/pages/home.html:151
 msgid "PC, PlayStation, Xbox і Nintendo Switch в одному каталозі."
 msgstr "PC, PlayStation, Xbox, and Nintendo Switch in one catalog."
 
-#: templates/pages/home.html:154
+#: templates/pages/home.html:156
 msgid "Вигідні пропозиції"
 msgstr "Great deals"
 
-#: templates/pages/home.html:155
+#: templates/pages/home.html:157
 msgid "Знижки, добірки та зрозумілі ціни без зайвого шуму."
 msgstr "Discounts, curated picks, and clear prices without extra noise."
 
-#: templates/pages/home.html:160
+#: templates/pages/home.html:162
 msgid "Відгуки після покупки"
 msgstr "Reviews after purchase"
 
-#: templates/pages/home.html:161
+#: templates/pages/home.html:163
 msgid "Оцінки доступні тільки для користувачів, які справді придбали гру."
 msgstr "Ratings are available only to users who actually bought the game."
 
-#: templates/pages/home.html:171
+#: templates/pages/home.html:173
 msgid "Обирай за настроєм"
 msgstr "Choose by mood"
 
-#: templates/pages/home.html:172
+#: templates/pages/home.html:174
 msgid "Популярні жанри"
 msgstr "Popular genres"
 
-#: templates/pages/home.html:175
+#: templates/pages/home.html:177
 msgid "Усі жанри"
 msgstr "All genres"
 
-#: templates/pages/home.html:206
+#: templates/pages/home.html:207
 msgid "Обирай пристрій"
 msgstr "Choose your device"
 
-#: templates/pages/home.html:207
+#: templates/pages/home.html:208
 msgid "Платформи"
 msgstr "Platforms"
 
-#: templates/pages/home.html:210 templates/products/product_list.html:52
+#: templates/pages/home.html:211 templates/products/product_list.html:52
 msgid "Усі платформи"
 msgstr "All platforms"
 
@@ -1276,6 +1251,55 @@ msgstr "Your profile was updated successfully."
 msgid "Пароль успішно змінено."
 msgstr "Your password was changed successfully."
 
+#~ msgid "Картка (тестова оплата)"
+#~ msgstr "Card (test payment)"
+
+#~ msgid "Оплата після обробки замовлення"
+#~ msgstr "Payment after order processing"
+
+#~ msgid "Тестовий баланс"
+#~ msgstr "Test balance"
+
+#~ msgid "Ім'я отримувача цифрового замовлення"
+#~ msgstr "Digital order recipient name"
+
+#~ msgid "Ключ буде надіслано після обробки замовлення."
+#~ msgstr "Your key will be sent after the order is processed."
+
+#~ msgid "Телефон для зв'язку щодо замовлення"
+#~ msgstr "Phone for order contact"
+
+#~ msgid "Регіон акаунта"
+#~ msgstr "Account region"
+
+#~ msgid "Дані для цифрової доставки"
+#~ msgstr "Digital delivery details"
+
+#~ msgid "Без фізичної доставки. Вкажіть платформу або примітку."
+#~ msgstr "No physical shipping. Enter a platform or note if needed."
+
+#~ msgid "Вкажіть ім'я та прізвище отримувача."
+#~ msgstr "Enter the recipient's first and last name."
+
+#~ msgid "Оплата при отриманні"
+#~ msgstr "Cash on delivery"
+
+#~ msgid "Ім'я отримувача"
+#~ msgstr "Recipient first name"
+
+#~ msgid "Прізвище отримувача"
+#~ msgstr "Recipient last name"
+
+#~ msgid "Без фізичної доставки"
+#~ msgstr "No physical shipping"
+
+#~ msgid ""
+#~ "Ключ буде надіслано після обробки замовлення. Платіжні дані не "
+#~ "запитуються та реальні кошти не списуються."
+#~ msgstr ""
+#~ "Your key will be sent after the order is processed. No payment details "
+#~ "are requested and no real funds are charged."
+
 #~ msgid "Позначити вибрані замовлення як відправлені"
 #~ msgstr "Mark selected orders as shipped"
 
@@ -1290,9 +1314,6 @@ msgstr "Your password was changed successfully."
 
 #~ msgid "Контактні дані"
 #~ msgstr "Contact details"
-
-#~ msgid "Тестова оплата"
-#~ msgstr "Test payment"
 
 #~ msgid "Вибрані ігри"
 #~ msgstr "Selected games"

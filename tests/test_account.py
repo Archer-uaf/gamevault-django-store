@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from orders.models import Order
+from orders.models import Order, OrderItem
+from products.models import Category, Product
 
 
 class AccountFlowTests(TestCase):
@@ -240,14 +241,46 @@ class AccountFlowTests(TestCase):
             username="other-player",
             password="StrongPassword123!",
         )
-        own_order = self.create_order(user=self.user, email="player@example.com")
-        other_order = self.create_order(user=other_user, email="other@example.com")
+        own_order = self.create_order(
+            user=self.user,
+            email="player@example.com",
+        )
+        other_order = self.create_order(
+            user=other_user,
+            email="other@example.com",
+        )
+
+        category = Category.objects.create(
+            name="Order History",
+            slug="order-history",
+        )
+        product = Product.objects.create(
+            name="Order History Game",
+            slug="order-history-game",
+            description="Game used by the order history test.",
+            price=Decimal("50.00"),
+            category=category,
+            platform=Product.Platform.PC,
+            stock=10,
+        )
+        OrderItem.objects.create(
+            order=own_order,
+            product=product,
+            quantity=2,
+            price=Decimal("50.00"),
+        )
+
         self.client.force_login(self.user)
 
         response = self.client.get(reverse("account:orders"))
 
         self.assertContains(response, f"Замовлення №{own_order.pk}")
-        self.assertContains(response, "XXXXX-XXXXX-XXXXX")
+        self.assertContains(response, product.name)
+        self.assertContains(
+            response,
+            "XXXXX-XXXXX-XXXXX",
+            count=2,
+        )
         self.assertNotContains(response, f"Замовлення №{other_order.pk}")
 
     def test_order_history_uses_digital_status_labels(self) -> None:

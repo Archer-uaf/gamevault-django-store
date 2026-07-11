@@ -385,10 +385,6 @@ class OrderAPITests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status_display"], "Ключ надіслано")
-        self.assertEqual(
-            response.json()["activation_key"],
-            "XXXXX-XXXXX-XXXXX",
-        )
 
     def test_order_detail_is_owner_only(self) -> None:
         other_order = self.create_order(user=self.other_user)
@@ -411,8 +407,11 @@ class OrderAPITests(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(
-            response.json()["activation_key"],
-            "XXXXX-XXXXX-XXXXX",
+            response.json()["items"][0]["activation_keys"],
+            [
+                "XXXXX-XXXXX-XXXXX",
+                "XXXXX-XXXXX-XXXXX",
+            ],
         )
         order = Order.objects.get()
         item = OrderItem.objects.get()

@@ -12,7 +12,6 @@ from orders.checkout import (
     ProductUnavailableError,
     create_order_from_items,
 )
-from orders.constants import DEMO_ACTIVATION_KEY
 from orders.models import Order, OrderItem
 
 
@@ -26,6 +25,13 @@ class OrderItemSerializer(serializers.ModelSerializer):
         decimal_places=2,
         read_only=True,
     )
+    activation_keys = serializers.SerializerMethodField(
+        label=_("Ключі активації"),
+    )
+
+    def get_activation_keys(self, obj: OrderItem) -> list[str]:
+        """Return one placeholder activation key per purchased unit."""
+        return list(obj.demo_activation_keys)
 
     class Meta:
         model = OrderItem
@@ -36,6 +42,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "quantity",
             "price",
             "total_price",
+            "activation_keys",
         )
         read_only_fields = fields
 
@@ -54,13 +61,6 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only=True,
         label=_("Спосіб оплати"),
     )
-    activation_key = serializers.SerializerMethodField(
-        label=_("Ключ активації"),
-    )
-
-    def get_activation_key(self, obj: Order) -> str:
-        """Return the shared placeholder key for demo orders."""
-        return DEMO_ACTIVATION_KEY
 
     class Meta:
         model = Order
@@ -77,7 +77,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "shipping_address",
             "payment_method",
             "payment_method_display",
-            "activation_key",
             "created_at",
             "items",
         )

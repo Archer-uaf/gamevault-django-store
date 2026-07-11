@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.translation import gettext as _
 
-from orders.constants import DEMO_ACTIVATION_KEY
 from orders.models import Order
 
 
@@ -42,32 +41,51 @@ def _send_order_email(
 
 
 def send_order_confirmation_email(order: Order) -> int:
-    """Send the demo activation key to the customer."""
+    """Send one demo activation key for every purchased unit."""
     subject = _("Підтвердження замовлення №%(number)s") % {
         "number": order.pk,
     }
-    message = "\n".join(
-        (
-            _("Дякуємо за замовлення в GameVault."),
+
+    message_lines = [
+        _("Дякуємо за замовлення в GameVault."),
+        "",
+        _("Номер замовлення: %(number)s") % {"number": order.pk},
+        _("Сума: ₴%(total)s") % {"total": order.total_price},
+        _("Статус: %(status)s")
+        % {"status": order.digital_status_display},
+        "",
+        _("Ключі активації:"),
+    ]
+
+    for item in order.items.select_related("product").all():
+        message_lines.append("")
+        message_lines.append(
+            f"{item.product.name} × {item.quantity}"
+        )
+
+        for number, key in enumerate(
+            item.demo_activation_keys,
+            start=1,
+        ):
+            message_lines.append(
+                f"{_('Ключ активації')} {number}: {key}"
+            )
+
+    message_lines.extend(
+        [
             "",
-            _("Номер замовлення: %(number)s") % {"number": order.pk},
-            _("Сума: ₴%(total)s") % {"total": order.total_price},
-            _("Статус: %(status)s")
-            % {"status": order.digital_status_display},
-            "",
-            f"{_('Ключ активації')}: {DEMO_ACTIVATION_KEY}",
             _(
-                "Ключ також доступний в історії замовлень. "
+                "Ключі також доступні в історії замовлень. "
                 "Фізична доставка не потрібна."
             ),
-        )
+        ]
     )
 
     return _send_order_email(
         order=order,
         notification_type="customer_confirmation",
         subject=subject,
-        message=message,
+        message="\n".join(message_lines),
         recipient_list=[order.email],
     )
 
@@ -78,7 +96,9 @@ def send_admin_order_notification_email(order: Order) -> int:
     if not admin_email:
         return 0
 
-    subject = _("Нове замовлення №%(number)s") % {"number": order.pk}
+    subject = _("Нове замовлення №%(number)s") % {
+        "number": order.pk,
+    }
     message = _(
         "У GameVault створено нове замовлення.\n\n"
         "Номер замовлення: %(number)s\n"

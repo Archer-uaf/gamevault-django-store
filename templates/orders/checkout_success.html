@@ -15,11 +15,21 @@
                     Замовлення №{{ number }} успішно створено.
                 {% endblocktrans %}
             </p>
-            <p>{% trans "Ваш тестовий ключ активації:" %}</p>
-            <div class="activation-key-panel">
-                <code class="activation-key-code">{{ demo_activation_key }}</code>
-                <small>{% trans "Це демонстраційний ключ для тестового замовлення." %}</small>
-            </div>
+            <p>{% trans "Ваші тестові ключі активації:" %}</p>
+
+            {% for item in order.items.all %}
+                {% for key in item.demo_activation_keys %}
+                    <div class="activation-key-panel">
+                        <code class="activation-key-code">{{ key }}</code>
+                        <small>
+                            {{ item.product.name }} —
+                            {% blocktrans with number=forloop.counter %}
+                                ключ №{{ number }}
+                            {% endblocktrans %}
+                        </small>
+                    </div>
+                {% endfor %}
+            {% endfor %}
             <div class="checkout-success-total">
                 <span>{% trans "Загальна сума" %}</span>
                 <strong>₴{{ order.total_price }}</strong>

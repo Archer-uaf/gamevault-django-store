@@ -14,7 +14,6 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import FormView, ListView, TemplateView
 
-from orders.constants import DEMO_ACTIVATION_KEY
 from orders.models import Order
 from users.forms import (
     AccountAuthenticationForm,
@@ -117,12 +116,6 @@ class OrderHistoryView(LoginRequiredMixin, ListView):
             .prefetch_related("items__product")
             .order_by("-created_at")
         )
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        """Expose the shared placeholder key to the history template."""
-        context = super().get_context_data(**kwargs)
-        context["demo_activation_key"] = DEMO_ACTIVATION_KEY
-        return context
 
 
 class AccountPasswordChangeView(LoginRequiredMixin, PasswordChangeView):

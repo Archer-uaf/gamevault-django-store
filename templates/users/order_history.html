@@ -33,10 +33,19 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                        <div class="order-activation-key">
-                            <span>{% trans "Ключ активації" %}</span>
-                            <code>{{ demo_activation_key }}</code>
-                        </div>
+                        {% for item in order.items.all %}
+                        {% for key in item.demo_activation_keys %}
+                            <div class="order-activation-key">
+                                <span>
+                                    {{ item.product.name }} —
+                                    {% blocktrans with number=forloop.counter %}
+                                        ключ №{{ number }}
+                                    {% endblocktrans %}
+                                </span>
+                                <code>{{ key }}</code>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
                         <footer>
                             <span>{% trans "Загальна сума" %}</span>
                             <strong>₴{{ order.total_price }}</strong>

@@ -7,6 +7,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from orders.constants import DEMO_ACTIVATION_KEY
+
 
 class Order(models.Model):
     """A snapshot of customer and digital delivery data for a purchase."""
@@ -138,3 +140,8 @@ class OrderItem(models.Model):
     @property
     def total_price(self) -> Decimal:
         return Decimal(str(self.price)) * self.quantity
+
+    @property
+    def demo_activation_keys(self) -> tuple[str, ...]:
+        """Return one demo activation key for every purchased unit."""
+        return (DEMO_ACTIVATION_KEY,) * self.quantity

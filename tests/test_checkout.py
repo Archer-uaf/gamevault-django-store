@@ -80,6 +80,10 @@ class CheckoutFlowTests(TestCase):
         self.assertIn(str(order.total_price), email.body)
         self.assertIn("Ключ активації", email.body)
         self.assertIn("XXXXX-XXXXX-XXXXX", email.body)
+        self.assertEqual(
+            email.body.count("XXXXX-XXXXX-XXXXX"),
+            2,
+        )
         self.assertIn("Фізична доставка не потрібна", email.body)
 
     @override_settings(ADMIN_EMAIL="admin@example.com")
@@ -285,8 +289,12 @@ class CheckoutFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "orders/checkout_success.html")
         self.assertContains(response, f"Замовлення №{order.pk}")
-        self.assertContains(response, "Ваш тестовий ключ активації")
-        self.assertContains(response, "XXXXX-XXXXX-XXXXX")
+        self.assertContains(response, "Ваші тестові ключі активації")
+        self.assertContains(
+            response,
+            "XXXXX-XXXXX-XXXXX",
+            count=2,
+        )
         self.assertContains(response, "₴180")
 
     def test_success_page_is_owner_only(self) -> None:
@@ -339,3 +347,45 @@ class CheckoutFlowTests(TestCase):
         self.assertContains(response, "Digital delivery")
         self.assertContains(response, "no real funds are charged")
         self.assertContains(response, "Confirm order")
+
+
+class OrderItemActivationKeyTests(TestCase):
+    def test_demo_keys_match_purchased_quantity(self) -> None:
+        category = Category.objects.create(
+            name="Keys",
+            slug="keys",
+        )
+        product = Product.objects.create(
+            name="Key Test Game",
+            slug="key-test-game",
+            description="Test game.",
+            price=Decimal("100.00"),
+            category=category,
+            platform=Product.Platform.PC,
+            stock=10,
+        )
+        order = Order.objects.create(
+            total_price=Decimal("300.00"),
+            first_name="",
+            last_name="",
+            email="keys@example.com",
+            phone="",
+            city="",
+            shipping_address="",
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
+        )
+        item = OrderItem.objects.create(
+            order=order,
+            product=product,
+            quantity=3,
+            price=Decimal("100.00"),
+        )
+
+        self.assertEqual(
+            item.demo_activation_keys,
+            (
+                "XXXXX-XXXXX-XXXXX",
+                "XXXXX-XXXXX-XXXXX",
+                "XXXXX-XXXXX-XXXXX",
+            ),
+        )

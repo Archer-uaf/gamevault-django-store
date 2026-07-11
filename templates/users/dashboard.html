@@ -18,7 +18,7 @@
             <p class="eyebrow">{% trans "Дані облікового запису" %}</p>
             <dl class="account-details">
                 <div>
-                    <dt>{% trans "Ім’я користувача" %}</dt>
+                    <dt>{% trans "Нікнейм" %}</dt>
                     <dd>{{ user.username }}</dd>
                 </div>
                 <div>
@@ -32,7 +32,7 @@
             <p class="eyebrow">{% trans "Швидкі дії" %}</p>
             <a href="{% url 'account:profile' %}">
                 <strong>{% trans "Редагувати профіль" %}</strong>
-                <span>{% trans "Оновити ім’я, контакти та адресу доставки." %}</span>
+                <span>{% trans "Оновити нікнейм та email." %}</span>
             </a>
             <a href="{% url 'account:orders' %}">
                 <strong>{% trans "Історія замовлень" %}</strong>

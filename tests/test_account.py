@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.urls import reverse
 
 from orders.models import Order
-from users.models import UserProfile
 
 
 class AccountFlowTests(TestCase):
@@ -42,6 +41,46 @@ class AccountFlowTests(TestCase):
             ).exists()
         )
         self.assertIn("_auth_user_id", self.client.session)
+
+    def test_register_rejects_existing_email(self) -> None:
+        response = self.client.post(
+            reverse("account:register"),
+            {
+                "username": "new-player",
+                "email": "player@example.com",
+                "password1": "AnotherStrongPassword123!",
+                "password2": "AnotherStrongPassword123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Ця електронна пошта вже використовується.",
+        )
+        self.assertFalse(
+            get_user_model().objects.filter(username="new-player").exists()
+        )
+
+    def test_register_rejects_existing_email_case_insensitive(self) -> None:
+        response = self.client.post(
+            reverse("account:register"),
+            {
+                "username": "new-player",
+                "email": "PLAYER@EXAMPLE.COM",
+                "password1": "AnotherStrongPassword123!",
+                "password2": "AnotherStrongPassword123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Ця електронна пошта вже використовується.",
+        )
+        self.assertFalse(
+            get_user_model().objects.filter(username="new-player").exists()
+        )
 
     def test_login_page_opens(self) -> None:
         response = self.client.get(reverse("account:login"))
@@ -106,34 +145,76 @@ class AccountFlowTests(TestCase):
         response = self.client.post(
             reverse("account:profile"),
             {
-                "first_name": "Олена",
-                "last_name": "Коваль",
-                "email": "olena@example.com",
-                "phone": "+380501234567",
-                "city": "Київ",
-                "address": "вул. Хрещатик, 1",
+                "username": "digital-player",
+                "email": "digital-player@example.com",
             },
         )
 
         self.assertRedirects(response, reverse("account:profile"))
         self.user.refresh_from_db()
-        profile = UserProfile.objects.get(user=self.user)
-        self.assertEqual(self.user.first_name, "Олена")
-        self.assertEqual(self.user.last_name, "Коваль")
-        self.assertEqual(self.user.email, "olena@example.com")
-        self.assertEqual(profile.phone, "+380501234567")
-        self.assertEqual(profile.city, "Київ")
-        self.assertEqual(profile.address, "вул. Хрещатик, 1")
+        self.assertEqual(self.user.username, "digital-player")
+        self.assertEqual(self.user.email, "digital-player@example.com")
 
-    def test_profile_page_displays_updated_data(self) -> None:
+    def test_profile_update_allows_current_email(self) -> None:
         self.client.force_login(self.user)
-        profile = UserProfile.objects.get(user=self.user)
-        profile.city = "Львів"
-        profile.save(update_fields=("city",))
+
+        response = self.client.post(
+            reverse("account:profile"),
+            {
+                "username": "player",
+                "email": "player@example.com",
+            },
+        )
+
+        self.assertRedirects(response, reverse("account:profile"))
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "player@example.com")
+
+    def test_profile_update_rejects_email_used_by_another_user(self) -> None:
+        get_user_model().objects.create_user(
+            username="other-player",
+            email="other@example.com",
+            password="StrongPassword123!",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("account:profile"),
+            {
+                "username": "player",
+                "email": "OTHER@EXAMPLE.COM",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Ця електронна пошта вже використовується.",
+        )
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "player@example.com")
+
+    def test_profile_page_hides_physical_delivery_fields(self) -> None:
+        self.client.force_login(self.user)
 
         response = self.client.get(reverse("account:profile"))
 
-        self.assertContains(response, "Львів")
+        self.assertContains(response, "Нікнейм")
+        self.assertContains(response, "Електронна пошта")
+        for field_name in ("phone", "city", "address", "first_name", "last_name"):
+            self.assertNotContains(response, f'name="{field_name}"')
+        self.assertNotContains(response, "адресу для майбутніх замовлень")
+
+    def test_profile_page_displays_updated_data(self) -> None:
+        self.client.force_login(self.user)
+        self.user.username = "updated-player"
+        self.user.email = "updated-player@example.com"
+        self.user.save(update_fields=("username", "email"))
+
+        response = self.client.get(reverse("account:profile"))
+
+        self.assertContains(response, "updated-player")
+        self.assertContains(response, "updated-player@example.com")
 
     def test_profile_page_can_be_rendered_in_english(self) -> None:
         self.client.force_login(self.user)
@@ -166,7 +247,19 @@ class AccountFlowTests(TestCase):
         response = self.client.get(reverse("account:orders"))
 
         self.assertContains(response, f"Замовлення №{own_order.pk}")
+        self.assertContains(response, "XXXXX-XXXXX-XXXXX")
         self.assertNotContains(response, f"Замовлення №{other_order.pk}")
+
+    def test_order_history_uses_digital_status_labels(self) -> None:
+        order = self.create_order(user=self.user, email="player@example.com")
+        order.status = Order.Status.SHIPPED
+        order.save(update_fields=("status",))
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("account:orders"))
+
+        self.assertContains(response, "Ключ надіслано")
+        self.assertNotContains(response, "Відправлено")
 
     def test_password_change_page_requires_login(self) -> None:
         response = self.client.get(reverse("account:password"))
@@ -217,5 +310,5 @@ class AccountFlowTests(TestCase):
             phone="+380000000000",
             city="Kyiv",
             shipping_address="Test street, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )

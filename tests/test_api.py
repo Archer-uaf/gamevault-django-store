@@ -30,6 +30,7 @@ class CatalogAPITests(TestCase):
             category=self.rpg,
             price=Decimal("100.00"),
             description="Searchable kingdom adventure.",
+            platform=Product.Platform.PLAYSTATION,
         )
         self.inactive_product = self.create_product(
             name="Hidden API Game",
@@ -48,6 +49,16 @@ class CatalogAPITests(TestCase):
         self.assertIn(self.first_product.pk, product_ids)
         self.assertIn(self.second_product.pk, product_ids)
         self.assertNotIn(self.inactive_product.pk, product_ids)
+
+    def test_products_list_without_platform_returns_default_list(self) -> None:
+        response = self.client.get(reverse("api:product-list"))
+
+        self.assertEqual(response.status_code, 200)
+        product_ids = {product["id"] for product in response.json()["results"]}
+        self.assertEqual(
+            product_ids,
+            {self.first_product.pk, self.second_product.pk},
+        )
 
     def test_product_detail_is_public(self) -> None:
         response = self.client.get(
@@ -108,6 +119,101 @@ class CatalogAPITests(TestCase):
             self.first_product.pk,
         )
 
+    def test_product_price_ordering_uses_discounted_final_price(self) -> None:
+        price_sort_category = Category.objects.create(
+            name="API Price Sorting",
+            slug="api-price-sorting",
+        )
+        discounted_product = self.create_product(
+            name="Discounted API Expensive Game",
+            slug="discounted-api-expensive-game",
+            category=price_sort_category,
+            price=Decimal("1000.00"),
+            discount_percent=50,
+        )
+        regular_product = self.create_product(
+            name="Regular API Cheaper Game",
+            slug="regular-api-cheaper-game",
+            category=price_sort_category,
+            price=Decimal("700.00"),
+        )
+
+        response = self.client.get(
+            reverse("api:product-list"),
+            {"category": price_sort_category.slug, "ordering": "price"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [product["id"] for product in response.json()["results"]],
+            [discounted_product.pk, regular_product.pk],
+        )
+
+    def test_product_price_desc_ordering_uses_discounted_final_price(
+        self,
+    ) -> None:
+        price_sort_category = Category.objects.create(
+            name="API Price Sorting Desc",
+            slug="api-price-sorting-desc",
+        )
+        discounted_product = self.create_product(
+            name="Discounted API Expensive Game Desc",
+            slug="discounted-api-expensive-game-desc",
+            category=price_sort_category,
+            price=Decimal("1000.00"),
+            discount_percent=50,
+        )
+        regular_product = self.create_product(
+            name="Regular API Cheaper Game Desc",
+            slug="regular-api-cheaper-game-desc",
+            category=price_sort_category,
+            price=Decimal("700.00"),
+        )
+
+        response = self.client.get(
+            reverse("api:product-list"),
+            {"category": price_sort_category.slug, "ordering": "-price"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [product["id"] for product in response.json()["results"]],
+            [regular_product.pk, discounted_product.pk],
+        )
+
+    def test_product_list_filters_by_platform(self) -> None:
+        pc_response = self.client.get(
+            reverse("api:product-list"),
+            {"platform": Product.Platform.PC},
+        )
+        playstation_response = self.client.get(
+            reverse("api:product-list"),
+            {"platform": Product.Platform.PLAYSTATION},
+        )
+
+        self.assertEqual(pc_response.status_code, 200)
+        self.assertEqual(playstation_response.status_code, 200)
+        self.assertEqual(
+            [product["id"] for product in pc_response.json()["results"]],
+            [self.first_product.pk],
+        )
+        self.assertEqual(
+            [
+                product["id"]
+                for product in playstation_response.json()["results"]
+            ],
+            [self.second_product.pk],
+        )
+
+    def test_product_list_rejects_invalid_platform_filter(self) -> None:
+        response = self.client.get(
+            reverse("api:product-list"),
+            {"platform": "steam-deck"},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("platform", response.json())
+
     def test_product_popularity_sort_uses_review_count(self) -> None:
         first_user = get_user_model().objects.create_user(username="api-reviewer-1")
         second_user = get_user_model().objects.create_user(username="api-reviewer-2")
@@ -151,6 +257,8 @@ class CatalogAPITests(TestCase):
         price: Decimal,
         description: str = "API product description.",
         is_active: bool = True,
+        platform: str = Product.Platform.PC,
+        discount_percent: int = 0,
     ) -> Product:
         return Product.objects.create(
             name=name,
@@ -158,9 +266,10 @@ class CatalogAPITests(TestCase):
             description=description,
             price=price,
             category=category,
-            platform=Product.Platform.PC,
+            platform=platform,
             stock=10,
             is_active=is_active,
+            discount_percent=discount_percent,
         )
 
 
@@ -239,6 +348,16 @@ class OrderAPITests(TestCase):
             platform=Product.Platform.PC,
             stock=5,
         )
+        self.inactive_product = Product.objects.create(
+            name="Inactive API Order Game",
+            slug="inactive-api-order-game",
+            description="A hidden game that cannot be ordered.",
+            price=Decimal("80.00"),
+            category=category,
+            platform=Product.Platform.PC,
+            stock=5,
+            is_active=False,
+        )
 
     def test_orders_list_requires_authentication(self) -> None:
         response = self.client.get(reverse("api:order-list"))
@@ -255,6 +374,21 @@ class OrderAPITests(TestCase):
         order_ids = {order["id"] for order in response.json()["results"]}
         self.assertIn(own_order.pk, order_ids)
         self.assertNotIn(other_order.pk, order_ids)
+
+    def test_order_api_uses_digital_status_labels(self) -> None:
+        order = self.create_order(user=self.user)
+        order.status = Order.Status.SHIPPED
+        order.save(update_fields=("status",))
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.get(reverse("api:order-detail", args=[order.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status_display"], "Ключ надіслано")
+        self.assertEqual(
+            response.json()["activation_key"],
+            "XXXXX-XXXXX-XXXXX",
+        )
 
     def test_order_detail_is_owner_only(self) -> None:
         other_order = self.create_order(user=self.other_user)
@@ -276,13 +410,68 @@ class OrderAPITests(TestCase):
         )
 
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response.json()["activation_key"],
+            "XXXXX-XXXXX-XXXXX",
+        )
         order = Order.objects.get()
         item = OrderItem.objects.get()
         self.assertEqual(order.user, self.user)
+        self.assertEqual(order.email, "olena@example.com")
+        self.assertEqual(order.first_name, "")
+        self.assertEqual(order.last_name, "")
+        self.assertEqual(order.phone, "")
+        self.assertEqual(order.city, "")
+        self.assertEqual(order.shipping_address, "")
+        self.assertEqual(
+            order.payment_method,
+            Order.PaymentMethod.BANK_CARD_TEST,
+        )
         self.assertEqual(order.total_price, Decimal("180.00"))
         self.assertEqual(item.product, self.product)
         self.assertEqual(item.quantity, 2)
         self.assertEqual(item.price, Decimal("90.00"))
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock, 3)
+
+    def test_api_accepts_all_test_payment_methods(self) -> None:
+        self.client.force_authenticate(user=self.user)
+
+        for payment_method in (
+            Order.PaymentMethod.BANK_CARD_TEST,
+            Order.PaymentMethod.CRYPTO_TRC20_TEST,
+            Order.PaymentMethod.GOOGLE_PAY_TEST,
+        ):
+            with self.subTest(payment_method=payment_method):
+                payload = self.order_payload(quantity=1)
+                payload["payment_method"] = payment_method
+
+                response = self.client.post(
+                    reverse("api:order-list"),
+                    payload,
+                    format="json",
+                )
+
+                self.assertEqual(response.status_code, 201)
+                self.assertEqual(
+                    Order.objects.latest("pk").payment_method,
+                    payment_method,
+                )
+
+    def test_api_rejects_legacy_payment_method(self) -> None:
+        self.client.force_authenticate(user=self.user)
+        payload = self.order_payload(quantity=1)
+        payload["payment_method"] = "card"
+
+        response = self.client.post(
+            reverse("api:order-list"),
+            payload,
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("payment_method", response.json())
+        self.assertFalse(Order.objects.exists())
 
     def test_valid_api_order_decreases_stock(self) -> None:
         self.client.force_authenticate(user=self.user)
@@ -310,15 +499,55 @@ class OrderAPITests(TestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock, 5)
 
+    def test_cannot_order_inactive_product(self) -> None:
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            reverse("api:order-list"),
+            self.order_payload_for_product(
+                quantity=1,
+                product_id=self.inactive_product.pk,
+            ),
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("items", response.json())
+        self.assertFalse(Order.objects.exists())
+        self.inactive_product.refresh_from_db()
+        self.assertEqual(self.inactive_product.stock, 5)
+
+    def test_cannot_create_order_with_empty_items(self) -> None:
+        self.client.force_authenticate(user=self.user)
+        payload = self.order_payload(quantity=1)
+        payload["items"] = []
+
+        response = self.client.post(
+            reverse("api:order-list"),
+            payload,
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("items", response.json())
+        self.assertFalse(Order.objects.exists())
+
     def order_payload(self, *, quantity: int) -> dict[str, Any]:
+        return self.order_payload_for_product(
+            product_id=self.product.pk,
+            quantity=quantity,
+        )
+
+    def order_payload_for_product(
+        self,
+        *,
+        product_id: int,
+        quantity: int,
+    ) -> dict[str, Any]:
         return {
-            "items": [{"product_id": self.product.pk, "quantity": quantity}],
-            "full_name": "Олена Коваль",
+            "items": [{"product_id": product_id, "quantity": quantity}],
             "email": "olena@example.com",
-            "phone": "+380501234567",
-            "city": "Київ",
-            "address": "вул. Хрещатик, 1",
-            "payment_method": Order.PaymentMethod.CARD,
+            "payment_method": Order.PaymentMethod.BANK_CARD_TEST,
         }
 
     @staticmethod
@@ -332,7 +561,7 @@ class OrderAPITests(TestCase):
             phone="+380000000000",
             city="Kyiv",
             shipping_address="Test street, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )
 
 
@@ -461,7 +690,7 @@ class ReviewAPITests(TestCase):
             phone="+380000000000",
             city="Kyiv",
             shipping_address="Test street, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )
         OrderItem.objects.create(
             order=order,
@@ -482,6 +711,21 @@ class OpenAPIEndpointTests(TestCase):
         response = self.client.get(reverse("schema"))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_schema_documents_digital_payment_methods(self) -> None:
+        response = self.client.get(reverse("schema"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "bank_card_test")
+        self.assertContains(response, "crypto_trc20_test")
+        self.assertContains(response, "google_pay_test")
+
+    def test_schema_documents_product_platform_filter(self) -> None:
+        response = self.client.get(reverse("schema"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "name: platform")
+        self.assertContains(response, "in: query")
 
     def test_swagger_endpoint_works(self) -> None:
         response = self.client.get(reverse("swagger-ui"))

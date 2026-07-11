@@ -30,7 +30,15 @@ class Review(models.Model):
             models.UniqueConstraint(
                 fields=("product", "user"),
                 name="unique_review_product_user",
-            )
+            ),
+            models.CheckConstraint(
+                condition=models.Q(rating__gte=1),
+                name="review_rating_min",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(rating__lte=5),
+                name="review_rating_max",
+            ),
         ]
         indexes = [
             models.Index(fields=("product",), name="review_product_idx"),

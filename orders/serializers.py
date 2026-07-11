@@ -1,14 +1,19 @@
 """Serializers for authenticated API order creation and history."""
 
-from decimal import Decimal
 from typing import Any
 
-from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from orders.checkout import (
+    EmptyCartError,
+    InsufficientStockError,
+    OrderLine,
+    ProductUnavailableError,
+    create_order_from_items,
+)
+from orders.constants import DEMO_ACTIVATION_KEY
 from orders.models import Order, OrderItem
-from products.models import Product
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -40,13 +45,22 @@ class OrderSerializer(serializers.ModelSerializer):
 
     items = OrderItemSerializer(many=True, read_only=True)
     status_display = serializers.CharField(
-        source="get_status_display",
+        source="digital_status_display",
         read_only=True,
+        label=_("Статус цифрового замовлення"),
     )
     payment_method_display = serializers.CharField(
-        source="get_payment_method_display",
+        source="digital_payment_method_display",
         read_only=True,
+        label=_("Спосіб оплати"),
     )
+    activation_key = serializers.SerializerMethodField(
+        label=_("Ключ активації"),
+    )
+
+    def get_activation_key(self, obj: Order) -> str:
+        """Return the shared placeholder key for demo orders."""
+        return DEMO_ACTIVATION_KEY
 
     class Meta:
         model = Order
@@ -63,6 +77,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "shipping_address",
             "payment_method",
             "payment_method_display",
+            "activation_key",
             "created_at",
             "items",
         )
@@ -77,24 +92,14 @@ class OrderCreateItemSerializer(serializers.Serializer):
 
 
 class OrderCreateSerializer(serializers.Serializer):
-    """Validate and atomically create an authenticated user's order."""
+    """Validate and atomically create an authenticated digital order."""
 
     items = OrderCreateItemSerializer(many=True, allow_empty=False)
-    full_name = serializers.CharField(max_length=241)
-    email = serializers.EmailField()
-    phone = serializers.CharField(max_length=30)
-    city = serializers.CharField(max_length=120)
-    address = serializers.CharField()
-    payment_method = serializers.ChoiceField(choices=Order.PaymentMethod.choices)
-
-    def validate_full_name(self, value: str) -> str:
-        """Require both a first and last name for the order snapshot."""
-        full_name = " ".join(value.split())
-        if len(full_name.split(maxsplit=1)) < 2:
-            raise serializers.ValidationError(
-                _("Вкажіть ім’я та прізвище.")
-            )
-        return full_name
+    email = serializers.EmailField(label=_("Email для отримання ключа"))
+    payment_method = serializers.ChoiceField(
+        choices=Order.PaymentMethod.choices,
+        label=_("Спосіб оплати"),
+    )
 
     def validate_items(self, value: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Reject duplicate product ids in one order payload."""
@@ -109,68 +114,49 @@ class OrderCreateSerializer(serializers.Serializer):
         return value
 
     def create(self, validated_data: dict[str, Any]) -> Order:
-        """Lock products, validate stock, create snapshots, and decrement stock."""
+        """Create an order through the shared checkout service."""
         request = self.context["request"]
-        user = request.user
         item_data = validated_data.pop("items")
-        first_name, last_name = validated_data.pop("full_name").split(maxsplit=1)
-        address = validated_data.pop("address")
-        product_ids = [item["product_id"] for item in item_data]
-
-        with transaction.atomic():
-            products = list(
-                Product.objects.select_for_update().filter(
-                    pk__in=product_ids,
-                    is_active=True,
-                )
+        customer_data = {
+            "first_name": "",
+            "last_name": "",
+            "email": str(validated_data["email"]),
+            "phone": "",
+            "city": "",
+            "shipping_address": "",
+            "payment_method": str(validated_data["payment_method"]),
+        }
+        items = [
+            OrderLine(
+                product_id=int(item["product_id"]),
+                quantity=int(item["quantity"]),
             )
-            products_by_id = {int(product.pk): product for product in products}
-            if products_by_id.keys() != set(product_ids):
-                raise serializers.ValidationError(
-                    {"items": _("Один або кілька товарів недоступні.")}
-                )
+            for item in item_data
+        ]
 
-            total_price = Decimal("0.00")
-            order_items: list[OrderItem] = []
-            for item in item_data:
-                product = products_by_id[item["product_id"]]
-                quantity = item["quantity"]
-                if product.stock < quantity:
-                    raise serializers.ValidationError(
-                        {
-                            "items": _(
-                                "Недостатньо товару «%(product)s» на складі."
-                            )
-                            % {"product": product.name}
-                        }
-                    )
-
-                unit_price = product.final_price
-                total_price += unit_price * quantity
-                product.stock -= quantity
-                order_items.append(
-                    OrderItem(
-                        product=product,
-                        quantity=quantity,
-                        price=unit_price,
-                    )
-                )
-
-            order = Order.objects.create(
-                user=user,
-                total_price=total_price,
-                first_name=first_name,
-                last_name=last_name,
-                shipping_address=address,
-                **validated_data,
+        try:
+            return create_order_from_items(
+                items=items,
+                customer_data=customer_data,
+                user=request.user,
             )
-            for order_item in order_items:
-                order_item.order = order
-            OrderItem.objects.bulk_create(order_items)
-            for product in products:
-                product.save(update_fields=("stock", "updated_at"))
-
-        return order
+        except EmptyCartError as error:
+            raise serializers.ValidationError(
+                {"items": _("Список товарів не може бути порожнім.")}
+            ) from error
+        except ProductUnavailableError as error:
+            raise serializers.ValidationError(
+                {"items": _("Один або кілька товарів недоступні.")}
+            ) from error
+        except InsufficientStockError as error:
+            raise serializers.ValidationError(
+                {
+                    "items": _(
+                        "Недостатньо товару «%(product)s» на складі."
+                    )
+                    % {"product": error.product_name}
+                }
+            ) from error
 
 
 class CartAddItemSerializer(serializers.Serializer):

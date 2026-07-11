@@ -8,13 +8,18 @@
     <div class="container">
         <div class="checkout-success-card">
             <span class="checkout-success-icon" aria-hidden="true">✓</span>
-            <p class="eyebrow">{% trans "Замовлення прийнято" %}</p>
+            <p class="eyebrow">{% trans "Цифрове замовлення прийнято" %}</p>
             <h1>{% trans "Дякуємо за покупку!" %}</h1>
             <p>
                 {% blocktrans with number=order.pk trimmed %}
                     Замовлення №{{ number }} успішно створено.
                 {% endblocktrans %}
             </p>
+            <p>{% trans "Ваш тестовий ключ активації:" %}</p>
+            <div class="activation-key-panel">
+                <code class="activation-key-code">{{ demo_activation_key }}</code>
+                <small>{% trans "Це демонстраційний ключ для тестового замовлення." %}</small>
+            </div>
             <div class="checkout-success-total">
                 <span>{% trans "Загальна сума" %}</span>
                 <strong>₴{{ order.total_price }}</strong>

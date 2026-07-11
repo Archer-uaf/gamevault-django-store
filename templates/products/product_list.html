@@ -124,6 +124,8 @@
                             <a href="{{ product.get_absolute_url }}" class="catalog-card__cover">
                                 {% if product.image %}
                                     <img src="{{ product.image.url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
+                                {% elif product.cover_url %}
+                                    <img src="{{ product.cover_url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                                 {% else %}
                                     <div class="game-placeholder" aria-hidden="true">
                                         <span>{{ product.get_platform_display }}</span>
@@ -150,12 +152,8 @@
                                         <span>{% trans "Немає оцінок" %}</span>
                                     {% endif %}
                                 </div>
-                                <div class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
-                                    {% if product.is_in_stock %}
-                                        {% blocktrans with stock=product.stock %}В наявності: {{ stock }}{% endblocktrans %}
-                                    {% else %}
-                                        {% trans "Немає в наявності" %}
-                                    {% endif %}
+                                <div class="stock-state stock-state--{{ product.stock_status }}">
+                                    {{ product.stock_status_label }}
                                 </div>
                                 <div class="card-footer-row">
                                     <div class="price-block">
@@ -186,12 +184,14 @@
                         {% endif %}
 
                         <div class="pagination__pages">
-                            {% for page_number in page_obj.paginator.page_range %}
-                                {% if page_number == page_obj.number %}
-                                    <span class="pagination__current">{{ page_number }}</span>
+                            {% for page_item in page_window %}
+                                {% if page_item == "ellipsis" %}
+                                    <span class="pagination__ellipsis" aria-hidden="true">…</span>
+                                {% elif page_item == page_obj.number %}
+                                    <span class="pagination__current" aria-current="page">{{ page_item }}</span>
                                 {% else %}
-                                    <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_number }}">
-                                        {{ page_number }}
+                                    <a href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_item }}">
+                                        {{ page_item }}
                                     </a>
                                 {% endif %}
                             {% endfor %}

@@ -14,6 +14,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import FormView, ListView, TemplateView
 
+from orders.constants import DEMO_ACTIVATION_KEY
 from orders.models import Order
 from users.forms import (
     AccountAuthenticationForm,
@@ -21,7 +22,6 @@ from users.forms import (
     ProfileUpdateForm,
     RegistrationForm,
 )
-from users.models import UserProfile
 
 
 class RegisterView(FormView):
@@ -74,7 +74,7 @@ class AccountLogoutView(LoginRequiredMixin, TemplateView):
     ) -> HttpResponse:
         logout(request)
         messages.success(request, _("Ви успішно вийшли."))
-        return redirect("home")
+        return redirect("/")
 
 
 class AccountDashboardView(LoginRequiredMixin, TemplateView):
@@ -84,7 +84,7 @@ class AccountDashboardView(LoginRequiredMixin, TemplateView):
 
 
 class AccountProfileView(LoginRequiredMixin, FormView):
-    """Edit the current user's account and delivery details."""
+    """Edit the current user's digital account identity."""
 
     template_name = "users/profile.html"
     form_class = ProfileUpdateForm
@@ -92,8 +92,7 @@ class AccountProfileView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
-        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
-        kwargs.update({"user": self.request.user, "instance": profile})
+        kwargs.update({"user": self.request.user})
         return kwargs
 
     def form_valid(self, form: ProfileUpdateForm) -> HttpResponse:
@@ -118,6 +117,12 @@ class OrderHistoryView(LoginRequiredMixin, ListView):
             .prefetch_related("items__product")
             .order_by("-created_at")
         )
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        """Expose the shared placeholder key to the history template."""
+        context = super().get_context_data(**kwargs)
+        context["demo_activation_key"] = DEMO_ACTIVATION_KEY
+        return context
 
 
 class AccountPasswordChangeView(LoginRequiredMixin, PasswordChangeView):

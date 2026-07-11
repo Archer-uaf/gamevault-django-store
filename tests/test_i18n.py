@@ -1,6 +1,9 @@
 import pytest
+from django.core.management import call_command
 from django.test import Client
 from django.urls import reverse
+
+pytestmark = pytest.mark.django_db
 
 
 def test_home_page_uses_ukrainian_by_default(client: Client) -> None:
@@ -30,7 +33,23 @@ def test_home_page_can_be_rendered_in_english(client: Client) -> None:
     assert "Footer navigation" in content
 
 
-@pytest.mark.django_db
+def test_home_hot_deals_hero_can_be_rendered_in_english(client: Client) -> None:
+    call_command("seed_demo_games", "--reset", verbosity=0)
+
+    response = client.get("/", HTTP_ACCEPT_LANGUAGE="en")
+
+    assert response.status_code == 200
+    content = response.content.decode()
+
+    assert "Hot deals" in content
+    assert "Grab them while they are hot!" in content
+    assert "An open-world RPG about a mercenary in Night City" in content
+    assert "Discounted price" in content
+    assert "View details" in content
+    assert "Хапай поки гаряче!" not in content
+    assert "Відкрита RPG про найманця у Найт-Сіті" not in content
+
+
 def test_catalog_page_can_be_rendered_in_english(client: Client) -> None:
     response = client.get(
         reverse("products:product_list"),

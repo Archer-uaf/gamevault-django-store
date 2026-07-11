@@ -1,38 +1,48 @@
-# План проекта GameVault
+# GameVault project plan
 
-Проект развивается небольшими этапами. Каждый этап реализуется и проверяется отдельно.
+GameVault was developed as a staged educational Django/DRF digital game store. The stages below describe the completed roadmap and the boundaries used during implementation.
 
-## Этап 1. Каркас проекта
+## Completed stages
 
-- Django project `config`.
-- Приложения `products`, `orders`, `users`, `reviews`.
-- PostgreSQL, Docker Compose и переменные окружения.
-- Базовая конфигурация DRF, JWT, django-filter и drf-spectacular.
-- Инструменты pytest, flake8 и mypy.
-- Эксплуатационная документация.
+1. Project foundation: Django project, application layout, Docker Compose, PostgreSQL, environment configuration, and quality tooling.
+2. Catalog domain: categories, products, platforms, prices, discounts, stock, product images, cover URLs, indexes, validators, and DB constraints.
+3. Django admin: product, category, order, review, profile, and user management.
+4. Storefront catalog: list page, search, filters, platform filter, sorting, pagination, and product detail pages.
+5. Demo catalog: real-game seed data, localized descriptions, external cover URLs, Steam UA price snapshot, genre/platform sections, and hot deals hero.
+6. Session cart: add, update, remove, totals, discounts, and stock validation.
+7. Checkout and orders: shared order creation service, atomic stock decrease, digital key delivery wording, user feedback, and order history.
+8. Account area: registration, login, logout, profile editing, dashboard, order history, and password changes.
+9. Reviews: verified-purchase review policy in web and API flows.
+10. REST API: product/category endpoints, cart endpoints, order endpoints, review endpoints, permissions, filtering, and JWT authentication.
+11. OpenAPI: drf-spectacular schema and Swagger UI.
+12. Internationalization: Ukrainian source UI and English gettext translations.
+13. Tests and quality: pytest coverage for core flows, flake8, mypy, Django checks, migration checks, and schema validation.
+14. Documentation: README, feature checklist, and workflow notes.
 
-Результат этапа: проект запускается, системная проверка и стандартные миграции проходят.
-Модели предметной области и бизнес-логика не входят в этап.
+## Current project scope
 
-## Последующие этапы
+Implemented:
 
-1. Модели каталога и миграции.
-2. Настройка Django admin.
-3. Каталог: список, поиск, фильтрация, сортировка и пагинация.
-4. Страница видеоигры.
-5. Корзина на Django sessions.
-6. Checkout, заказ и уменьшение остатков в транзакции.
-7. Регистрация, профиль и история заказов.
-8. Отзывы и рейтинг.
-9. REST API и permissions.
-10. JWT и OpenAPI-документация API.
-11. Расширение тестов, линтинг и типизация.
-12. Финализация README и проверка сборки.
+- Digital video game storefront.
+- Web catalog, cart, checkout, account, orders, and reviews.
+- REST API with JWT and OpenAPI documentation.
+- PostgreSQL/Docker development setup.
+- Demo catalog suitable for portfolio screenshots.
+- Quality checks suitable for an educational Django/DRF project.
 
-## Принципы планирования
+Intentionally deferred:
 
-- Один этап не должен скрыто реализовывать следующий.
-- Изменения моделей всегда сопровождаются миграциями.
-- Бизнес-логика сопровождается минимальным набором тестов.
-- Изменения запуска, структуры и публичного API отражаются в документации.
-- После завершённого логического этапа допускается один локальный commit.
+- Real payment gateway integration.
+- Production SMTP setup.
+- External hosting and production infrastructure.
+- Advanced fulfillment automation.
+- GraphQL, background workers, Redis, and frontend SPA rewrites.
+
+## Planning principles
+
+- Keep each change small and testable.
+- Model changes include migrations.
+- Business rules live in services or models rather than templates.
+- Shared behavior between web and API flows should not be duplicated.
+- Public documentation should describe implemented behavior only.
+- UI text should remain Ukrainian and English, with Ukrainian source strings.

@@ -7,7 +7,7 @@
 <section class="product-detail-section">
     <div class="container">
         <nav class="breadcrumbs" aria-label="{% trans 'Навігаційний шлях' %}">
-            <a href="{% url 'home' %}">{% trans "Головна" %}</a>
+            <a href="/">{% trans "Головна" %}</a>
             <span>›</span>
             <a href="{% url 'products:product_list' %}">{% trans "Ігри" %}</a>
             <span>›</span>
@@ -18,6 +18,8 @@
             <div class="detail-cover">
                 {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
+                {% elif product.cover_url %}
+                    <img src="{{ product.cover_url }}" alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                 {% else %}
                     <div class="detail-placeholder" aria-hidden="true">
                         <span>{{ product.get_platform_display }}</span>
@@ -48,7 +50,7 @@
                     {% endif %}
                 </div>
 
-                <p class="detail-description">{{ product.description }}</p>
+                <p class="detail-description">{{ product.localized_description }}</p>
 
                 {% trans "Не вказано" as not_specified %}
                 <dl class="game-specs">
@@ -69,12 +71,8 @@
                                 <strong>₴{{ product.price }}</strong>
                             {% endif %}
                         </div>
-                        <p class="stock-state {% if not product.is_in_stock %}stock-state--empty{% endif %}">
-                            {% if product.is_in_stock %}
-                                {% blocktrans with stock=product.stock %}В наявності: {{ stock }}{% endblocktrans %}
-                            {% else %}
-                                {% trans "Немає в наявності" %}
-                            {% endif %}
+                        <p class="stock-state stock-state--{{ product.stock_status }}">
+                            {{ product.stock_status_label }}
                         </p>
                     </div>
                     {% if product.is_in_stock %}
@@ -213,6 +211,8 @@
                     <a href="{{ related_product.get_absolute_url }}" class="related-card__visual">
                         {% if related_product.image %}
                             <img src="{{ related_product.image.url }}" alt="{% blocktrans with name=related_product.name %}Обкладинка {{ name }}{% endblocktrans %}">
+                        {% elif related_product.cover_url %}
+                            <img src="{{ related_product.cover_url }}" alt="{% blocktrans with name=related_product.name %}Обкладинка {{ name }}{% endblocktrans %}">
                         {% else %}
                             <div class="game-placeholder" aria-hidden="true">
                                 <span>{{ related_product.get_platform_display }}</span>

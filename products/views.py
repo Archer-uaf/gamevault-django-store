@@ -14,14 +14,135 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from products.models import Category, Product
+from products.querysets import EFFECTIVE_PRICE_ANNOTATION, with_effective_price
 from reviews.forms import ReviewForm
 from reviews.models import Review
 from reviews.services import user_has_purchased_product
 
 
+HOME_GENRE_CARDS = (
+    {
+        "slug": "action",
+        "label": _("Екшн"),
+        "icon": "images/categories/action.svg",
+        "class": "action",
+    },
+    {
+        "slug": "rpg",
+        "label": "RPG",
+        "icon": "images/categories/rpg.svg",
+        "class": "rpg",
+    },
+    {
+        "slug": "adventure",
+        "label": _("Пригоди"),
+        "icon": "images/categories/adventure.svg",
+        "class": "adventure",
+    },
+    {
+        "slug": "horror",
+        "label": _("Горор"),
+        "icon": "images/categories/horror.svg",
+        "class": "horror",
+    },
+    {
+        "slug": "strategy",
+        "label": _("Стратегії"),
+        "icon": "images/categories/strategy.svg",
+        "class": "strategy",
+    },
+    {
+        "slug": "racing",
+        "label": _("Гонки"),
+        "icon": "images/categories/racing.svg",
+        "class": "racing",
+    },
+    {
+        "slug": "indie",
+        "label": _("Інді"),
+        "icon": "images/categories/indie.svg",
+        "class": "indie",
+    },
+    {
+        "slug": "simulation",
+        "label": _("Симулятори"),
+        "icon": "images/categories/simulation.svg",
+        "class": "simulation",
+    },
+    {
+        "slug": "open-world",
+        "label": _("Відкритий світ"),
+        "icon": "images/categories/open-world.svg",
+        "class": "open-world",
+    },
+    {
+        "slug": "shooter",
+        "label": _("Шутери"),
+        "icon": "images/categories/shooter.svg",
+        "class": "shooter",
+    },
+)
+
+HOME_HERO_SLUGS = (
+    "cyberpunk-2077",
+    "the-witcher-3-wild-hunt",
+    "hearts-of-iron-iv",
+)
+HOME_RECOMMENDED_SLUGS = (
+    "cyberpunk-2077",
+    "the-witcher-3-wild-hunt",
+    "hearts-of-iron-iv",
+)
+HOME_PLATFORM_CARDS = (
+    {
+        "value": Product.Platform.PC,
+        "label": "PC",
+        "icon": "images/platforms/pc.svg",
+        "class": "pc",
+    },
+    {
+        "value": Product.Platform.PLAYSTATION,
+        "label": "PlayStation",
+        "icon": "images/platforms/playstation.svg",
+        "class": "playstation",
+    },
+    {
+        "value": Product.Platform.XBOX,
+        "label": "Xbox",
+        "icon": "images/platforms/xbox.svg",
+        "class": "xbox",
+    },
+    {
+        "value": Product.Platform.NINTENDO_SWITCH,
+        "label": "Nintendo Switch",
+        "icon": "images/platforms/nintendo-switch.svg",
+        "class": "switch",
+    },
+)
+
+
+def _products_by_slugs(slugs: tuple[str, ...]) -> list[Product]:
+    """Return active products ordered by the supplied slug sequence."""
+    products = Product.objects.filter(is_active=True, slug__in=slugs).select_related(
+        "category",
+    )
+    products_by_slug = {product.slug: product for product in products}
+    return [
+        product
+        for slug in slugs
+        if (product := products_by_slug.get(slug)) is not None
+    ]
+
+
 def home(request: HttpRequest) -> HttpResponse:
-    """Render the static GameVault landing page."""
-    return render(request, "pages/home.html")
+    """Render the GameVault landing page using real catalog records."""
+    context = {
+        "genre_cards": HOME_GENRE_CARDS,
+        "platform_cards": HOME_PLATFORM_CARDS,
+        "hero_products": _products_by_slugs(HOME_HERO_SLUGS),
+        "recommended_products": _products_by_slugs(HOME_RECOMMENDED_SLUGS),
+    }
+    return render(request, "pages/home.html", context)
 
 
 def _parse_price(value: str) -> Decimal | None:
@@ -35,6 +156,31 @@ def _parse_price(value: str) -> Decimal | None:
     if not price.is_finite() or price < 0:
         return None
     return price
+
+
+def build_page_window(
+    *,
+    current_page: int,
+    total_pages: int,
+    siblings: int = 2,
+) -> list[int | str]:
+    """Return compact page numbers with ellipsis gaps for pagination."""
+    if total_pages <= 1:
+        return [1]
+
+    visible_pages = {1, total_pages}
+    start = max(1, current_page - siblings)
+    end = min(total_pages, current_page + siblings)
+    visible_pages.update(range(start, end + 1))
+
+    page_window: list[int | str] = []
+    previous_page = 0
+    for page_number in sorted(visible_pages):
+        if previous_page and page_number - previous_page > 1:
+            page_window.append("ellipsis")
+        page_window.append(page_number)
+        previous_page = page_number
+    return page_window
 
 
 class ProductListView(ListView):
@@ -53,13 +199,13 @@ class ProductListView(ListView):
     )
     SORT_FIELDS = {
         "newest": ("-created_at",),
-        "price_asc": ("price",),
-        "price_desc": ("-price",),
+        "price_asc": (EFFECTIVE_PRICE_ANNOTATION,),
+        "price_desc": (f"-{EFFECTIVE_PRICE_ANNOTATION}",),
         "popular": ("-reviews_count", "-created_at"),
     }
 
     def get_queryset(self) -> QuerySet[Product]:
-        queryset = (
+        queryset = with_effective_price(
             Product.objects.filter(is_active=True)
             .select_related("category")
             .annotate(
@@ -78,6 +224,7 @@ class ProductListView(ListView):
             queryset = queryset.filter(
                 Q(name__icontains=query)
                 | Q(description__icontains=query)
+                | Q(description_en__icontains=query)
                 | Q(developer__icontains=query)
                 | Q(publisher__icontains=query)
             )
@@ -119,6 +266,10 @@ class ProductListView(ListView):
         query_params = self.request.GET.copy()
         query_params.pop("page", None)
         context["query_string"] = query_params.urlencode()
+        context["page_window"] = build_page_window(
+            current_page=context["page_obj"].number,
+            total_pages=context["page_obj"].paginator.num_pages,
+        )
         return context
 
 

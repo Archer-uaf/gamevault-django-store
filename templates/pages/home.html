@@ -4,7 +4,7 @@
 {% block title %}{% trans "GameVault — магазин відеоігор" %}{% endblock %}
 
 {% block content %}
-<section class="hero">
+<section class="hero hero--marketplace">
     <div class="container hero-grid">
         <div class="hero-content">
             <p class="eyebrow">{% trans "Твоя наступна історія починається тут" %}</p>
@@ -15,14 +15,20 @@
                     та чесні ціни — усе це GameVault!
                 {% endblocktrans %}
             </p>
+
             <div class="hero-actions">
-                <a href="{% url 'products:product_list' %}" class="button button--primary">{% trans "Дивитися ігри" %}</a>
-                <a href="#genres" class="button button--secondary">{% trans "Обрати жанр" %}</a>
+                <a href="{% url 'products:product_list' %}" class="button button--primary">
+                    {% trans "Дивитися ігри" %}
+                </a>
+                <a href="#genres" class="button button--secondary">
+                    {% trans "Обрати жанр" %}
+                </a>
             </div>
+
             <dl class="hero-stats">
                 <div>
-                    <dt>500+</dt>
-                    <dd>{% trans "ігор у каталозі" %}</dd>
+                    <dt>20</dt>
+                    <dd>{% trans "реальних ігор у demo catalog" %}</dd>
                 </div>
                 <div>
                     <dt>4</dt>
@@ -30,23 +36,103 @@
                 </div>
                 <div>
                     <dt>24/7</dt>
-                    <dd>{% trans "доступ до магазину" %}</dd>
+                    <dd>{% trans "доступ до цифрового магазину" %}</dd>
                 </div>
             </dl>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
-            <div class="hero-glow"></div>
-            <div class="vault-card vault-card--back">
-                <span>RPG</span>
-                <strong>MYTHIC<br>REALMS</strong>
-            </div>
-            <div class="vault-card vault-card--front">
-                <span>ACTION</span>
-                <strong>NEON<br>DRIFT</strong>
-                <small>PLAY BEYOND</small>
-            </div>
-            <div class="controller-mark">+</div>
+        <div class="hero-visual">
+            <div class="hero-glow" aria-hidden="true"></div>
+
+            {% if hero_products %}
+                <section class="hero-hot-deals" aria-labelledby="hero-hot-deals-title">
+                    <div class="hero-hot-deals__header">
+                        <div>
+                            <span class="hero-hot-deals__label">🔥 {% trans "Гарячі знижки" %}</span>
+                            <h2 id="hero-hot-deals-title">{% trans "Хапай поки гаряче!" %}</h2>
+                        </div>
+                        <p class="hero-hot-deals__note">
+                            {% trans "Добірка ігор зі знижками для швидкого старту." %}
+                        </p>
+                    </div>
+
+                    <div class="hero-hot-grid">
+                        {% for product in hero_products|slice:":3" %}
+                            <a
+                                href="{{ product.get_absolute_url }}"
+                                class="hero-hot-card hero-hot-card--{{ forloop.counter }}"
+                                aria-label="{{ product.name }}"
+                            >
+                                <span class="hero-hot-card__cover">
+                                    {% if product.image %}
+                                        <img
+                                            src="{{ product.image.url }}"
+                                            alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}"
+                                        >
+                                    {% elif product.cover_url %}
+                                        <img
+                                            src="{{ product.cover_url }}"
+                                            alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}"
+                                        >
+                                    {% else %}
+                                        <span class="game-placeholder" aria-hidden="true">
+                                            <span>{{ product.get_platform_display }}</span>
+                                            <strong>{{ product.name }}</strong>
+                                        </span>
+                                    {% endif %}
+
+                                    {% if product.has_discount %}
+                                        <span class="hero-hot-card__badge">-{{ product.discount_percent }}%</span>
+                                    {% else %}
+                                        <span class="hero-hot-card__badge">{% trans "Акція" %}</span>
+                                    {% endif %}
+                                </span>
+
+                                <div class="hero-hot-card__body">
+                                    <span class="hero-hot-card__meta">
+                                        <span>{{ product.category.name }}</span>
+                                        <span>{{ product.get_platform_display }}</span>
+                                    </span>
+
+                                    <strong class="hero-hot-card__title">{{ product.name }}</strong>
+
+                                    {% with description=product.localized_description|default:product.description %}
+                                        {% if description %}
+                                            <p class="hero-hot-card__description">
+                                                {{ description|striptags|truncatewords:20 }}
+                                            </p>
+                                        {% endif %}
+                                    {% endwith %}
+
+                                    <div class="hero-hot-card__purchase">
+                                        <div class="hero-hot-card__prices">
+                                            <span class="hero-hot-card__pricing-label">
+                                                {% if product.has_discount %}
+                                                    {% trans "Ціна зі знижкою" %}
+                                                {% else %}
+                                                    {% trans "Гаряча ціна" %}
+                                                {% endif %}
+                                            </span>
+                                            <div class="hero-hot-card__price-values">
+                                                {% if product.has_discount %}
+                                                    <del class="hero-hot-card__old-price">₴{{ product.price }}</del>
+                                                {% endif %}
+                                                <strong class="hero-hot-card__price">₴{{ product.final_price }}</strong>
+                                            </div>
+                                        </div>
+                                        <span class="hero-hot-card__cta">{% trans "Детальніше" %}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% else %}
+                <div class="hero-hot-empty">
+                    <strong>{% trans "Каталог ще порожній" %}</strong>
+                    <span>{% trans "Запустіть seed_demo_games, щоб побачити обкладинки ігор." %}</span>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -55,23 +141,26 @@
     <div class="container">
         <div class="section-heading section-heading--center">
             <p class="eyebrow">{% trans "Чому GameVault" %}</p>
-            <h2>{% trans "Усе необхідне для гарного вибору!" %}</h2>
+            <h2>{% trans "Маркетплейс для швидкого вибору гри" %}</h2>
         </div>
+
         <div class="advantage-grid">
             <article class="advantage-card">
-                <span class="feature-icon">◆</span>
+                <span class="feature-icon" aria-hidden="true">01</span>
                 <h3>{% trans "Ігри для різних платформ" %}</h3>
                 <p>{% trans "PC, PlayStation, Xbox і Nintendo Switch в одному каталозі." %}</p>
             </article>
+
             <article class="advantage-card">
-                <span class="feature-icon">%</span>
+                <span class="feature-icon" aria-hidden="true">02</span>
                 <h3>{% trans "Вигідні пропозиції" %}</h3>
-                <p>{% trans "У нас шалені знижки та гарячі бандли!" %}</p>
+                <p>{% trans "Знижки, добірки та зрозумілі ціни без зайвого шуму." %}</p>
             </article>
+
             <article class="advantage-card">
-                <span class="feature-icon">★</span>
-                <h3>{% trans "Відгуки" %}</h3>
-                <p>{% trans "Рейтинги та думки спільноти спростять вибір наступної пригоди." %}</p>
+                <span class="feature-icon" aria-hidden="true">03</span>
+                <h3>{% trans "Відгуки після покупки" %}</h3>
+                <p>{% trans "Оцінки доступні тільки для користувачів, які справді придбали гру." %}</p>
             </article>
         </div>
     </div>
@@ -84,15 +173,61 @@
                 <p class="eyebrow">{% trans "Обирай за настроєм" %}</p>
                 <h2>{% trans "Популярні жанри" %}</h2>
             </div>
-            <a href="{% url 'products:product_list' %}" class="text-link">{% trans "Усі жанри" %} <span aria-hidden="true">→</span></a>
+            <a href="{% url 'products:product_list' %}" class="text-link">
+                {% trans "Усі жанри" %} <span aria-hidden="true">→</span>
+            </a>
         </div>
+
         <div class="genre-grid">
-            <a href="#" class="genre-card genre-card--action"><span>01</span><strong>{% trans "Екшн" %}</strong></a>
-            <a href="#" class="genre-card genre-card--rpg"><span>02</span><strong>RPG</strong></a>
-            <a href="#" class="genre-card genre-card--strategy"><span>03</span><strong>{% trans "Стратегії" %}</strong></a>
-            <a href="#" class="genre-card genre-card--racing"><span>04</span><strong>{% trans "Гонки" %}</strong></a>
-            <a href="#" class="genre-card genre-card--indie"><span>05</span><strong>{% trans "Інді" %}</strong></a>
-            <a href="#" class="genre-card genre-card--sport"><span>06</span><strong>{% trans "Спорт" %}</strong></a>
+            {% for card in genre_cards %}
+                <a
+                    href="{% url 'products:product_list' %}?category={{ card.slug }}"
+                    class="genre-card genre-card--{{ card.class }}"
+                    aria-label="{{ card.label }}"
+                >
+                    <span class="genre-card__number">{{ forloop.counter|stringformat:"02d" }}</span>
+
+                    <span class="genre-card__icon-wrap" aria-hidden="true">
+                        <img src="{% static card.icon %}" alt="" class="genre-card__icon">
+                    </span>
+
+                    <span class="genre-card__content">
+                        <strong class="genre-card__title">{{ card.label }}</strong>
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="platforms section" id="platforms">
+    <div class="container">
+        <div class="section-heading split-heading">
+            <div>
+                <p class="eyebrow">{% trans "Обирай пристрій" %}</p>
+                <h2>{% trans "Платформи" %}</h2>
+            </div>
+            <a href="{% url 'products:product_list' %}" class="text-link">
+                {% trans "Усі платформи" %} <span aria-hidden="true">→</span>
+            </a>
+        </div>
+
+        <div class="platform-grid">
+            {% for card in platform_cards %}
+                <a
+                    href="{% url 'products:product_list' %}?platform={{ card.value }}"
+                    class="platform-card platform-card--{{ card.class }}"
+                    aria-label="{{ card.label }}"
+                >
+                    <span class="platform-card__icon-wrap" aria-hidden="true">
+                        <img src="{% static card.icon %}" alt="" class="platform-card__icon">
+                    </span>
+
+                    <span class="platform-card__content">
+                        <strong>{{ card.label }}</strong>
+                    </span>
+                </a>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -104,43 +239,66 @@
                 <p class="eyebrow">{% trans "Вибір редакції" %}</p>
                 <h2>{% trans "Рекомендовані ігри" %}</h2>
             </div>
-            <p class="section-note">{% trans "Добірка ігор від редакції GameVault." %}</p>
+            <p class="section-note">{% trans "Три гри, з яких легко почати знайомство з GameVault." %}</p>
         </div>
-        <div class="game-grid">
-            <article class="game-card">
-                <div class="game-cover">
-                    <img src="{% static 'images/games/neon-drift.svg' %}" alt="{% trans 'Обкладинка Neon Drift' %}">
-                    <span class="game-badge">{% trans "Новинка" %}</span>
-                </div>
-                <div class="game-info">
-                    <p class="game-platform">PC · PlayStation</p>
-                    <h3>Neon Drift</h3>
-                    <div class="game-meta"><span>{% trans "Екшн" %}</span><strong>₴1 299</strong></div>
-                </div>
-            </article>
-            <article class="game-card">
-                <div class="game-cover">
-                    <img src="{% static 'images/games/mythic-realms.svg' %}" alt="{% trans 'Обкладинка Mythic Realms' %}">
-                    <span class="game-badge game-badge--violet">-20%</span>
-                </div>
-                <div class="game-info">
-                    <p class="game-platform">PC · Xbox</p>
-                    <h3>Mythic Realms</h3>
-                    <div class="game-meta"><span>RPG</span><strong>₴999</strong></div>
-                </div>
-            </article>
-            <article class="game-card">
-                <div class="game-cover">
-                    <img src="{% static 'images/games/stellar-frontier.svg' %}" alt="{% trans 'Обкладинка Stellar Frontier' %}">
-                    <span class="game-badge game-badge--blue">{% trans "Рекомендовано" %}</span>
-                </div>
-                <div class="game-info">
-                    <p class="game-platform">Nintendo Switch</p>
-                    <h3>Stellar Frontier</h3>
-                    <div class="game-meta"><span>{% trans "Пригодницькі" %}</span><strong>₴1 149</strong></div>
-                </div>
-            </article>
-        </div>
+
+        {% if recommended_products %}
+            <div class="game-grid">
+                {% for product in recommended_products|slice:":3" %}
+                    <a href="{{ product.get_absolute_url }}" class="game-card game-card--interactive">
+                        <div class="game-cover">
+                            {% if product.image %}
+                                <img
+                                    src="{{ product.image.url }}"
+                                    alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}"
+                                >
+                            {% elif product.cover_url %}
+                                <img
+                                    src="{{ product.cover_url }}"
+                                    alt="{% blocktrans with name=product.name %}Обкладинка {{ name }}{% endblocktrans %}"
+                                >
+                            {% else %}
+                                <div class="game-placeholder" aria-hidden="true">
+                                    <span>{{ product.get_platform_display }}</span>
+                                    <strong>{{ product.name }}</strong>
+                                </div>
+                            {% endif %}
+
+                            {% if product.has_discount %}
+                                <span class="game-badge">-{{ product.discount_percent }}%</span>
+                            {% else %}
+                                <span class="game-badge game-badge--blue">{% trans "Рекомендовано" %}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="game-info">
+                            <p class="game-platform">{{ product.get_platform_display }}</p>
+                            <h3>{{ product.name }}</h3>
+                            <div class="game-meta">
+                                <span>{{ product.category.name }}</span>
+                                <div class="price-block">
+                                    {% if product.has_discount %}
+                                        <del class="old-price">₴{{ product.price }}</del>
+                                        <strong>₴{{ product.final_price }}</strong>
+                                    {% else %}
+                                        <strong>₴{{ product.price }}</strong>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <span class="game-card__action">{% trans "Детальніше" %}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state empty-state--compact">
+                <h3>{% trans "Каталог ще порожній" %}</h3>
+                <p>{% trans "Запустіть seed_demo_games або перейдіть до каталогу." %}</p>
+                <a href="{% url 'products:product_list' %}" class="button button--primary">
+                    {% trans "Перейти до каталогу" %}
+                </a>
+            </div>
+        {% endif %}
     </div>
 </section>
 
@@ -152,7 +310,9 @@
                 <h2>{% trans "Знайди гру, яку не захочеться вимикати" %}</h2>
                 <p>{% trans "Шукай ігри за жанром, платформою, ціною або назвою." %}</p>
             </div>
-            <a href="{% url 'products:product_list' %}" class="button button--light">{% trans "Перейти до каталогу" %}</a>
+            <a href="{% url 'products:product_list' %}" class="button button--light">
+                {% trans "Перейти до каталогу" %}
+            </a>
         </div>
     </div>
 </section>

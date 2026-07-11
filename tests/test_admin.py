@@ -54,7 +54,7 @@ class AdminManagementTests(TestCase):
             phone="+380501234567",
             city="Київ",
             shipping_address="вул. Хрещатик, 1",
-            payment_method=Order.PaymentMethod.CARD,
+            payment_method=Order.PaymentMethod.BANK_CARD_TEST,
         )
 
     def test_product_admin_action_marks_products_active(self) -> None:

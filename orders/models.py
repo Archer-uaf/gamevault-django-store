@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Order(models.Model):
-    """A snapshot of customer and shipping data for a purchase."""
+    """A snapshot of customer and digital delivery data for a purchase."""
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Очікує обробки")
@@ -19,9 +19,12 @@ class Order(models.Model):
         CANCELLED = "cancelled", _("Скасовано")
 
     class PaymentMethod(models.TextChoices):
-        CARD = "card", _("Картка (тестова оплата)")
-        CASH_ON_DELIVERY = "cash_on_delivery", _("Оплата при отриманні")
-        BALANCE_MOCK = "balance_mock", _("Тестовий баланс")
+        BANK_CARD_TEST = "bank_card_test", _("Банківська картка (тест)")
+        CRYPTO_TRC20_TEST = (
+            "crypto_trc20_test",
+            _("Криптовалюта TRC20 (тест)"),
+        )
+        GOOGLE_PAY_TEST = "google_pay_test", _("Google Pay (тест)")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -49,6 +52,12 @@ class Order(models.Model):
 
     class Meta:
         ordering = ("-created_at",)
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(total_price__gte=0),
+                name="order_total_price_non_negative",
+            ),
+        ]
         indexes = [
             models.Index(fields=("user",), name="order_user_idx"),
             models.Index(fields=("status",), name="order_status_idx"),
@@ -66,6 +75,38 @@ class Order(models.Model):
     def can_be_cancelled(self) -> bool:
         return self.status in {self.Status.PENDING, self.Status.PAID}
 
+    @property
+    def digital_status_display(self) -> str:
+        labels = {
+            self.Status.PENDING.value: _("Очікує обробки"),
+            self.Status.PAID.value: _("Оплачено"),
+            self.Status.SHIPPED.value: _("Ключ надіслано"),
+            self.Status.DELIVERED.value: _("Виконано"),
+            self.Status.CANCELLED.value: _("Скасовано"),
+        }
+        return str(labels.get(self.status, self.get_status_display()))
+
+    @property
+    def digital_payment_method_display(self) -> str:
+        labels = {
+            self.PaymentMethod.BANK_CARD_TEST.value: _(
+                "Банківська картка (тест)"
+            ),
+            self.PaymentMethod.CRYPTO_TRC20_TEST.value: _(
+                "Криптовалюта TRC20 (тест)"
+            ),
+            self.PaymentMethod.GOOGLE_PAY_TEST.value: _("Google Pay (тест)"),
+            # Temporary compatibility for orders created before migration 0004.
+            "card": _("Банківська картка (старий тестовий запис)"),
+            "cash_on_delivery": _(
+                "Банківська картка (старий тестовий запис)"
+            ),
+            "balance_mock": _("Банківська картка (старий тестовий запис)"),
+        }
+        return str(
+            labels.get(self.payment_method, self.get_payment_method_display())
+        )
+
 
 class OrderItem(models.Model):
     """A product and price snapshot belonging to an order."""
@@ -78,6 +119,18 @@ class OrderItem(models.Model):
     product = models.ForeignKey("products.Product", on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(price__gte=0),
+                name="order_item_price_non_negative",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(quantity__gt=0),
+                name="order_item_quantity_positive",
+            ),
+        ]
 
     def __str__(self) -> str:
         return f"{self.product} × {self.quantity}"

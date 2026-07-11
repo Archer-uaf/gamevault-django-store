@@ -9,9 +9,9 @@ from products.models import Category, Product
 
 
 EXPECTED_GAME_GENRES = {
-    'kingdom-come-deliverance': {'open-world', 'rpg'},
-    'cyberpunk-2077': {'action', 'open-world', 'rpg'},
-    'the-witcher-3-wild-hunt': {'action', 'open-world', 'rpg'},
+    'kingdom-come-deliverance': {'rpg','open-world'},
+    'cyberpunk-2077': {'action', 'rpg', 'open-world'},
+    'the-witcher-3-wild-hunt': {'action', 'rpg', 'open-world'},
     'dying-light': {'action', 'horror', 'open-world'},
     'forza-horizon-5': {'racing'},
     'hearts-of-iron-iv': {'strategy'},
